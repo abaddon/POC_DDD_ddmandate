@@ -16,6 +16,8 @@ class DDMandateService(
      val debtor : Debtor = bankAccountPort.findDebtorByBankAccountId(bankAccountId)
      val creditor: Creditor = creditorPort.findByLegalEntity(legalEntity)
 
+     //TODO - ADD [INV]: only one DD mandate for Creditor and Debitor (excluded cancelled)
+
      val ddMandate = DDMandate(debtor, creditor)
      val contact = contractPort.createDDMandateContract(ddMandate)
 

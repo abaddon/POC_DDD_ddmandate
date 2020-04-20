@@ -2,7 +2,7 @@ package com.abaddon83.legal.domainModel.ddMandates
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.domainModel.contract.Contract
-import com.abaddon83.legal.domainModel.contract.Repositories.{PostelRepository, Repository}
+import com.abaddon83.legal.domainModel.contract.Repositories.{XyzRepository, Repository}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -56,11 +56,11 @@ class DDMandateTest extends AnyFunSuite {
   }
 
   def buildDebtor(bankAccountValidated: Boolean):Debtor = {
+    val firstName = "First"
     val userId = 12345
-    val firstName = "Stefano"
-    val lastName = "Longhi"
+    val lastName = "Last"
     val taxcode = "TAXCODE"
-    val birthDate = buildDateFromString("1983-05-24",None)
+    val birthDate = buildDateFromString("2000-01-01",None)
 
     Debtor(userId,firstName,lastName,taxcode,birthDate,buildEUBankAccount(bankAccountValidated))
   }
@@ -85,7 +85,7 @@ class DDMandateTest extends AnyFunSuite {
   }
 
   def buildSignedPosteFile(name:String) : Repository ={
-    new PostelRepository(name)
+    new XyzRepository(name)
   }
 
 }
