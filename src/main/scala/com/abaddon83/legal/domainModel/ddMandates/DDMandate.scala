@@ -6,7 +6,7 @@ import com.abaddon83.legal.domainModel.contract.Contract
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccount
 
 object DDMandate{
-  def apply(debtor: Debtor, creditor: Creditor) = {
+  def apply(debtor: Debtor, creditor: Creditor): DDMandate = {
     val ddMandate = new DDMandate(DDMandateIdentity(),Financial,debtor,creditor,new Date(),DRAFT,None)
     assert(ddMandate.ddMandateType == Financial,"The DD mandate has to be Financial")
     assert(ddMandate.status == DRAFT ,"The DD mandate has to be DRAFT")
