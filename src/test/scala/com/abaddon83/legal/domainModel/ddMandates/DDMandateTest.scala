@@ -1,8 +1,8 @@
 package com.abaddon83.legal.domainModel.ddMandates
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.contract.Contract
-import com.abaddon83.legal.domainModel.contract.Repositories.{XyzRepository, Repository}
+import com.abaddon83.legal.domainModel.contract.{Contract, DD_MANDATE}
+import com.abaddon83.legal.domainModel.contract.Repositories.{Repository, XyzRepository}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -23,22 +23,50 @@ class DDMandateTest extends AnyFunSuite {
   }
 
   test("assign the right contract to a draft mandate"){
-    val debtor = buildDebtor(false)
-    val creditor = buildCreditor()
 
-    val ddMandate = DDMandate(debtor,creditor)
+    val ddMandate = buildDraftDDMandate()
     val contract = buildContract(ddMandate)
     val ddMandateWithContract = ddMandate.assignContract(contract)
 
-    //assert
-
-
+    assert(ddMandateWithContract.contract.get == contract)
+    assert(ddMandateWithContract.contract.get.reference == ddMandate.identity.toString)
+    assert(ddMandateWithContract.contract.get.contractType == DD_MANDATE)
+    assert(ddMandateWithContract.status == NOACCEPTED)
   }
 
   test("assign the wrong contract to a draft mandate"){
 
+    val ddMandate = buildDraftDDMandate()
+    val differentDDMandate = buildDraftDDMandate()
+    val wrongContract = buildContract(differentDDMandate)
+
+    assertThrows[java.lang.AssertionError] {
+      ddMandate.assignContract(wrongContract)
+    }
   }
 
+  test("accept DD mandate with a contract not signed"){
+
+    val ddMandate = buildNotAcceptedDDMandate()
+
+    assertThrows[java.lang.AssertionError] {
+      ddMandate.accept(buildEUBankAccount(true))
+    }
+
+  }
+
+
+  def buildDraftDDMandate(): DDMandate ={
+    val debtor = buildDebtor(false)
+    val creditor = buildCreditor()
+    DDMandate(debtor,creditor)
+  }
+
+  def buildNotAcceptedDDMandate(): DDMandate = {
+    val ddMandateDraft = buildDraftDDMandate()
+    val contract = buildContract(ddMandateDraft)
+    ddMandateDraft.assignContract(contract)
+  }
 
   def buildContract(ddMandate:DDMandate):Contract={
     Contract(ddMandate)

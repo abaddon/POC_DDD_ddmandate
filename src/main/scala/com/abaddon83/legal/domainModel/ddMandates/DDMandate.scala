@@ -29,7 +29,7 @@ case class DDMandate (
     assert(this.contract.isEmpty,"Contract has to be empty")
     assert(status == DRAFT, "Contract can be assigned only to a DRAFT mandate")
     assert(identity.toString == contract.reference,"The reference on the Contract doesn't match mandate identifier ")
-    this.contract = Option(contract)
+    this.contract = Some(contract)
     this.status = NOACCEPTED
     assert(this.status == NOACCEPTED)
     assert(this.contract.isDefined)
