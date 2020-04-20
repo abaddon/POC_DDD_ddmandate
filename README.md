@@ -8,10 +8,8 @@ Aggregates:
 - DD Mandate
 - Contract
 
+## Event Storming Design
+![alt text](./docs/AggregateDefinition.jpg)
+
 ## Domain model
 ![alt text](./docs/DomainModel.jpg)
-
-## Event Storming Design
-
-![alt text](./docs/AggregateDefinition.jpg)
- 
