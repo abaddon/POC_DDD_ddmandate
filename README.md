@@ -9,9 +9,9 @@ Aggregates:
 - Contract
 
 ## Domain model
-![alt text](../docsDomainModel.jpg)
+![alt text](./docs/DomainModel.jpg)
 
 ## Event Storming Design
 
-![alt text](../AggregateDefinition.jpg)
+![alt text](./docs/AggregateDefinition.jpg)
  
