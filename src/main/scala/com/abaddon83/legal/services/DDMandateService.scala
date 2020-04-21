@@ -2,8 +2,8 @@ package com.abaddon83.legal.services
 
 import java.util.UUID
 
-import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandate, DDMandateIdentity, Debtor}
-import com.abaddon83.legal.ports.{ContractPort, CreditorPort, DDMandateRepositoryPort, BankAccountPort}
+import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateIdentity, DDMandateNotAccepted, Debtor}
+import com.abaddon83.legal.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
 
 class DDMandateService(
                         repositoryPort: DDMandateRepositoryPort,
@@ -11,37 +11,33 @@ class DDMandateService(
                         creditorPort: CreditorPort,
                         contractPort: ContractPort) {
 
-   def createDDMandate(bankAccountId: UUID, legalEntity: String): DDMandate =
+   def createDDMandate(bankAccountId: UUID, legalEntity: String): DDMandateNotAccepted =
    {
      val debtor : Debtor = bankAccountPort.findDebtorByBankAccountId(bankAccountId)
      val creditor: Creditor = creditorPort.findByLegalEntity(legalEntity)
 
-     //TODO - ADD [INV]: only one DD mandate for Creditor and Debitor (excluded cancelled)
+     val ddMandateDraft = DDMandateDraft(debtor, creditor)
+     val contact = contractPort.createDDMandateContract(ddMandateDraft)
 
-     val ddMandate = DDMandate(debtor, creditor)
-     val contact = contractPort.createDDMandateContract(ddMandate)
-
-     ddMandate.assignContract(contact)
-     repositoryPort.save(ddMandate)
-
+     val DDMandateNotAccepted = ddMandateDraft.assignContract(contact)
+     repositoryPort.save(DDMandateNotAccepted)
 
   }
 
-  def acceptDDMandate(mandateIdentity:  DDMandateIdentity): DDMandate =
+  def acceptDDMandate(mandateIdentity:  DDMandateIdentity): DDMandateAccepted =
   {
-    val ddMandate = repositoryPort.findDDMandateById(mandateIdentity)
-    val bankAccount= bankAccountPort.findBankAccountByBankAccountId(ddMandate.debtor.bankAccount.identifier)
-    ddMandate.accept(bankAccount)
-    repositoryPort.save(ddMandate)
+    val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(mandateIdentity)
+    val DDMandateAccepted = ddMandateNotAccepted.accept()
+
+    repositoryPort.save(DDMandateAccepted)
 
   }
 
-  def cancelDDMandate(mandateIdentity:  DDMandateIdentity): DDMandate =
+  def cancelDDMandate(mandateIdentity:  DDMandateIdentity): DDMandateCanceled =
   {
-    val ddMandate = repositoryPort.findDDMandateById(mandateIdentity)
-    ddMandate.cancel()
-    repositoryPort.save(ddMandate)
-
+    val ddMandateAccepted = repositoryPort.findDDMandateAcceptedById(mandateIdentity)
+    val ddMandateCanceled = ddMandateAccepted.cancel()
+    repositoryPort.save(ddMandateCanceled)
   }
 
 

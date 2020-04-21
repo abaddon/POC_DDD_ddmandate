@@ -1,9 +1,11 @@
 package com.abaddon83.legal.ports
 
-import com.abaddon83.legal.domainModel.contract.{Contract, ContractIdentity}
+import com.abaddon83.legal.domainModel.contract.{Contract, ContractIdentity, ContractSigned, ContractUnSigned}
 
 trait ContractRepositoryPort {
 
-  def save(contract: Contract): Contract
-  def findByContractIdentity(contractIdentity: ContractIdentity): Contract
+  def save(contract: ContractUnSigned): ContractUnSigned
+  def save(contract: ContractSigned): ContractSigned
+  def findByContractUnSignedIdentity(contractIdentity: ContractIdentity): ContractUnSigned
+  def findByContractSignedIdentity(contractIdentity: ContractIdentity): ContractSigned
 }

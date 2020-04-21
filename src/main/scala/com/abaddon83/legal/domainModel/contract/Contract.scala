@@ -5,7 +5,22 @@ import java.util.Date
 import com.abaddon83.legal.domainModel.contract.Repositories.{Repository, S3Repository}
 import com.abaddon83.legal.domainModel.ddMandates.{DDMandate, DRAFT}
 
-case class Contract (
+sealed trait Contract{
+  val identity: ContractIdentity
+  val contractType:ContractType
+  val reference: String
+  val name: String
+  val format: Format
+  val file: Repository
+  val creationDate: Date
+  def isSigned: Boolean
+}
+
+
+
+//CONTRACT UNSIGNED
+
+case class ContractUnSigned(
       identity: ContractIdentity,
       contractType:ContractType,
       reference: String,
@@ -13,45 +28,71 @@ case class Contract (
       format: Format,
       file: Repository,
       creationDate: Date,
-      var signedFile:Option[Repository],
-      var signatureDate: Option[Date]
-){
-  def sign(signedFile: Repository, signedDate: Date): Contract ={
-    //PRE
-    assert(!isSigned(),"Contract is already signed, cannot sign again")
-    assert(signatureDate.isEmpty,"The signature date is already defined")
+      ) extends Contract {
+  override def isSigned: Boolean = false
 
-    this.signedFile = Some(signedFile)
-    this.signatureDate = Some(signedDate)
 
-    //POST
-    assert(isSigned(),"Contract should be signed")
-    assert(signatureDate.isDefined,"Signature Date should be defined")
-    assert(this.signedFile.isDefined,"Signature Date should be defined")
+  def sign(signedFile: Repository, signatureDate: Date): ContractSigned ={
 
-    this
+    val contractSigned = ContractSigned(this,signedFile,signatureDate)
+
+    assert(contractSigned.signedFile == signedFile)
+    assert(contractSigned.signatureDate == signatureDate)
+
+    contractSigned
   }
 
-  def isSigned() : Boolean = {
-    signedFile.isDefined
-  }
+
 }
 
-object Contract{
-  def apply(ddMandate : DDMandate): Contract = {
+object ContractUnSigned{
+  def apply(ddMandate : DDMandate, unsignedfile: Repository): ContractUnSigned = {
     //PRE
     assert(ddMandate.status == DRAFT, "DDMandate has to be in status draft")
 
-    val repository = S3Repository("key","container")
-    val contract  = new Contract(ContractIdentity(),DD_MANDATE, ddMandate.identity.toString, DD_MANDATE.name(Some(ddMandate.identity.toString)), DD_MANDATE.format,repository, new Date(),None,None)
+    val contractUnsigned  = new ContractUnSigned(ContractIdentity(),DD_MANDATE, ddMandate.identity.toString, DD_MANDATE.name(Some(ddMandate.identity.toString)), DD_MANDATE.format,unsignedfile, new Date())
 
     //POST
-    assert(contract.contractType == DD_MANDATE,"The contract should have type DD_MANDATE")
-    assert(contract.reference == ddMandate.identity.toString, "The reference and the DD mandate id are different")
-    assert(!contract.name.isEmpty, "The contract name cannot be empty")
-    assert(contract.format == PDF, "The contract format has to be a pdf")
-    //assert(contract.creationDate.before(new Date())) //TO FIX)
+    assert(contractUnsigned.contractType == DD_MANDATE,"The contract should have type DD_MANDATE")
+    assert(contractUnsigned.reference == ddMandate.identity.toString, "The reference and the DD mandate id are different")
+    assert(contractUnsigned.name.length > 0, "The contract name cannot be empty")
+    assert(contractUnsigned.format == PDF, "The contract format has to be a pdf")
 
-    contract
+    contractUnsigned
+  }
+}
+
+//CONTRACT SIGNED
+
+case class ContractSigned(
+                             identity: ContractIdentity,
+                             contractType:ContractType,
+                             reference: String,
+                             name: String,
+                             format: Format,
+                             file: Repository,
+                             creationDate: Date,
+                             signedFile: Repository,
+                             signatureDate: Date) extends Contract {
+  override def isSigned: Boolean = true
+
+}
+
+object ContractSigned {
+  def apply(contractUnSigned: ContractUnSigned, signedFile: Repository, signatureDate: Date): ContractSigned = {
+    val contractSigned = new ContractSigned(contractUnSigned.identity,contractUnSigned.contractType,contractUnSigned.reference,contractUnSigned.name,contractUnSigned.format,contractUnSigned.file,contractUnSigned.creationDate,signedFile,signatureDate)
+
+    assert(contractSigned.identity == contractUnSigned.identity)
+    assert(contractSigned.contractType == contractUnSigned.contractType)
+    assert(contractSigned.creationDate == contractUnSigned.creationDate)
+    assert(contractSigned.file == contractUnSigned.file)
+    assert(contractSigned.format == contractUnSigned.format)
+    assert(contractSigned.name == contractUnSigned.name)
+    assert(contractSigned.reference == contractUnSigned.reference)
+    assert(contractSigned.signedFile == signedFile)
+    assert(contractSigned.signatureDate == signatureDate)
+
+    contractSigned
+
   }
 }

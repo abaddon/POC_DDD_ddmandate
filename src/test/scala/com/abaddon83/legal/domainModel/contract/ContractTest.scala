@@ -2,9 +2,9 @@ package com.abaddon83.legal.domainModel.contract
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.contract.Repositories.{XyzRepository, Repository}
+import com.abaddon83.legal.domainModel.contract.Repositories.Repository
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
-import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandate, DDMandateIdentity, DRAFT, Debtor, Financial}
+import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandateDraft, Debtor}
 import org.scalatest.funsuite.AnyFunSuite
 
 
@@ -12,51 +12,46 @@ class ContractTest extends AnyFunSuite {
 
   test("New dd mandate contract created") {
 
-    val ddMandate = buildEUDDMandateDraft()
+    val ddMandate = buildDraftDDMandate(false)
 
-    val contract = Contract(ddMandate)
+    val contractUnSigned = ContractUnSigned(ddMandate,fakeRepository)
 
-    assert(contract.contractType == DD_MANDATE)
-    assert(contract.format == PDF)
-    assert(contract.name == "Direct Debit Mandate"++ddMandate.identity.toString)
-    assert(contract.reference == ddMandate.identity.toString)
-    assert(contract.file.provider == "S3")
-    assert(contract.signedFile.isEmpty)
-    assert(contract.signatureDate.isEmpty)
-    assert(!contract.isSigned())
+    assert(contractUnSigned.contractType == DD_MANDATE)
+    assert(contractUnSigned.format == PDF)
+    assert(contractUnSigned.name == "Direct Debit Mandate"++ddMandate.identity.toString)
+    assert(contractUnSigned.reference == ddMandate.identity.toString)
+    assert(contractUnSigned.file == fakeRepository)
   }
-  test("sign DD mandate contract"){
-    val ddMandate = buildEUDDMandateDraft()
 
-    val contract = Contract(ddMandate)
-    val filename = "PosteDDMandateSigned.pdf"
-    val signedDate = new Date()
-    val signedFile = buildSignedPosteFile(filename)
-    val contractSigned = contract.sign(signedFile,signedDate)
+  test("sign a contract"){
 
-    assert(contractSigned.signedFile.get.provider == signedFile.provider)
-    assert(contractSigned.signedFile.get.url == "https://repository.xyz/"++filename)
-    assert(contractSigned.isSigned())
-    assert(contractSigned.file==contract.file)
-    assert(contractSigned.reference==contract.reference)
-    assert(contractSigned.name==contract.name)
-    assert(contractSigned.format==contract.format)
-    assert(contractSigned.creationDate==contract.creationDate)
-    assert(contractSigned.identity==contract.identity)
-    assert(contractSigned.contractType==contract.contractType)
+    val unsignedContract = buildUnsignedContract()
+    val signatureDate = new Date()
+    val signedFile = fakeRepository
+    val contractSigned = unsignedContract.sign(signedFile,signatureDate)
+
+    assert(contractSigned.signedFile == signedFile)
+    assert(contractSigned.signatureDate == signatureDate)
+    assert(contractSigned.file==unsignedContract.file)
+    assert(contractSigned.reference==unsignedContract.reference)
+    assert(contractSigned.name==unsignedContract.name)
+    assert(contractSigned.format==unsignedContract.format)
+    assert(contractSigned.creationDate==unsignedContract.creationDate)
+    assert(contractSigned.identity==unsignedContract.identity)
+    assert(contractSigned.contractType==unsignedContract.contractType)
 
   }
 
 
-  def buildEUDDMandateDraft(): DDMandate= {
+  def buildUnsignedContract(): ContractUnSigned = {
 
-    val identity = DDMandateIdentity(UUID.fromString("25c54011-4994-4616-b9de-931083db957b"))
+    ContractUnSigned(buildDraftDDMandate(false),fakeRepository)
+  }
 
-    val debtor = buildDebtor(false)
+  def buildDraftDDMandate(isBankAccountValid: Boolean): DDMandateDraft ={
+    val debtor = buildDebtor(isBankAccountValid)
     val creditor = buildCreditor()
-    val creationDate = buildDateFromString("2020-01-01",None)
-
-    DDMandate(identity,Financial,debtor,creditor,creationDate,DRAFT,None)
+    DDMandateDraft(debtor,creditor)
   }
 
   def buildDebtor(bankAccountValidated: Boolean):Debtor = {
@@ -88,8 +83,10 @@ class ContractTest extends AnyFunSuite {
     Creditor( "Company1",buildEUBankAccount(true),"123456")
   }
 
-  def buildSignedPosteFile(name:String) : Repository ={
-    new XyzRepository(name)
+  object fakeRepository extends Repository {
+    override val provider: String = "Fake"
+
+    override def url: String = "ddmandate.contract.test"
   }
 
 }

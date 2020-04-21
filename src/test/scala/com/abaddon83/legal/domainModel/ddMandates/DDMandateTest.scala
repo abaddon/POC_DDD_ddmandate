@@ -1,8 +1,8 @@
 package com.abaddon83.legal.domainModel.ddMandates
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.contract.{Contract, DD_MANDATE}
-import com.abaddon83.legal.domainModel.contract.Repositories.{Repository, XyzRepository}
+import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned, ContractUnSigned, DD_MANDATE}
+import com.abaddon83.legal.domainModel.contract.Repositories.Repository
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -12,9 +12,8 @@ class DDMandateTest extends AnyFunSuite {
     val debtor = buildDebtor(false)
     val creditor = buildCreditor()
 
-    val ddMandate = DDMandate(debtor,creditor)
+    val ddMandate = DDMandateDraft(debtor,creditor)
 
-    assert(ddMandate.contract.isEmpty)
     assert(ddMandate.creditor == creditor)
     assert(ddMandate.ddMandateType == Financial)
     assert(ddMandate.debtor == debtor)
@@ -24,63 +23,118 @@ class DDMandateTest extends AnyFunSuite {
 
   test("assign the right contract to a draft mandate"){
 
-    val ddMandate = buildDraftDDMandate()
-    val contract = buildContract(ddMandate)
-    val ddMandateWithContract = ddMandate.assignContract(contract)
+    val ddMandateDraft = buildDraftDDMandate(false)
+    val contract = buildContract(ddMandateDraft,false)
+    val ddMandateNotAccepted = ddMandateDraft.assignContract(contract)
 
-    assert(ddMandateWithContract.contract.get == contract)
-    assert(ddMandateWithContract.contract.get.reference == ddMandate.identity.toString)
-    assert(ddMandateWithContract.contract.get.contractType == DD_MANDATE)
-    assert(ddMandateWithContract.status == NOACCEPTED)
+    assert(ddMandateNotAccepted.identity == ddMandateDraft.identity)
+    assert(ddMandateNotAccepted.creationDate == ddMandateDraft.creationDate)
+    assert(ddMandateNotAccepted.creditor == ddMandateDraft.creditor)
+    assert(ddMandateNotAccepted.debtor == ddMandateDraft.debtor)
+    assert(ddMandateNotAccepted.ddMandateType == ddMandateDraft.ddMandateType)
+    assert(ddMandateNotAccepted.status == NOACCEPTED)
+
+    assert(ddMandateNotAccepted.contract == contract)
+    assert(ddMandateNotAccepted.contract.reference == ddMandateDraft.identity.toString)
+    assert(ddMandateNotAccepted.contract.contractType == DD_MANDATE)
+
+
   }
 
   test("assign the wrong contract to a draft mandate"){
 
-    val ddMandate = buildDraftDDMandate()
-    val differentDDMandate = buildDraftDDMandate()
-    val wrongContract = buildContract(differentDDMandate)
+    val ddMandateDraft = buildDraftDDMandate(isBankAccountValid = false)
+    val differentDDMandateDraft = buildDraftDDMandate(isBankAccountValid = false)
+    val wrongContract = buildContract(differentDDMandateDraft,false)
 
     assertThrows[java.lang.AssertionError] {
-      ddMandate.assignContract(wrongContract)
+      ddMandateDraft.assignContract(wrongContract)
     }
   }
 
   test("accept DD mandate with a contract not signed"){
 
-    val ddMandate = buildNotAcceptedDDMandate()
+    val ddMandateNotAccepted = buildNotAcceptedDDMandate(isBankAccountValid = true,isContractSigned = false)
 
     assertThrows[java.lang.AssertionError] {
-      ddMandate.accept(buildEUBankAccount(true))
+      ddMandateNotAccepted.accept()
     }
 
   }
 
+  test("accept DD mandate with a bank account not valid"){
 
-  def buildDraftDDMandate(): DDMandate ={
-    val debtor = buildDebtor(false)
-    val creditor = buildCreditor()
-    DDMandate(debtor,creditor)
+    val ddMandateNotAccepted = buildNotAcceptedDDMandate(isBankAccountValid = false,isContractSigned = true)
+
+    assertThrows[java.lang.AssertionError] {
+      ddMandateNotAccepted.accept()
+    }
+
   }
 
-  def buildNotAcceptedDDMandate(): DDMandate = {
-    val ddMandateDraft = buildDraftDDMandate()
-    val contract = buildContract(ddMandateDraft)
+  test("accept DD mandate with a bank account not valid and contract not signed"){
+
+    val ddMandateNotAccepted = buildNotAcceptedDDMandate(isBankAccountValid = false,isContractSigned = false)
+
+    assertThrows[java.lang.AssertionError] {
+      ddMandateNotAccepted.accept()
+    }
+
+  }
+
+  test("accept DD mandate with a bank account valid and contract signed"){
+
+    val ddMandateNotAccepted = buildNotAcceptedDDMandate(isBankAccountValid = true,isContractSigned = true)
+    val ddMandateAccepted = ddMandateNotAccepted.accept()
+
+    assert(ddMandateAccepted.identity == ddMandateNotAccepted.identity)
+    assert(ddMandateAccepted.creationDate == ddMandateNotAccepted.creationDate)
+    assert(ddMandateAccepted.creditor == ddMandateNotAccepted.creditor)
+    assert(ddMandateAccepted.debtor == ddMandateNotAccepted.debtor)
+    assert(ddMandateAccepted.ddMandateType == ddMandateNotAccepted.ddMandateType)
+    assert(ddMandateAccepted.contract == ddMandateNotAccepted.contract)
+    assert(ddMandateAccepted.status == ACCEPTED)
+
+  }
+
+  test("cancel a DD mandateAccepted"){
+
+    val ddMandateAccepted = buildAcceptedDDMandate
+    val ddMandateCanceled = ddMandateAccepted.cancel()
+
+    assert(ddMandateCanceled.identity == ddMandateAccepted.identity)
+    assert(ddMandateCanceled.creationDate == ddMandateAccepted.creationDate)
+    assert(ddMandateCanceled.creditor == ddMandateAccepted.creditor)
+    assert(ddMandateCanceled.debtor == ddMandateAccepted.debtor)
+    assert(ddMandateCanceled.ddMandateType == ddMandateAccepted.ddMandateType)
+    assert(ddMandateCanceled.contract == ddMandateAccepted.contract)
+    assert(ddMandateCanceled.status == CANCELED)
+
+  }
+
+
+  def buildDraftDDMandate(isBankAccountValid: Boolean): DDMandateDraft ={
+    val debtor = buildDebtor(isBankAccountValid)
+    val creditor = buildCreditor()
+    DDMandateDraft(debtor,creditor)
+  }
+
+  def buildNotAcceptedDDMandate(isBankAccountValid: Boolean,isContractSigned: Boolean): DDMandateNotAccepted = {
+    val ddMandateDraft = buildDraftDDMandate(isBankAccountValid)
+    val contract = buildContract(ddMandateDraft,isContractSigned)
     ddMandateDraft.assignContract(contract)
   }
 
-  def buildContract(ddMandate:DDMandate):Contract={
-    Contract(ddMandate)
+  def buildAcceptedDDMandate : DDMandateAccepted = {
+    val ddMandateNotAccepted = buildNotAcceptedDDMandate(isBankAccountValid = true,isContractSigned = true)
+    ddMandateNotAccepted.accept()
   }
 
-  def buildEUDDMandateDraft(): DDMandate= {
-
-    val identity = DDMandateIdentity(UUID.fromString("25c54011-4994-4616-b9de-931083db957b"))
-
-    val debtor = buildDebtor(false)
-    val creditor = buildCreditor()
-    val creationDate = buildDateFromString("2020-01-01",None)
-
-    DDMandate(identity,Financial,debtor,creditor,creationDate,DRAFT,None)
+  def buildContract(ddMandate:DDMandate, isSigned: Boolean):Contract={
+    isSigned match {
+      case true => ContractUnSigned(ddMandate,fakeRepository).sign(fakeRepository,new Date)
+      case false => ContractUnSigned(ddMandate,fakeRepository)
+    }
   }
 
   def buildDebtor(bankAccountValidated: Boolean):Debtor = {
@@ -112,8 +166,10 @@ class DDMandateTest extends AnyFunSuite {
     Creditor( "Company1",buildEUBankAccount(true),"123456")
   }
 
-  def buildSignedPosteFile(name:String) : Repository ={
-    new XyzRepository(name)
+  object fakeRepository extends Repository {
+    override val provider: String = "Fake"
+
+    override def url: String = "ddmandate.contract.test"
   }
 
 }

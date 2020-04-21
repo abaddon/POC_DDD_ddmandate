@@ -6,5 +6,4 @@ trait BankAccount{
   val identifier: UUID
   val code: String
   var isValid: Boolean
-  def validate()= isValid = true
 }
