@@ -6,6 +6,6 @@ trait ContractRepositoryPort {
 
   def save(contract: ContractUnSigned): ContractUnSigned
   def save(contract: ContractSigned): ContractSigned
-  def findByContractUnSignedIdentity(contractIdentity: ContractIdentity): ContractUnSigned
-  def findByContractSignedIdentity(contractIdentity: ContractIdentity): ContractSigned
+  def findByContractUnSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractUnSigned]
+  def findByContractSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractSigned]
 }

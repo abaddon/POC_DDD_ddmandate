@@ -2,10 +2,12 @@ package com.abaddon83.legal.domainModel.ddMandates
 
 import java.util.Date
 
+import com.abaddon83.ddd.{AssertionConcern, Entity}
 import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccount
 
-sealed trait DDMandate{
+sealed trait DDMandate extends Entity {
+
   val identity: DDMandateIdentity
   val ddMandateType: DDMandateType
   val debtor: Debtor
@@ -22,19 +24,25 @@ case class DDMandateDraft(
         creationDate: Date,
         status: Status = DRAFT) extends DDMandate {
 
+
   def assignContract(contract:Contract): DDMandateNotAccepted = {
-    assert(status == DRAFT, "Contract can be assigned only to a DRAFT mandate")
-    assert(identity.toString == contract.reference,"The reference on the Contract doesn't match mandate identifier ")
+
+    assertArgumentEquals(status,DRAFT,"Contract can be assigned only to a DRAFT mandate")
+    assertArgumentEquals(identity.uuid.toString,contract.reference,"The reference on the Contract doesn't match mandate identifier")
 
     DDMandateNotAccepted(this,contract)
   }
 }
 
-object DDMandateDraft{
+object DDMandateDraft extends Entity{
   def apply(debtor: Debtor, creditor: Creditor): DDMandateDraft = {
+
     val ddMandateDraft = new DDMandateDraft(DDMandateIdentity(),Financial,debtor,creditor,new Date())
+
+    //PRO
     assert(ddMandateDraft.ddMandateType == Financial,"The DD mandate has to be Financial")
     assert(ddMandateDraft.status == DRAFT ,"The DD mandate has to be DRAFT")
+
     ddMandateDraft
   }
 }
@@ -50,6 +58,17 @@ case class DDMandateNotAccepted(
                            contract: Contract,
                            status: Status = NOACCEPTED) extends DDMandate {
 
+  def updateContractSigned(contractSigned: Contract): DDMandateNotAccepted ={
+    assert(contractSigned.isSigned, "Contract is not signed")
+    assert(contractSigned.identity == contract.identity, "The contract identifier is wrong")
+    this.copy(contract = contractSigned)
+  }
+
+  def updateDebtorValidated(debtorValidated: Debtor): DDMandateNotAccepted ={
+    assert(debtorValidated.bankAccount.isValid, "BankAccount is not valid")
+    assert(debtorValidated.bankAccount.identity == debtor.bankAccount.identity,"The bankAccount identifier is wrong")
+    this.copy(debtor = debtorValidated)
+  }
 
   def accept(): DDMandateAccepted = {
     assert(this.debtor.bankAccount.isValid,"The bank account has to be valid to accept a DD Mandate")
@@ -60,8 +79,10 @@ case class DDMandateNotAccepted(
   }
 }
 
-object DDMandateNotAccepted{
+object DDMandateNotAccepted extends Entity{
   def apply(ddMandateDraft: DDMandateDraft, contract: Contract): DDMandateNotAccepted = {
+    //PRE
+
     val ddMandateNotAccepted = new DDMandateNotAccepted(ddMandateDraft.identity,ddMandateDraft.ddMandateType,ddMandateDraft.debtor,ddMandateDraft.creditor,ddMandateDraft.creationDate,contract)
     assert(ddMandateNotAccepted.identity == ddMandateDraft.identity)
     assert(ddMandateNotAccepted.ddMandateType == ddMandateDraft.ddMandateType)
@@ -92,7 +113,7 @@ case class DDMandateAccepted(
   }
 }
 
-object DDMandateAccepted{
+object DDMandateAccepted extends Entity{
   def apply(ddMandateNotAccepted: DDMandateNotAccepted): DDMandateAccepted = {
 
     val ddMandateAccepted = new DDMandateAccepted(ddMandateNotAccepted.identity,ddMandateNotAccepted.ddMandateType,ddMandateNotAccepted.debtor,ddMandateNotAccepted.creditor,ddMandateNotAccepted.creationDate,ddMandateNotAccepted.contract)
@@ -122,7 +143,7 @@ case class DDMandateCanceled(
 
 }
 
-object DDMandateCanceled{
+object DDMandateCanceled extends Entity{
   def apply(ddMandateAccepted: DDMandateAccepted): DDMandateCanceled = {
     val ddMandateCanceled = new DDMandateCanceled(ddMandateAccepted.identity,ddMandateAccepted.ddMandateType,ddMandateAccepted.debtor,ddMandateAccepted.creditor,ddMandateAccepted.creationDate,ddMandateAccepted.contract,new Date())
     assert(ddMandateCanceled.identity == ddMandateAccepted.identity)

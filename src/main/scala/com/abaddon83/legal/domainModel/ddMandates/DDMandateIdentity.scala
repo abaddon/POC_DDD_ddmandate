@@ -6,6 +6,7 @@ import com.abaddon83.ddd.AggregateUUIDId
 
 case class DDMandateIdentity private(uuid:UUID) extends AggregateUUIDId{
   override val value : UUID = uuid
+  override def toString: String = "DDMandate-"+value.toString
 }
 
 object DDMandateIdentity{
