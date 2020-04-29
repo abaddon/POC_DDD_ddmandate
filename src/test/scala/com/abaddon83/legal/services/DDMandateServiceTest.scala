@@ -7,10 +7,10 @@ import com.abaddon83.legal.domainModel.contract.ContractUnSigned
 import com.abaddon83.legal.domainModel.ddMandates.{ACCEPTED, CANCELED, DDMandateNotAccepted, DRAFT, Financial, IT1, NOACCEPTED}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
-import com.abaddon83.legal.tests.utilities.{DomainElementHelper, ServiceTestHelper}
+import com.abaddon83.legal.tests.utilities.{DomainElementHelper, DDMandateServiceTestHelper}
 import org.scalatest.funsuite.AnyFunSuite
 
-class DDMandateServiceTest extends AnyFunSuite with ServiceTestHelper with DomainElementHelper {
+class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper with DomainElementHelper {
   override protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()
   override protected val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
   override protected val creditorPort: CreditorPort = new FakeCreditorAdapter()

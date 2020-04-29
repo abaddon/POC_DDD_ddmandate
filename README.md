@@ -11,6 +11,10 @@ Aggregates:
 - Contract
 
 ## Event Storming Design
+
+![An image](./docs/EventStormingDesignLegend.jpg)
+![alt text](./docs/EventStormingDesign.jpg)
+### Event Storming - Aggregate view
 ![alt text](./docs/AggregateDefinition.jpg)
 
 ## Domain model

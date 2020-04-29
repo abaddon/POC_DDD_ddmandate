@@ -9,7 +9,7 @@ import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, Bank
 import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.services.DDMandateService
 
-trait ServiceTestHelper{
+trait DDMandateServiceTestHelper{
 
   protected val ddMandateRepository: DDMandateRepositoryPort
   protected val bankAccountPort: BankAccountPort
