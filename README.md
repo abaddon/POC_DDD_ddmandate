@@ -1,7 +1,7 @@
 # POC DDD Direct Debit mandate
 Status: WIP
 
-![Scala CI](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Scala%20CI/badge.svg)
+![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
 
 ## Description
 the scope of this project is to implement a service to manage Direct Debit mandate using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
