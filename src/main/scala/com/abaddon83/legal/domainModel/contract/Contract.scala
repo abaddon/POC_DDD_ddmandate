@@ -4,7 +4,7 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.ddd.Entity
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
-import com.abaddon83.legal.domainModel.ddMandates.{DDMandate, DRAFT}
+import com.abaddon83.legal.domainModel.ddMandates.{DDMandate}
 
 sealed trait Contract extends Entity{
   val identity: ContractIdentity
@@ -44,7 +44,6 @@ case class ContractUnSigned(
 object ContractUnSigned extends Entity{
   def apply(ddMandate : DDMandate, unsignedfile: Option[FileRepository]): ContractUnSigned = {
     //PRE
-    assert(ddMandate.status == DRAFT, "DDMandate has to be in status draft")
     assertArgumentNotEmpty(unsignedfile,"document file is missing")
 
     val contractUnsigned  = new ContractUnSigned(ContractIdentity(),DD_MANDATE, ddMandate.identity.uuid.toString, DD_MANDATE.name(Some(ddMandate.identity.toString)), DD_MANDATE.format,unsignedfile.get, new Date())

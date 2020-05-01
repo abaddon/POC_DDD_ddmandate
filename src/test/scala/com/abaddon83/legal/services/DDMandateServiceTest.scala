@@ -4,10 +4,10 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.domainModel.adapters.{FakeBankAccountAdapter, FakeCreditorAdapter, FakeDDMandateRepositoryAdapter}
 import com.abaddon83.legal.domainModel.contract.ContractUnSigned
-import com.abaddon83.legal.domainModel.ddMandates.{ACCEPTED, CANCELED, DDMandateNotAccepted, DRAFT, Financial, IT1, NOACCEPTED}
+import com.abaddon83.legal.domainModel.ddMandates.{ACCEPTED, CANCELED, DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, DRAFT, Financial, IT1, NOACCEPTED}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
-import com.abaddon83.legal.tests.utilities.{DomainElementHelper, DDMandateServiceTestHelper}
+import com.abaddon83.legal.tests.utilities.{DDMandateServiceTestHelper, DomainElementHelper}
 import org.scalatest.funsuite.AnyFunSuite
 
 class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper with DomainElementHelper {
@@ -35,7 +35,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     assert(ddMandate.creditor.legalEntityCode == legalEntity)
     assert(ddMandate.debtor.bankAccount.identity == bankAccountId)
     assert(ddMandate.ddMandateType == Financial)
-    assert(ddMandate.status == DRAFT)
+    assert(ddMandate.isInstanceOf[DDMandateDraft])
   }
 
   test("Create DD Mandate with a contract not signed") {
@@ -53,7 +53,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
     assert(!ddMandate.get.contract.isSigned)
     assert(ddMandate.get.contract == unsignedContract)
-    assert(ddMandate.get.status == NOACCEPTED)
+    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)
     assert(ddMandate.get.creditor == ddMandateDraft.creditor)
   }
@@ -88,7 +88,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
     assert(ddMandate.get.contract.isSigned)
     assert(ddMandate.get.contract == unsignedContract)
-    assert(ddMandate.get.status == NOACCEPTED)
+    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)
     assert(ddMandate.get.creditor == ddMandateDraft.creditor)
   }
@@ -107,7 +107,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
     assert(ddMandate.get.contract.isSigned)
     assert(ddMandate.get.contract == signedContract)
-    assert(ddMandate.get.status == NOACCEPTED)
+    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
   }
 
   test("update dd mandate not accepted with a debtor validated") {
@@ -126,7 +126,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
 
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
     assert(ddMandate.get.debtor.bankAccount.isValid)
-    assert(ddMandate.get.status == NOACCEPTED)
+    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
   }
 
   test("accept dd mandate"){
@@ -146,7 +146,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     val ddMandateAccepted = ddMandateRepository.findDDMandateAcceptedById(ddMandate.identity)
     assert(ddMandateAccepted.get.contract.isSigned)
     assert(ddMandateAccepted.get.debtor.bankAccount.isValid)
-    assert(ddMandateAccepted.get.status == ACCEPTED)
+    assert(ddMandateAccepted.get.isInstanceOf[DDMandateAccepted])
 
   }
 
@@ -158,7 +158,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
 
     val ddMandateCancelled = ddMandateRepository.findAllDDMandatesByBankAccount(bankAccountId).last
 
-    assert(ddMandateCancelled.status == CANCELED)
+    assert(ddMandateCancelled.isInstanceOf[DDMandateCanceled])
   }
 
   test("Create DD Mandate with a debtor with a canceled DD mandate") {
@@ -178,7 +178,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
     assert(!ddMandate.get.contract.isSigned)
     assert(ddMandate.get.contract == unsignedContract)
-    assert(ddMandate.get.status == NOACCEPTED)
+    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)
     assert(ddMandate.get.creditor == ddMandateDraft.creditor)
   }

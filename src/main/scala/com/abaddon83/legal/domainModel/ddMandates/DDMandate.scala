@@ -13,7 +13,6 @@ sealed trait DDMandate extends Entity {
   val debtor: Debtor
   val creditor: Creditor
   val creationDate: Date
-  val status: Status
 }
 //DD MANDATE DRAFT
 case class DDMandateDraft(
@@ -21,13 +20,11 @@ case class DDMandateDraft(
         ddMandateType: DDMandateType,
         debtor: Debtor,
         creditor: Creditor,
-        creationDate: Date,
-        status: Status = DRAFT) extends DDMandate {
+        creationDate: Date) extends DDMandate {
 
 
   def assignContract(contract:Contract): DDMandateNotAccepted = {
 
-    assertArgumentEquals(status,DRAFT,"Contract can be assigned only to a DRAFT mandate")
     assertArgumentEquals(identity.uuid.toString,contract.reference,"The reference on the Contract doesn't match mandate identifier")
 
     DDMandateNotAccepted(this,contract)
@@ -41,7 +38,6 @@ object DDMandateDraft extends Entity{
 
     //PRO
     assert(ddMandateDraft.ddMandateType == Financial,"The DD mandate has to be Financial")
-    assert(ddMandateDraft.status == DRAFT ,"The DD mandate has to be DRAFT")
 
     ddMandateDraft
   }
@@ -55,8 +51,7 @@ case class DDMandateNotAccepted(
                            debtor: Debtor,
                            creditor: Creditor,
                            creationDate: Date,
-                           contract: Contract,
-                           status: Status = NOACCEPTED) extends DDMandate {
+                           contract: Contract) extends DDMandate {
 
   def updateContractSigned(contractSigned: Contract): DDMandateNotAccepted ={
     assert(contractSigned.isSigned, "Contract is not signed")
@@ -72,7 +67,6 @@ case class DDMandateNotAccepted(
 
   def accept(): DDMandateAccepted = {
     assert(this.debtor.bankAccount.isValid,"The bank account has to be valid to accept a DD Mandate")
-    assert(this.status == NOACCEPTED, "The DD Mandate status has to be not accepted")
     assert(this.contract.isSigned, "The contract has to be signed")
 
     DDMandateAccepted(this)
@@ -89,7 +83,6 @@ object DDMandateNotAccepted extends Entity{
     assert(ddMandateNotAccepted.creditor == ddMandateDraft.creditor)
     assert(ddMandateNotAccepted.debtor == ddMandateDraft.debtor)
     assert(ddMandateNotAccepted.creationDate == ddMandateDraft.creationDate)
-    assert(ddMandateNotAccepted.status == NOACCEPTED)
     assert(ddMandateNotAccepted.contract == contract)
     ddMandateNotAccepted
   }
@@ -103,11 +96,9 @@ case class DDMandateAccepted(
                               debtor: Debtor,
                               creditor: Creditor,
                               creationDate: Date,
-                              contract: Contract,
-                              status: Status = ACCEPTED) extends DDMandate {
+                              contract: Contract) extends DDMandate {
 
   def cancel(): DDMandateCanceled = {
-    assert(status == ACCEPTED, "The DD Mandate status has to be accepted")
 
     DDMandateCanceled(this)
   }
@@ -123,7 +114,6 @@ object DDMandateAccepted extends Entity{
     assert(ddMandateAccepted.creditor == ddMandateNotAccepted.creditor)
     assert(ddMandateAccepted.debtor == ddMandateNotAccepted.debtor)
     assert(ddMandateAccepted.creationDate == ddMandateNotAccepted.creationDate)
-    assert(ddMandateAccepted.status == ACCEPTED)
     assert(ddMandateAccepted.contract == ddMandateNotAccepted.contract)
     assert(ddMandateAccepted.contract.isSigned)
 
@@ -138,8 +128,7 @@ case class DDMandateCanceled(
                               creditor: Creditor,
                               creationDate: Date,
                               contract: Contract,
-                              cancellationDate: Date,
-                              status: Status = CANCELED) extends DDMandate {
+                              cancellationDate: Date) extends DDMandate {
 
 }
 
@@ -151,7 +140,6 @@ object DDMandateCanceled extends Entity{
     assert(ddMandateCanceled.creditor == ddMandateAccepted.creditor)
     assert(ddMandateCanceled.debtor == ddMandateAccepted.debtor)
     assert(ddMandateCanceled.creationDate == ddMandateAccepted.creationDate)
-    assert(ddMandateCanceled.status == CANCELED)
     assert(ddMandateCanceled.contract == ddMandateAccepted.contract)
     ddMandateCanceled
   }

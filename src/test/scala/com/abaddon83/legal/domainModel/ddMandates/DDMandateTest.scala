@@ -17,7 +17,7 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
     assert(ddMandate.creditor == creditor)
     assert(ddMandate.ddMandateType == Financial)
     assert(ddMandate.debtor == debtor)
-    assert(ddMandate.status == DRAFT)
+    assert(ddMandate.isInstanceOf[DDMandateDraft])
 
   }
 
@@ -27,12 +27,12 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
     val contract = buildContract(ddMandateDraft,false)
     val ddMandateNotAccepted = ddMandateDraft.assignContract(contract)
 
+    assert(ddMandateNotAccepted.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandateNotAccepted.identity == ddMandateDraft.identity)
     assert(ddMandateNotAccepted.creationDate == ddMandateDraft.creationDate)
     assert(ddMandateNotAccepted.creditor == ddMandateDraft.creditor)
     assert(ddMandateNotAccepted.debtor == ddMandateDraft.debtor)
     assert(ddMandateNotAccepted.ddMandateType == ddMandateDraft.ddMandateType)
-    assert(ddMandateNotAccepted.status == NOACCEPTED)
 
     assert(ddMandateNotAccepted.contract == contract)
     assert(ddMandateNotAccepted.contract.reference == ddMandateDraft.identity.uuid.toString)
@@ -70,11 +70,11 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
     val validatedDebtor = ddMandateNotAccepted.debtor.copy(bankAccount = bankAccountValid)
     val ddMandateNotAcceptedUpdated = ddMandateNotAccepted.updateDebtorValidated(validatedDebtor)
 
+    assert(ddMandateNotAccepted.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandateNotAcceptedUpdated.identity == ddMandateNotAccepted.identity)
     assert(ddMandateNotAcceptedUpdated.creationDate == ddMandateNotAccepted.creationDate)
     assert(ddMandateNotAcceptedUpdated.creditor == ddMandateNotAccepted.creditor)
     assert(ddMandateNotAcceptedUpdated.ddMandateType == ddMandateNotAccepted.ddMandateType)
-    assert(ddMandateNotAcceptedUpdated.status == ddMandateNotAccepted.status)
     assert(ddMandateNotAcceptedUpdated.contract == ddMandateNotAccepted.contract)
     assert(ddMandateNotAcceptedUpdated.debtor.birthDate == ddMandateNotAccepted.debtor.birthDate)
     assert(ddMandateNotAcceptedUpdated.debtor.firstName == ddMandateNotAccepted.debtor.firstName)
@@ -142,13 +142,14 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(true),isContractSigned = true)
     val ddMandateAccepted = ddMandateNotAccepted.accept()
 
+    assert(ddMandateAccepted.isInstanceOf[DDMandateAccepted])
     assert(ddMandateAccepted.identity == ddMandateNotAccepted.identity)
     assert(ddMandateAccepted.creationDate == ddMandateNotAccepted.creationDate)
     assert(ddMandateAccepted.creditor == ddMandateNotAccepted.creditor)
     assert(ddMandateAccepted.debtor == ddMandateNotAccepted.debtor)
     assert(ddMandateAccepted.ddMandateType == ddMandateNotAccepted.ddMandateType)
     assert(ddMandateAccepted.contract == ddMandateNotAccepted.contract)
-    assert(ddMandateAccepted.status == ACCEPTED)
+
 
   }
 
@@ -157,13 +158,13 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
     val ddMandateAccepted = buildAcceptedDDMandate
     val ddMandateCanceled = ddMandateAccepted.cancel()
 
+    assert(ddMandateCanceled.isInstanceOf[DDMandateCanceled])
     assert(ddMandateCanceled.identity == ddMandateAccepted.identity)
     assert(ddMandateCanceled.creationDate == ddMandateAccepted.creationDate)
     assert(ddMandateCanceled.creditor == ddMandateAccepted.creditor)
     assert(ddMandateCanceled.debtor == ddMandateAccepted.debtor)
     assert(ddMandateCanceled.ddMandateType == ddMandateAccepted.ddMandateType)
     assert(ddMandateCanceled.contract == ddMandateAccepted.contract)
-    assert(ddMandateCanceled.status == CANCELED)
 
   }
 

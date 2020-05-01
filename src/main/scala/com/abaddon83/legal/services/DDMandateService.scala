@@ -39,8 +39,8 @@ class DDMandateService(
   //TO FIX wrong name...
   def bankAccountSuitable(bankAccountId: BankAccountIdentity): Boolean = {
     repositoryPort.findAllDDMandatesByBankAccount(bankAccountId).collect{
-      case ddMandate if ddMandate.status == NOACCEPTED => ddMandate
-      case ddMandate if ddMandate.status == ACCEPTED => ddMandate
+      case ddMandate if ddMandate.isInstanceOf[DDMandateAccepted] => ddMandate
+      case ddMandate if ddMandate.isInstanceOf[DDMandateNotAccepted] => ddMandate
     }.size == 0
   }
 
