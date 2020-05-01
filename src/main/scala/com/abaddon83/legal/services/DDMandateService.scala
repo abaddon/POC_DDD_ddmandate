@@ -1,11 +1,11 @@
 package com.abaddon83.legal.services
 
-import java.util.{Date, UUID}
+import java.util.UUID
 
-import com.abaddon83.legal.domainModel.contract.{Contract, DD_MANDATE, GIA_AGREEMENT, ISA_AGREEMENT, PIP_AGREEMENT, SIPP_AGREEMENT}
-import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccountIdentity, EUBankAccount}
-import com.abaddon83.legal.domainModel.ddMandates.{ACCEPTED, CANCELED, Creditor, DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateIdentity, DDMandateNotAccepted, DRAFT, Debtor, LegalEntityCode, NOACCEPTED}
-import com.abaddon83.legal.ports.{BankAccountPort, ContractRepositoryPort, CreditorPort, DDMandateRepositoryPort, FileRepositoryPort}
+import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned}
+import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
+import com.abaddon83.legal.domainModel.ddMandates._
+import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
 
 class DDMandateService(
                         repositoryPort: DDMandateRepositoryPort,
@@ -44,7 +44,7 @@ class DDMandateService(
     }.size == 0
   }
 
-  def updateContractSigned(contract: Contract): DDMandateNotAccepted = {
+  def updateContractSigned(contract: ContractSigned): DDMandateNotAccepted = {
     val ddMandateIdentity = DDMandateIdentity(UUID.fromString(contract.reference))
 
     val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {

@@ -3,8 +3,8 @@ package com.abaddon83.legal.services
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.domainModel.adapters.{FakeBankAccountAdapter, FakeCreditorAdapter, FakeDDMandateRepositoryAdapter}
-import com.abaddon83.legal.domainModel.contract.ContractUnSigned
-import com.abaddon83.legal.domainModel.ddMandates.{ACCEPTED, CANCELED, DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, DRAFT, Financial, IT1, NOACCEPTED}
+import com.abaddon83.legal.domainModel.contract.{ContractSigned, ContractUnSigned}
+import com.abaddon83.legal.domainModel.ddMandates.{DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, Financial, IT1}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.tests.utilities.{DDMandateServiceTestHelper, DomainElementHelper}
@@ -51,7 +51,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
     assert(ddMandate.isDefined)
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
-    assert(!ddMandate.get.contract.isSigned)
+    assert(ddMandate.get.contract.isInstanceOf[ContractUnSigned])
     assert(ddMandate.get.contract == unsignedContract)
     assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)
@@ -86,7 +86,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
     assert(ddMandate.isDefined)
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
-    assert(ddMandate.get.contract.isSigned)
+    assert(ddMandate.get.contract.isInstanceOf[ContractSigned])
     assert(ddMandate.get.contract == unsignedContract)
     assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)
@@ -105,7 +105,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     ddMandateService.updateContractSigned(signedContract)
 
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
-    assert(ddMandate.get.contract.isSigned)
+    assert(ddMandate.get.contract.isInstanceOf[ContractSigned])
     assert(ddMandate.get.contract == signedContract)
     assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
   }
@@ -144,7 +144,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     ddMandateService.acceptDDMandate(ddMandate.identity)
 
     val ddMandateAccepted = ddMandateRepository.findDDMandateAcceptedById(ddMandate.identity)
-    assert(ddMandateAccepted.get.contract.isSigned)
+    assert(ddMandateAccepted.get.contract.isInstanceOf[ContractSigned])
     assert(ddMandateAccepted.get.debtor.bankAccount.isValid)
     assert(ddMandateAccepted.get.isInstanceOf[DDMandateAccepted])
 
@@ -176,7 +176,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
     val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateDraft.identity)
     assert(ddMandate.isDefined)
     assert(ddMandate.get.debtor == ddMandateDraft.debtor)
-    assert(!ddMandate.get.contract.isSigned)
+    assert(ddMandate.get.contract.isInstanceOf[ContractUnSigned])
     assert(ddMandate.get.contract == unsignedContract)
     assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.get.identity == ddMandateDraft.identity)

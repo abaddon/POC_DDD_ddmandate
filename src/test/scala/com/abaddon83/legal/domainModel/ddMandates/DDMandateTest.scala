@@ -1,7 +1,7 @@
 package com.abaddon83.legal.domainModel.ddMandates
 import java.util.Date
 
-import com.abaddon83.legal.domainModel.contract.{ContractSigned, DD_MANDATE}
+import com.abaddon83.legal.domainModel.contract.{ContractSigned, ContractUnSigned, DD_MANDATE}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.tests.utilities.DomainElementHelper
 import org.scalatest.funsuite.AnyFunSuite
@@ -103,7 +103,7 @@ class DDMandateTest extends AnyFunSuite with DomainElementHelper{
 
     val ddMandateNotAcceptedSigned = ddMandateNotAccepted.updateContractSigned(signedContract)
 
-    assert(ddMandateNotAcceptedSigned.contract.isSigned)
+    assert(ddMandateNotAcceptedSigned.contract.isInstanceOf[ContractSigned])
     assert(ddMandateNotAcceptedSigned.contract.identity == ddMandateNotAccepted.contract.identity)
   }
 

@@ -19,7 +19,11 @@ class ContractServiceTest extends AnyFunSuite with  ContractServiceTestHelper wi
     val ddMandate = buildDraftDDMandate(buildEUBankAccount(false))
     val contract = contractService.createDDMandateContract(ddMandate)
 
+    println(s"contract.identity.uuid: ${contract.identity.uuid}")
+
     val contractPersisted = contractRepository.findByContractUnSignedByIdentity(contract.identity)
+
+    println(s"contractPersisted ${contractPersisted.isDefined} ${contractPersisted.map(f=> f.identity.uuid)}")
 
     assert(contractPersisted.get.contractType == DD_MANDATE)
     assert(contractPersisted.get.reference == ddMandate.identity.uuid.toString)
@@ -30,12 +34,12 @@ class ContractServiceTest extends AnyFunSuite with  ContractServiceTestHelper wi
     val contractIdentity = ContractIdentity(UUID.fromString("1469e8b0-7b98-4755-96b4-c3efea1a5894"))
     val signatureDate = new Date()
     val contractUnsigned = contractRepository.findByContractUnSignedByIdentity(contractIdentity)
-    assert(!contractUnsigned.get.isSigned)
+    assert(contractUnsigned.isInstanceOf[Option[ContractUnSigned]])
 
     contractService.signContract(contractIdentity,fakeFileRepository,signatureDate)
 
     val contractUpdated = contractRepository.findByContractSignedByIdentity(contractIdentity)
-    assert(contractUpdated.get.isSigned)
+    assert(contractUpdated.isInstanceOf[Option[ContractSigned]])
     assert(contractUpdated.get.signatureDate == signatureDate)
   }
 

@@ -53,8 +53,8 @@ case class DDMandateNotAccepted(
                            creationDate: Date,
                            contract: Contract) extends DDMandate {
 
-  def updateContractSigned(contractSigned: Contract): DDMandateNotAccepted ={
-    assert(contractSigned.isSigned, "Contract is not signed")
+  def updateContractSigned(contractSigned: ContractSigned): DDMandateNotAccepted ={
+
     assert(contractSigned.identity == contract.identity, "The contract identifier is wrong")
     this.copy(contract = contractSigned)
   }
@@ -67,7 +67,7 @@ case class DDMandateNotAccepted(
 
   def accept(): DDMandateAccepted = {
     assert(this.debtor.bankAccount.isValid,"The bank account has to be valid to accept a DD Mandate")
-    assert(this.contract.isSigned, "The contract has to be signed")
+    assert(this.contract.isInstanceOf[ContractSigned], "The contract has to be signed")
 
     DDMandateAccepted(this)
   }
@@ -115,7 +115,7 @@ object DDMandateAccepted extends Entity{
     assert(ddMandateAccepted.debtor == ddMandateNotAccepted.debtor)
     assert(ddMandateAccepted.creationDate == ddMandateNotAccepted.creationDate)
     assert(ddMandateAccepted.contract == ddMandateNotAccepted.contract)
-    assert(ddMandateAccepted.contract.isSigned)
+    assert(ddMandateAccepted.contract.isInstanceOf[ContractSigned])
 
     ddMandateAccepted
   }

@@ -14,7 +14,6 @@ sealed trait Contract extends Entity{
   val format: Format
   val file: FileRepository
   val creationDate: Date
-  def isSigned: Boolean
 }
 
 
@@ -28,10 +27,8 @@ case class ContractUnSigned(
                              name: String,
                              format: Format,
                              file: FileRepository,
-                             creationDate: Date,
+                             creationDate: Date
       ) extends Contract {
-  override def isSigned: Boolean = false
-
 
   def sign(signedFile: FileRepository, signatureDate: Date): ContractSigned ={
 
@@ -71,7 +68,6 @@ case class ContractSigned(
                            creationDate: Date,
                            signedFile: FileRepository,
                            signatureDate: Date) extends Contract {
-  override def isSigned: Boolean = true
 
 }
 

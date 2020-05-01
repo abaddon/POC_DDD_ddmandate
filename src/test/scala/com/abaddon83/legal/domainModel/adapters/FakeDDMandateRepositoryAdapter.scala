@@ -79,7 +79,7 @@ class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
 
 protected case class DDMandateRepo(
   identity: DDMandateIdentity,
-  status: Status,
+  status: DDMandateStatus,
   ddMandateType: DDMandateType,
   debtor: Debtor,
   creditor: Creditor,
@@ -134,7 +134,7 @@ object DDMandateRepo{
 
 }
 
-sealed trait Status
-case object NOACCEPTED extends Status
-case object ACCEPTED extends Status
-case object CANCELED extends Status
+protected sealed trait DDMandateStatus
+case object NOACCEPTED extends DDMandateStatus
+case object ACCEPTED extends DDMandateStatus
+case object CANCELED extends DDMandateStatus
