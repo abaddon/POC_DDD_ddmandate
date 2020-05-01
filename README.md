@@ -8,7 +8,7 @@ the scope of this project is to implement a service to manage Direct Debit manda
 
 The service lives in the Legel Context, so this service doesn't manage any payment logic but implement only the business rules needed to manage the mandate as agreement between the Debitor and the Debitor.
 
-To design the service I used the [EventStorming](https://www.eventstorming.com/) methodology. The outcome of the ES design is visible [here](https://github.com/abaddon/POC_DDD_ddmandate#event-storming-design).
+To design the service I used the [EventStorming](https://www.eventstorming.com/) methodology. The outcome of the ES design is visible [here](#event-storming-design).
 
 The Context map below should helps to contestualise the project and the parts not touched.
 ![Context Map](./docs/ContextsMap.jpg)
