@@ -4,7 +4,7 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
 import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandate, DDMandateAccepted, DDMandateDraft, DDMandateNotAccepted, Debtor, IT1}
+import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandate, DDMandateAccepted, DDMandateDraft, DDMandateNotAccepted, Debtor}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, BankAccountIdentity, EUBankAccount, UKBankAccount}
 import com.abaddon83.shared.DateUtils
 
@@ -52,7 +52,7 @@ trait DomainElementHelper {
   }
 
   protected def buildCreditor(): Creditor = {
-    Creditor( IT1,"Italian Company 1",buildEUBankAccount(true),"123456")
+    Creditor( "IT1","Italian Company 1",buildEUBankAccount(true),"123456")
   }
 
   protected def buildEUBankAccount(validated: Boolean): BankAccount = {

@@ -1,9 +1,9 @@
-package com.abaddon83.legal.domainModel.adapters
+package com.abaddon83.legal.adapters.ContractRepositoryAdapters
 
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
-import com.abaddon83.legal.domainModel.contract.{Contract, ContractIdentity, ContractSigned, ContractType, ContractUnSigned, DD_MANDATE, Format, PDF}
+import com.abaddon83.legal.domainModel.contract._
 import com.abaddon83.legal.ports.ContractRepositoryPort
 
 import scala.collection.mutable.ListBuffer
@@ -49,7 +49,7 @@ class FakeContractRepositoryAdapter extends ContractRepositoryPort{
   private def persist(contract: ContractRepo) = {
     repository.db = repository.db.addOne(contract)
 
-    debug()
+    //debug()
   }
 
   private def update(oldContract: ContractRepo,newContract: ContractRepo) = {

@@ -2,7 +2,8 @@ package com.abaddon83.legal.services
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.adapters.{FakeContractRepositoryAdapter, FakeFileRepositoryAdapter}
+import com.abaddon83.legal.adapters.ContractRepositoryAdapters.FakeContractRepositoryAdapter
+import com.abaddon83.legal.adapters.FileRepositoryAdapters.FakeFileRepositoryAdapter
 import com.abaddon83.legal.domainModel.contract.{ContractIdentity, ContractSigned, ContractUnSigned, DD_MANDATE}
 import com.abaddon83.legal.ports.{ContractRepositoryPort, FileRepositoryPort}
 import com.abaddon83.legal.tests.utilities.{ContractServiceTestHelper, DomainElementHelper}
@@ -19,11 +20,11 @@ class ContractServiceTest extends AnyFunSuite with  ContractServiceTestHelper wi
     val ddMandate = buildDraftDDMandate(buildEUBankAccount(false))
     val contract = contractService.createDDMandateContract(ddMandate)
 
-    println(s"contract.identity.uuid: ${contract.identity.uuid}")
+    //println(s"contract.identity.uuid: ${contract.identity.uuid}")
 
     val contractPersisted = contractRepository.findByContractUnSignedByIdentity(contract.identity)
 
-    println(s"contractPersisted ${contractPersisted.isDefined} ${contractPersisted.map(f=> f.identity.uuid)}")
+    //println(s"contractPersisted ${contractPersisted.isDefined} ${contractPersisted.map(f=> f.identity.uuid)}")
 
     assert(contractPersisted.get.contractType == DD_MANDATE)
     assert(contractPersisted.get.reference == ddMandate.identity.uuid.toString)

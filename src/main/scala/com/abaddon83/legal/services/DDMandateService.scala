@@ -13,7 +13,7 @@ class DDMandateService(
                         creditorPort: CreditorPort
                         ) {
 
-  def newDraftDDMandate(bankAccountId: BankAccountIdentity, legalEntity: LegalEntityCode): DDMandateDraft = {
+  def newDraftDDMandate(bankAccountId: BankAccountIdentity, legalEntity: String): DDMandateDraft = {
     val debtor = bankAccountPort.findDebtorByBankAccountId(bankAccountId) match {
       case Some(value) =>value
       case None => throw new NoSuchElementException("Debtor with bank account id: "++bankAccountId.toString++" not found")
@@ -21,7 +21,7 @@ class DDMandateService(
 
     val creditor = creditorPort.findByLegalEntity(legalEntity) match {
       case Some(value) =>value
-      case None =>  throw new NoSuchElementException("Creditor with legalEntity: "++legalEntity.toString++" not found")
+      case None =>  throw new NoSuchElementException("Creditor with legalEntity: "++legalEntity++" not found")
     }
     DDMandateDraft(debtor, creditor)
   }

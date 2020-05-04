@@ -1,4 +1,4 @@
-package com.abaddon83.legal.domainModel.adapters
+package com.abaddon83.legal.adapters.BankAccountAdapters
 
 import java.util.UUID
 

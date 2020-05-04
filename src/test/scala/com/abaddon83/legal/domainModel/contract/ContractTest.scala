@@ -2,9 +2,6 @@ package com.abaddon83.legal.domainModel.contract
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
-import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, BankAccountIdentity, EUBankAccount, UKBankAccount}
-import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandateDraft, Debtor, IT1}
 import com.abaddon83.legal.tests.utilities.DomainElementHelper
 import org.scalatest.funsuite.AnyFunSuite
 

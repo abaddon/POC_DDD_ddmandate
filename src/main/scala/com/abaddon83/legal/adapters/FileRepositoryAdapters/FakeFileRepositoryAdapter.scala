@@ -1,11 +1,8 @@
-package com.abaddon83.legal.domainModel.adapters
+package com.abaddon83.legal.adapters.FileRepositoryAdapters
 
-
-import com.abaddon83.legal.domainModel.contract.FileRepositories.{FileRepository, S3FileRepository}
+import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
 import com.abaddon83.legal.domainModel.ddMandates.DDMandate
 import com.abaddon83.legal.ports.FileRepositoryPort
-
-import scala.collection.mutable.ListBuffer
 
 class FakeFileRepositoryAdapter extends FileRepositoryPort{
   override def createUnsignedDDMandate(ddMandate: DDMandate): Option[FileRepository] = {

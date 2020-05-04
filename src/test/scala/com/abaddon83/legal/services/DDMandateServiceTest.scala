@@ -2,9 +2,11 @@ package com.abaddon83.legal.services
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.domainModel.adapters.{FakeBankAccountAdapter, FakeCreditorAdapter, FakeDDMandateRepositoryAdapter}
+import com.abaddon83.legal.adapters.BankAccountAdapters.FakeBankAccountAdapter
+import com.abaddon83.legal.adapters.CreditorAdapters.FakeCreditorAdapter
+import com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.domainModel.contract.{ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.domainModel.ddMandates.{DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, Financial, IT1}
+import com.abaddon83.legal.domainModel.ddMandates.{DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, Financial}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.ports.{BankAccountPort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.tests.utilities.{DDMandateServiceTestHelper, DomainElementHelper}
@@ -19,7 +21,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
   test("New DD draft mandate with a bank account wrong") {
 
     val bankAccountId = BankAccountIdentity(UUID.fromString("8ee0b59a-8e7d-46c0-a058-8cfcd1d92204"))
-    val legalEntity = IT1
+    val legalEntity = "IT1"
 
     assertThrows[NoSuchElementException] {
       ddMandateService.newDraftDDMandate(bankAccountId,legalEntity)
@@ -29,7 +31,7 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateServiceTestHelper w
   test("New DD draft mandate with an existing bank account") {
 
     val bankAccountId = BankAccountIdentity(UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede0"))
-    val legalEntity = IT1
+    val legalEntity = "IT1"
     val ddMandate = ddMandateService.newDraftDDMandate(bankAccountId,legalEntity)
 
     assert(ddMandate.creditor.legalEntityCode == legalEntity)

@@ -1,10 +1,10 @@
-package com.abaddon83.legal.domainModel.adapters
+package com.abaddon83.legal.adapters.DDMandateRepositoryAdapters
 
 import java.util.Date
 
 import com.abaddon83.legal.domainModel.contract.Contract
+import com.abaddon83.legal.domainModel.ddMandates._
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
-import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateIdentity, DDMandateNotAccepted, DDMandateType, Debtor}
 import com.abaddon83.legal.ports.DDMandateRepositoryPort
 
 import scala.collection.mutable.ListBuffer
