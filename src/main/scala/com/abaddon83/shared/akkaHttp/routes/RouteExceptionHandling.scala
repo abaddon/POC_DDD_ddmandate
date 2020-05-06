@@ -7,7 +7,7 @@ import com.abaddon83.shared.akkaHttp.messages.GenericJsonSupport
 
 trait RouteExceptionHandling extends GenericJsonSupport{
 
-  protected def globalExceptionHandler = ExceptionHandler {
+  protected val globalExceptionHandler = ExceptionHandler {
     case e: Throwable =>
       extractUri { uri =>
         complete(InternalServerError -> ErrorDDMandate.build(e,uri.toString()))

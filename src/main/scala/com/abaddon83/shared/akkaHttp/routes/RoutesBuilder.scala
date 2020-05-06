@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route
 
 class RoutesBuilder(routeList: List[Route])(implicit val actorSystem: ActorSystem)
-    extends Routes with RouteExceptionHandling with RouteRejectionHandler {
+    extends Routes with RouteExceptionHandling {
 
   //protected val DefaultDataWaitTime: FiniteDuration = 1.minute
 
@@ -14,10 +14,13 @@ class RoutesBuilder(routeList: List[Route])(implicit val actorSystem: ActorSyste
     }
   }*/
 
-  lazy val routes: Route = pathPrefix("api") {
-    concat(routeList:_*)
-  }
 
+  lazy val routes: Route =
+    handleExceptions(globalExceptionHandler){
+        pathPrefix("api") {
+          concat(routeList:_*)
+        }
+    }
 
 }
 

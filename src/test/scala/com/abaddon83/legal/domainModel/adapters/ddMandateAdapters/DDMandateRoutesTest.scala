@@ -2,7 +2,9 @@ package com.abaddon83.legal.domainModel.adapters.ddMandateAdapters
 
 import java.util.{Date, UUID}
 
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.adapters.BankAccountAdapters.Fake.FakeBankAccountAdapter
 import com.abaddon83.legal.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
@@ -89,6 +91,22 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
         assert(viewDDMandate.instance == "/ddmandates")
         assert(viewDDMandate.message == s"Creditor with legalEntity: ${legalEntity} not found")
       }
+    }
+  }
+
+  test("Create a new DD Mandate with a mal formatted UUID"){
+
+    val bankAccountUUID = "146a525d"
+    val legalEntity = "IT1"
+
+    Post("/ddmandates",HttpEntity(ContentTypes.`application/json`, s"""{ "bankAccountId": "${bankAccountUUID}", "legalEntity": "IT5"}""")) ~> Route.seal(ddMandateRoutes.getRoute()) ~> check{
+
+        status shouldBe BadRequest
+        val message = responseAs[ErrorMessage]
+        assert(message.errorCode == 0)
+        assert(message.exceptionType == "spray.json.DeserializationException")
+        assert(message.instance == "/")
+        assert(message.message == s"Expected UUID format, got ${bankAccountUUID}")
     }
   }
 }
