@@ -1,4 +1,4 @@
-package com.abaddon83.legal.adapters.DDMandateRepositoryAdapters
+package com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.Fake
 
 import java.util.Date
 

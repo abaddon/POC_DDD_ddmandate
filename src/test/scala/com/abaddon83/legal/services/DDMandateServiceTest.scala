@@ -2,9 +2,9 @@ package com.abaddon83.legal.services
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.adapters.BankAccountAdapters.FakeBankAccountAdapter
-import com.abaddon83.legal.adapters.CreditorAdapters.FakeCreditorAdapter
-import com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.FakeDDMandateRepositoryAdapter
+import com.abaddon83.legal.adapters.BankAccountAdapters.Fake.FakeBankAccountAdapter
+import com.abaddon83.legal.adapters.CreditorAdapters.Fake.FakeCreditorAdapter
+import com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.Fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.domainModel.contract.{ContractSigned, ContractUnSigned}
 import com.abaddon83.legal.domainModel.ddMandates.{DDMandateAccepted, DDMandateCanceled, DDMandateDraft, DDMandateNotAccepted, Financial}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity

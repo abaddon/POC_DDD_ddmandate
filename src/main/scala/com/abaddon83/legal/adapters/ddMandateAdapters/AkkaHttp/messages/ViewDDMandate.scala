@@ -1,13 +1,8 @@
-package com.abaddon83.legal.adapters.ddMandateAdapters.components
+package com.abaddon83.legal.adapters.ddMandateAdapters.AkkaHttp.messages
 
 import java.util.{Date, UUID}
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.abaddon83.legal.domainModel.ddMandates.{Creditor, DDMandateNotAccepted, Debtor}
-import com.abaddon83.legal.adapters.ddMandateAdapters.utils.ExtraMarshalling
-import spray.json.DefaultJsonProtocol
-
-
 
 case class ViewDDMandate(id: UUID, creditor: RestCreditor, debtor: RestDebtor, ddMandateType: String, creationDate: Date)
 
@@ -15,14 +10,6 @@ case class RestCreditor(legalEntityCode: String, businessName: String, bankAccou
 
 case class RestDebtor(userId: Int, firstName: String, lastName: String, taxCode:String, birthDate: Date, bankAccountId: UUID)
 
-
-object ViewDDMandateJsonSupport extends DefaultJsonProtocol with SprayJsonSupport with ExtraMarshalling{
-
-  implicit val restCreditorFormat = jsonFormat4(RestCreditor.apply)
-  implicit val restDebtorFormat = jsonFormat6(RestDebtor.apply)
-  implicit val restDDMandateFormat = jsonFormat5(ViewDDMandate.apply)
-
-}
 
 object ViewDDMandate{
   def apply(ddmandate: DDMandateNotAccepted):ViewDDMandate = {

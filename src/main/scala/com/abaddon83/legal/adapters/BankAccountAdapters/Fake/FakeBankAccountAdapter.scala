@@ -1,4 +1,4 @@
-package com.abaddon83.legal.adapters.BankAccountAdapters
+package com.abaddon83.legal.adapters.BankAccountAdapters.Fake
 
 import java.util.UUID
 

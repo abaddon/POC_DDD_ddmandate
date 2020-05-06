@@ -1,4 +1,4 @@
-package com.abaddon83.legal.adapters.ContractRepositoryAdapters
+package com.abaddon83.legal.adapters.ContractRepositoryAdapters.Fake
 
 import java.util.{Date, UUID}
 

@@ -1,4 +1,4 @@
-package com.abaddon83.legal.adapters.FileRepositoryAdapters
+package com.abaddon83.legal.adapters.FileRepositoryAdapters.Fake
 
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
 import com.abaddon83.legal.domainModel.ddMandates.DDMandate

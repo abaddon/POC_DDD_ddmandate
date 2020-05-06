@@ -1,4 +1,4 @@
-package com.abaddon83.legal.adapters.CreditorAdapters
+package com.abaddon83.legal.adapters.CreditorAdapters.Fake
 
 import java.util.UUID
 

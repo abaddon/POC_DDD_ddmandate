@@ -2,8 +2,8 @@ package com.abaddon83.legal.services
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.legal.adapters.ContractRepositoryAdapters.FakeContractRepositoryAdapter
-import com.abaddon83.legal.adapters.FileRepositoryAdapters.FakeFileRepositoryAdapter
+import com.abaddon83.legal.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
+import com.abaddon83.legal.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.domainModel.contract.{ContractIdentity, ContractSigned, ContractUnSigned, DD_MANDATE}
 import com.abaddon83.legal.ports.{ContractRepositoryPort, FileRepositoryPort}
 import com.abaddon83.legal.tests.utilities.{ContractServiceTestHelper, DomainElementHelper}

@@ -1,14 +1,13 @@
-package com.abaddon83.legal.adapters.ddMandateAdapters
+package com.abaddon83.legal.adapters.ddMandateAdapters.AkkaHttp
 
 import java.util.UUID
 
-import com.abaddon83.legal.domainModel.ddMandates.DDMandateNotAccepted
+import com.abaddon83.legal.domainModel.ddMandates.{DDMandate, DDMandateNotAccepted}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccountIdentity
 import com.abaddon83.legal.ports.DDMandatePort
 import com.abaddon83.legal.services.{ContractService, DDMandateService}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-
-
 import scala.concurrent.Future
 
 class DDMandateAdapter(ddMandateService: DDMandateService, contractService: ContractService)
@@ -22,4 +21,5 @@ class DDMandateAdapter(ddMandateService: DDMandateService, contractService: Cont
     }
   }
 
+  override def findByIdDDMandate(ddMandateId: UUID): Future[DDMandate] = ???
 }

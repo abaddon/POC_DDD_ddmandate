@@ -3,12 +3,12 @@ package com.abaddon83.legal.Application
 
 import java.util.UUID
 
-import com.abaddon83.legal.adapters.BankAccountAdapters.FakeBankAccountAdapter
-import com.abaddon83.legal.adapters.ContractRepositoryAdapters.FakeContractRepositoryAdapter
-import com.abaddon83.legal.adapters.CreditorAdapters.FakeCreditorAdapter
-import com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.adapters.FileRepositoryAdapters.FakeFileRepositoryAdapter
-import com.abaddon83.legal.adapters.ddMandateAdapters.DDMandateAdapter
+import com.abaddon83.legal.adapters.BankAccountAdapters.Fake.FakeBankAccountAdapter
+import com.abaddon83.legal.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
+import com.abaddon83.legal.adapters.CreditorAdapters.Fake.FakeCreditorAdapter
+import com.abaddon83.legal.adapters.DDMandateRepositoryAdapters.Fake.FakeDDMandateRepositoryAdapter
+import com.abaddon83.legal.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
+import com.abaddon83.legal.adapters.ddMandateAdapters.AkkaHttp.DDMandateAdapter
 import com.abaddon83.legal.domainModel.contract.ContractUnSigned
 import com.abaddon83.legal.ports.{BankAccountPort, ContractRepositoryPort, CreditorPort, DDMandateRepositoryPort, FileRepositoryPort}
 import com.abaddon83.legal.services.{ContractService, DDMandateService}
