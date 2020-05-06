@@ -2,9 +2,9 @@ package com.abaddon83.legal.domainModel.contract
 
 import java.util.{Date, UUID}
 
-import com.abaddon83.ddd.Entity
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
-import com.abaddon83.legal.domainModel.ddMandates.{DDMandate}
+import com.abaddon83.legal.domainModel.ddMandates.DDMandate
+import com.abaddon83.shared.ddd.Entity
 
 sealed trait Contract extends Entity{
   val identity: ContractIdentity

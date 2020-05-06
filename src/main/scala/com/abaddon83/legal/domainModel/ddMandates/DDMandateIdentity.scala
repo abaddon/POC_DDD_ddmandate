@@ -2,7 +2,7 @@ package com.abaddon83.legal.domainModel.ddMandates
 
 import java.util.UUID
 
-import com.abaddon83.ddd.AggregateUUIDId
+import com.abaddon83.shared.ddd.AggregateUUIDId
 
 case class DDMandateIdentity private(uuid:UUID) extends AggregateUUIDId{
   override val value : UUID = uuid

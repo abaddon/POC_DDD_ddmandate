@@ -2,9 +2,9 @@ package com.abaddon83.legal.domainModel.ddMandates
 
 import java.util.Date
 
-import com.abaddon83.ddd.{AssertionConcern, Entity}
 import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned}
 import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccount
+import com.abaddon83.shared.ddd.Entity
 
 sealed trait DDMandate extends Entity {
 

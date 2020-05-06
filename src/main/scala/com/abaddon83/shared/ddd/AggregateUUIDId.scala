@@ -1,4 +1,4 @@
-package com.abaddon83.ddd
+package com.abaddon83.shared.ddd
 
 import java.util.UUID
 
