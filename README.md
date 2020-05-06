@@ -17,6 +17,9 @@ Aggregates:
 - DD Mandate
 - Contract
 
+## Hexagonal architecture
+![Hexagonal architecture](./docs/HexagonalArchitecture.jpg)
+
 ## Event Storming Design
 
 ![EventStorming - The picture that explains everything!](./docs/EventStormingDesignLegend.jpg)
