@@ -1,5 +1,5 @@
 
-package com.abaddon83.legal.Application
+package com.abaddon83.legal.adapters.ddMandateAdapters
 
 import java.util.UUID
 

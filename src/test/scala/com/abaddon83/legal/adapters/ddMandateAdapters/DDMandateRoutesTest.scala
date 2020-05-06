@@ -1,4 +1,4 @@
-package com.abaddon83.legal.domainModel.adapters.ddMandateAdapters
+package com.abaddon83.legal.adapters.ddMandateAdapters
 
 import java.util.{Date, UUID}
 
