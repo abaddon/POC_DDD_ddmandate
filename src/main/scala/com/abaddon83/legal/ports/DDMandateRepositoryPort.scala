@@ -6,7 +6,10 @@ import com.abaddon83.legal.domainModel.ddMandates.{DDMandate, DDMandateAccepted,
 trait DDMandateRepositoryPort {
   def findDDMandateNotAcceptedById(id: DDMandateIdentity): Option[DDMandateNotAccepted]
   def findDDMandateAcceptedById(id: DDMandateIdentity): Option[DDMandateAccepted]
+  def findDDMandateById(id: DDMandateIdentity): Option[DDMandate]
   def findAllDDMandatesByBankAccount(id: BankAccountIdentity): List[DDMandate]
+
+
 
   def save(DDMandate: DDMandateNotAccepted): DDMandateNotAccepted
   def save(DDMandate: DDMandateAccepted): DDMandateAccepted

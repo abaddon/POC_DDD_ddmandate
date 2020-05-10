@@ -73,12 +73,25 @@ class DDMandateService(
 
   }
 
-  def acceptDDMandate(ddMandateIdentity:  DDMandateIdentity): DDMandateAccepted = {
+  def search(): DDMandateRepositoryPort = {
+    this.repositoryPort
+  }
+
+  def acceptDDMandate(ddMandateIdentity:  DDMandateIdentity, contractSigned: ContractSigned): DDMandateAccepted = {
+    //get DDmandateNotAccepted
     val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
       case Some(value) => value
       case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
     }
-    val DDMandateAccepted = ddMandateNotAccepted.accept()
+
+    //getDebtor with BankAccountValidated
+    val bankAccountIdentity = ddMandateNotAccepted.debtor.bankAccount.identity
+    val validatedDebtor = bankAccountPort.findValidatedDebtorByBankAccountId(bankAccountIdentity) match {
+      case Some(value) =>value
+      case None => throw new NoSuchElementException("Validated Debtor with bank account id: "++bankAccountIdentity.toString++" not found")
+    }
+
+    val DDMandateAccepted = ddMandateNotAccepted.accept(contractSigned,validatedDebtor)
 
     repositoryPort.save(DDMandateAccepted)
 

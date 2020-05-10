@@ -3,7 +3,6 @@ package com.abaddon83.legal.domainModel.ddMandates
 import java.util.Date
 
 import com.abaddon83.legal.domainModel.contract.{Contract, ContractSigned}
-import com.abaddon83.legal.domainModel.ddMandates.bankAccount.BankAccount
 import com.abaddon83.shared.ddd.Entity
 
 sealed trait DDMandate extends Entity {
@@ -59,17 +58,19 @@ case class DDMandateNotAccepted(
     this.copy(contract = contractSigned)
   }
 
-  def updateDebtorValidated(debtorValidated: Debtor): DDMandateNotAccepted ={
+  /*def updateDebtorValidated(debtorValidated: Debtor): DDMandateNotAccepted ={
     assert(debtorValidated.bankAccount.isValid, "BankAccount is not valid")
     assert(debtorValidated.bankAccount.identity == debtor.bankAccount.identity,"The bankAccount identifier is wrong")
     this.copy(debtor = debtorValidated)
-  }
+  }*/
 
-  def accept(): DDMandateAccepted = {
+  def accept(contractSigned: ContractSigned, debtorValidated: Debtor): DDMandateAccepted = {
+    assert(debtorValidated.bankAccount.isValid, "BankAccount is not valid")
     assert(this.debtor.bankAccount.isValid,"The bank account has to be valid to accept a DD Mandate")
-    assert(this.contract.isInstanceOf[ContractSigned], "The contract has to be signed")
+    assert(this.debtor.bankAccount.identity == debtorValidated.bankAccount.identity,s"The valid debtor bankAccount is not the same, bank account expected: ${this.debtor.bankAccount.identity}")
+    assert(this.contract.identity == contractSigned.identity,s"The contract signed used is not the same, contract expected: ${this.contract.identity}")
 
-    DDMandateAccepted(this)
+    DDMandateAccepted(this, contractSigned, debtorValidated)
   }
 }
 
@@ -105,9 +106,9 @@ case class DDMandateAccepted(
 }
 
 object DDMandateAccepted extends Entity{
-  def apply(ddMandateNotAccepted: DDMandateNotAccepted): DDMandateAccepted = {
+  def apply(ddMandateNotAccepted: DDMandateNotAccepted, contractSigned: ContractSigned, debtorValidated: Debtor): DDMandateAccepted = {
 
-    val ddMandateAccepted = new DDMandateAccepted(ddMandateNotAccepted.identity,ddMandateNotAccepted.ddMandateType,ddMandateNotAccepted.debtor,ddMandateNotAccepted.creditor,ddMandateNotAccepted.creationDate,ddMandateNotAccepted.contract)
+    val ddMandateAccepted = new DDMandateAccepted(ddMandateNotAccepted.identity,ddMandateNotAccepted.ddMandateType,debtorValidated ,ddMandateNotAccepted.creditor,ddMandateNotAccepted.creationDate,contractSigned)
 
     assert(ddMandateAccepted.identity == ddMandateNotAccepted.identity)
     assert(ddMandateAccepted.ddMandateType == ddMandateNotAccepted.ddMandateType)

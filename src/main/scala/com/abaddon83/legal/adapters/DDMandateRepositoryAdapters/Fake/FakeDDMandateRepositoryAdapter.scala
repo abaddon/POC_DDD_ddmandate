@@ -12,15 +12,25 @@ import scala.collection.mutable.ListBuffer
 class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
 
   override def findDDMandateNotAcceptedById(id: DDMandateIdentity): Option[DDMandateNotAccepted] = {
-    repository.db.find(ddMandate =>
-      ddMandate.identity == id && ddMandate.status == NOACCEPTED
-    ).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateNotAccepted]]
+    findDDMandateById(id).asInstanceOf[Option[DDMandateNotAccepted]]
+    //repository.db.find(ddMandate =>
+    //  ddMandate.identity == id && ddMandate.status == NOACCEPTED
+    //).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateNotAccepted]]
   }
 
   override def findDDMandateAcceptedById(id: DDMandateIdentity): Option[DDMandateAccepted] ={
+    findDDMandateById(id).asInstanceOf[Option[DDMandateAccepted]]
+
+    //repository.db.find(ddMandate =>
+    //  ddMandate.identity == id && ddMandate.status == ACCEPTED
+    //).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateAccepted]]
+  }
+
+  override def findDDMandateById(id: DDMandateIdentity): Option[DDMandate] = {
     repository.db.find(ddMandate =>
-      ddMandate.identity == id && ddMandate.status == ACCEPTED
-    ).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateAccepted]]
+      ddMandate.identity == id
+    ).map(ddDomainRepo => ddDomainRepo.buildDDMandate())
+
   }
 
   override def findAllDDMandatesByBankAccount(bankAccountId: BankAccountIdentity): List[DDMandate] = {
@@ -74,7 +84,6 @@ class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
     })
     println("---end---")
   }
-
 }
 
 protected case class DDMandateRepo(

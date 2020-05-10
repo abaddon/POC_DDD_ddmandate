@@ -5,5 +5,6 @@ import com.abaddon83.legal.domainModel.ddMandates.bankAccount.{BankAccount, Bank
 
 trait BankAccountPort {
   def findDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor]
+  def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor]
   def findBankAccountByBankAccountId(bankAccountId: BankAccountIdentity): Option[BankAccount]
 }

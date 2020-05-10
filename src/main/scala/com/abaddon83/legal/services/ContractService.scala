@@ -2,8 +2,8 @@ package com.abaddon83.legal.services
 
 import java.util.Date
 
-import com.abaddon83.legal.domainModel.contract.{Contract, ContractIdentity, ContractUnSigned}
 import com.abaddon83.legal.domainModel.contract.FileRepositories.FileRepository
+import com.abaddon83.legal.domainModel.contract.{Contract, ContractIdentity, ContractUnSigned}
 import com.abaddon83.legal.domainModel.ddMandates.DDMandate
 import com.abaddon83.legal.ports.{ContractRepositoryPort, FileRepositoryPort}
 
@@ -32,6 +32,10 @@ class ContractService(
 
     repository.save(contractSigned)
 
+  }
+
+  def search(): ContractRepositoryPort = {
+    this.repository
   }
 
 

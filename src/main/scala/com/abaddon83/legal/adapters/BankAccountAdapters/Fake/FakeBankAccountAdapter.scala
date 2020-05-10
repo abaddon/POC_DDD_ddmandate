@@ -15,8 +15,11 @@ class FakeBankAccountAdapter extends BankAccountPort{
     val result = bankAccountService.find(debtor =>
       debtor.bankAccount.identity == bankAccountId
     )
-
     result
+  }
+
+  override def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor] = {
+    findDebtorByBankAccountId(bankAccountId).filter(_.bankAccount.isValid)
   }
 
   override def findBankAccountByBankAccountId(bankAccountId: BankAccountIdentity): Option[BankAccount] = ???
@@ -68,8 +71,7 @@ class FakeBankAccountAdapter extends BankAccountPort{
     UKBankAccount(BankAccountIdentity(uuid),sortCode,account,validated)
   }
 
-
-
+  override def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor] = ???
 }
 
 

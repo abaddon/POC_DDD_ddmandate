@@ -14,9 +14,9 @@ trait RouteRejectionHandler extends GenericJsonSupport{
   val globalRejectionHandler = RejectionHandler.newBuilder()
     .handle {
       case ValidationRejection(msg, e) =>
-        complete(BadRequest, List(`Content-Type`(`application/json`)),ErrorDDMandate.build(e.get,"/"))
+        complete(BadRequest, List(`Content-Type`(`application/json`)),ErrorDDMandate.build(e.get,"/ValidationRejection"))
       case MalformedRequestContentRejection(msg,e) =>
-        complete(BadRequest, List(`Content-Type`(`application/json`)), ErrorDDMandate.build(e,"/"))
+        complete(BadRequest, List(`Content-Type`(`application/json`)), ErrorDDMandate.build(e,"/MalformedRequestContentRejection"))
     }
     .handleAll[MethodRejection] { methodRejections =>
       val names = methodRejections.map(_.supported.name).toString()
@@ -24,7 +24,7 @@ trait RouteRejectionHandler extends GenericJsonSupport{
     }
     .handleNotFound {
       extractUnmatchedPath { p =>
-        complete(NotFound, List(`Content-Type`(`application/json`)), ErrorDDMandate.build("URL Missing",p.toString()))
+        complete(NotFound, ErrorDDMandate.build("Resource Missing",p.toString()))
       }
     }
     .result()
