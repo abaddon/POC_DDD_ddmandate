@@ -2,7 +2,7 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp
 
 import java.util.UUID
 
-import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateAccepted, DDMandateNotAccepted}
+import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateNotAccepted}
 import com.abaddon83.legal.ddMandates.ports.DDMandatePort
 import com.abaddon83.legal.ddMandates.services.DDMandateService
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
@@ -34,6 +34,13 @@ class DDMandateAdapter(ddMandateService: DDMandateService)
     Future {
       val ddMandateIdentity = DDMandateIdentity.apply(ddMandateId)
       ddMandateService.acceptDDMandate(ddMandateIdentity)
+    }
+  }
+
+  override def cancelDDMandate(ddMandateId: UUID): Future[DDMandateCanceled] = {
+    Future {
+      val ddMandateIdentity = DDMandateIdentity.apply(ddMandateId)
+      ddMandateService.cancelDDMandate(ddMandateIdentity)
     }
   }
 }

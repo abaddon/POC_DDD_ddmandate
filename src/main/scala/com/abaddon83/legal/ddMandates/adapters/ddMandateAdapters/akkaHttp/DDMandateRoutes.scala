@@ -39,6 +39,21 @@ class DDMandateRoutes(ddMandateAdapter: DDMandateAdapter) extends Routes with DD
                         case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
                         case Failure(throwable) => throwable match {
                           case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
+                        }
+                      }
+                    }
+                  }
+                },
+                path("cancel"){
+                  put {
+                    onComplete(ddMandateAdapter.cancelDDMandate(mandateUUID)) {
+                      _ match {
+                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
+                        case Failure(throwable) => throwable match {
+                          case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
                           case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
                         }
                       }
