@@ -4,16 +4,21 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.contracts.ports.{ContractPort, DIPortsBinding}
+import com.abaddon83.legal.contracts.ports.{ContractPort, ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 import com.abaddon83.legal.contracts.services.ContractService
 import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import wvlet.airframe._
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
-class ContractAdapter extends ContractPort with DIPortsBinding{
+trait ContractAdapter extends ContractPort{
+
+  val ddMandatePort = bind[DDMandatePort]
+  val contractRepositoryPort = bind[ContractRepositoryPort]
+  val fileRepositoryPort = bind[FileRepositoryPort]
 
   private lazy val contractService: ContractService = new ContractService(contractRepositoryPort,fileRepositoryPort,ddMandatePort)
 

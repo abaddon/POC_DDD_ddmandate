@@ -9,25 +9,27 @@ import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContrac
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels.ContractUnSigned
-import com.abaddon83.legal.ddMandates.ports._
-import com.abaddon83.legal.ddMandates.services.DDMandateService
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import wvlet.airframe.newDesign
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+
 class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()
-  val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
-  val creditorPort: CreditorPort = new FakeCreditorAdapter()
-  val contractPort: ContractPort = new FakeContractAdapter()
-  val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort,contractPort)
+  val session = newDesign
+      .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
+      .bind[ContractPort].toInstance(new FakeContractAdapter() )
+      .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
+      .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter())
+      .newSession
 
+  val ddMandateAdapter = session.build[DDMandateAdapter]
 
-  val ddMandateAdapter: DDMandatePort = new DDMandateAdapter(ddMandateService)
 
   test("create a new mandate no signed"){
     val bankAccountIdString= "146a525d-402b-4bce-a317-3f00d05aede0"

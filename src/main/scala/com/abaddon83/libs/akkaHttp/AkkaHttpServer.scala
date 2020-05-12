@@ -16,10 +16,9 @@ trait AkkaHttpServer {
 
   implicit val actorSystem: ActorSystem;
   implicit val materializer: ActorMaterializer
-  val apiRoutes: RoutesBuilder
 
 
-  def startServer() = {
+  def startServer(apiRoutes: RoutesBuilder) = {
     lazy val logger = Logging(actorSystem, classOf[App])
 
     Http().bindAndHandle(apiRoutes.getRoute(), host, port)

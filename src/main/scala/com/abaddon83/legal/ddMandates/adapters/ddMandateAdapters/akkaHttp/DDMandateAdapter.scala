@@ -10,12 +10,15 @@ import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import wvlet.airframe._
+
 
 trait DDMandateAdapter extends DDMandatePort{
-  val bankAccountPort: BankAccountPort
-  val contractPort :ContractPort
-  val creditorPort : CreditorPort
-  val ddMandateRepositoryePort : DDMandateRepositoryPort
+
+  val bankAccountPort: BankAccountPort = bind[BankAccountPort]
+  val contractPort :ContractPort = bind[ContractPort]
+  val creditorPort : CreditorPort = bind[CreditorPort]
+  val ddMandateRepositoryePort : DDMandateRepositoryPort = bind[DDMandateRepositoryPort]
 
   private lazy val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepositoryePort,bankAccountPort,creditorPort,contractPort)
 

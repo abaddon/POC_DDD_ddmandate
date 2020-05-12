@@ -7,26 +7,29 @@ import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFi
 import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.ContractAdapter
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
-import com.abaddon83.legal.contracts.ports.{ContractPort, ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
-import com.abaddon83.legal.contracts.services.ContractService
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import wvlet.airframe._
 
-class ContractAdapterTest  extends AnyFunSuite with Matchers with ScalaFutures {{
-  val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter()
-  val fileRepository: FileRepositoryPort = new FakeFileRepositoryAdapter()
-  val contractRepository: ContractRepositoryPort = new FakeContractRepositoryAdapter()
-  val contractService = new ContractService(contractRepository,fileRepository,ddMandatePort)
-  val contractPort: ContractPort = new ContractAdapter(contractService)
+class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {{
+
+  val session = newDesign
+    .bind[DDMandatePort].toInstance(new FakeDDMandateAdapter())
+    .bind[ContractRepositoryPort].toInstance(new FakeContractRepositoryAdapter() )
+    .bind[FileRepositoryPort].toInstance(new FakeFileRepositoryAdapter())
+    .newSession
+
+  val contractAdapter = session.build[ContractAdapter]
 
   test(""){
-    ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
+    contractAdapter.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
     val contractType = "DDMANDATE"
     val ddMandateUUIDString = "79abadf2-84db-42bc-81d5-4577778d38af"
     val ddMandateUUIDReference: UUID = UUID.fromString(ddMandateUUIDString)
 
-    whenReady(contractPort.createContract(contractType,ddMandateUUIDReference)){ contract =>
+    whenReady(contractAdapter.createContract(contractType,ddMandateUUIDReference)){ contract =>
 
       assert(contract.isInstanceOf[ContractUnSigned])
       assert(contract.reference == ddMandateUUIDString)

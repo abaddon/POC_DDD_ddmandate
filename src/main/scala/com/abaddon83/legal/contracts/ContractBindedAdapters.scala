@@ -7,19 +7,9 @@ import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePor
 import wvlet.airframe._
 
 trait ContractBindedAdapters {
-  /*
-  val ddMandatePort = bind[DDMandatePort]
-  val contractRepositoryPort = bind[ContractRepositoryPort]
-  val fileRepositoryPort = bind[FileRepositoryPort]
-   */
 
-
-  private val bindDesign = newDesign
+  val contractBindDesign = newDesign
     .bind[DDMandatePort].toInstance(new FakeDDMandateAdapter)
     .bind[ContractRepositoryPort].toInstance(new FakeContractRepositoryAdapter)
     .bind[FileRepositoryPort].toInstance(new FakeFileRepositoryAdapter)
-
-  def getContractBind() = {
-    bindDesign
-  }
 }

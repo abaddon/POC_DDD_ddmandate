@@ -5,19 +5,19 @@ import akka.http.scaladsl.server.Route
 import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.messages._
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.S3FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
-import com.abaddon83.libs.akkaHttp.routes.{RouteRejectionHandler, Routes}
+import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 
 
-class ContractRoutes extends ContractAdapter with Routes with ContractJsonSupport with RouteRejectionHandler{
+trait ContractRoutes extends ContractAdapter with ContractJsonSupport with RouteRejectionHandler{
 
-  override protected val routes: Route = {
-    handleRejections(globalRejectionHandler) {
-      extractUri { uri =>
-        pathPrefix("contracts") {
+  val contractRoutes: Route = {
+    extractUri { uri =>
+      pathPrefix("contracts") {
+        handleRejections(globalRejectionHandler) {
           concat(
             pathEndOrSingleSlash {
               post { // POST /contracts

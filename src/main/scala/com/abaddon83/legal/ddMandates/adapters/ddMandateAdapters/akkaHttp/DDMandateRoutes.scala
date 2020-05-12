@@ -4,18 +4,18 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, ErrorDDMandate, RestViewDDMandate}
 import com.abaddon83.legal.ddMandates.domainModels.DDMandateNotAccepted
-import com.abaddon83.libs.akkaHttp.routes.{RouteRejectionHandler, Routes}
+import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 
-trait DDMandateRoutes extends DDMandateAdapter with Routes with DDMandateJsonSupport with RouteRejectionHandler{
+trait DDMandateRoutes extends DDMandateAdapter with DDMandateJsonSupport with RouteRejectionHandler{
 
-  override protected val routes: Route = {
-    handleRejections(globalRejectionHandler) {
-      extractUri { uri =>
-        pathPrefix("ddmandates") {
+  val ddMandateRoutes: Route = {
+    extractUri { uri =>
+      pathPrefix("ddmandates") {
+        handleRejections(globalRejectionHandler) {
           concat(
             pathEndOrSingleSlash {
               post { // POST /ddmandates

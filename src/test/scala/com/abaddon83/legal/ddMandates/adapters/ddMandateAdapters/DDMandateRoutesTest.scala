@@ -9,37 +9,36 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, RestViewDDMandate}
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.{DDMandateAdapter, DDMandateRoutes}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
-import com.abaddon83.legal.ddMandates.services.DDMandateService
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.Eventually
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import wvlet.airframe._
 
 
 class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest with Eventually with DDMandateJsonSupport{
-  val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()
-  val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
-  val creditorPort: CreditorPort = new FakeCreditorAdapter()
-  val contractPort: ContractPort = new FakeContractAdapter()
 
-  val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort, contractPort)
-  val ddMandateAdapter: DDMandateAdapter = new DDMandateAdapter(ddMandateService)
+val session = newDesign
+  .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
+  .bind[ContractPort].toInstance(new FakeContractAdapter() )
+  .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
+  .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter() )
+  .newSession
 
-  val ddMandateRoutes = new DDMandateRoutes(ddMandateAdapter)
-
+  val routes = session.build[DDMandateRoutes]
 
   test("Create a new DD Mandate"){
 
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede0")
     val legalEntity = "IT1"
-    val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
+    val createDDMandate = CreateDDMandateRequest(bankAccountUUID,legalEntity)
+    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
       eventually{
         status shouldBe OK
         val viewDDMandate = responseAs[RestViewDDMandate]
@@ -59,7 +58,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede1")
     val legalEntity = "IT1"
     val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
+    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
       eventually{
         val message = responseAs[ErrorMessage]
         status shouldBe BadRequest
@@ -75,8 +74,8 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val bankAccountUUID = UUID.fromString("d4456de3-bcb0-4009-adff-803d7884c647")
     val legalEntity = "NOEXIST"
-    val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
+    val createDDMandate = CreateDDMandateRequest(bankAccountUUID,legalEntity)
+    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
       eventually{
         status shouldBe BadRequest
         val viewDDMandate = responseAs[ErrorMessage]
@@ -93,7 +92,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
     val bankAccountUUID = "146a525d"
     val legalEntity = "IT1"
 
-    Post("/ddmandates",HttpEntity(ContentTypes.`application/json`, s"""{ "bankAccountId": "${bankAccountUUID}", "legalEntity": "IT5"}""")) ~> Route.seal(ddMandateRoutes.getRoute()) ~> check{
+    Post("/ddmandates",HttpEntity(ContentTypes.`application/json`, s"""{ "bankAccountId": "${bankAccountUUID}", "legalEntity": "IT5"}""")) ~> Route.seal(routes.ddMandateRoutes) ~> check{
 
         status shouldBe BadRequest
         val message = responseAs[ErrorMessage]
@@ -108,7 +107,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.getRoute() ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[RestViewDDMandate]
@@ -122,7 +121,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString="4a943d91-1ed4-4a1d-904e-9ec830106299"
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check{
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> Route.seal(routes.ddMandateRoutes) ~> check{
       eventually{
         val message = responseAs[ErrorMessage]
 
@@ -140,7 +139,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
       val message = responseAs[ErrorMessage]
       //debug(message)
       status shouldBe BadRequest
@@ -155,12 +154,12 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    val ddMandateNotAccepted = ddMandateRepository.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).get
-    contractPort.asInstanceOf[FakeContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).get
+    routes.contractPort.asInstanceOf[FakeContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
       val message = responseAs[RestViewDDMandate]
 
       status shouldBe OK
@@ -174,7 +173,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.getRoute() ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[RestViewDDMandate]
@@ -188,7 +187,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
       val message = responseAs[ErrorMessage]
 
       status shouldBe BadRequest
@@ -203,7 +202,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(routes.ddMandateRoutes) ~> check {
       val message = responseAs[RestViewDDMandate]
 
       status shouldBe OK
@@ -217,7 +216,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","canceled").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.getRoute() ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[RestViewDDMandate]
@@ -231,7 +230,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","canceled").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(ddMandateRoutes.getRoute()) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(routes.ddMandateRoutes) ~> check {
 
       val message = responseAs[ErrorMessage]
 
