@@ -1,4 +1,4 @@
-package com.abaddon83.legal.ddMandates.utilities
+package com.abaddon83.legal.utilities
 
 import java.util.{Date, UUID}
 

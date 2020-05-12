@@ -9,13 +9,13 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandate, DDMandateJsonSupport, RestViewDDMandate}
+import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, RestViewDDMandate}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.{DDMandateAdapter, DDMandateRoutes}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.ddMandates.services.DDMandateService
-import com.abaddon83.legal.ddMandates.utilities.UUIDRegistryHelper
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.Eventually
 import org.scalatest.funsuite.AnyFunSuite
@@ -38,7 +38,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede0")
     val legalEntity = "IT1"
-    val createDDMandate = new CreateDDMandate(bankAccountUUID,legalEntity)
+    val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
     Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
       eventually{
         status shouldBe OK
@@ -58,7 +58,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede1")
     val legalEntity = "IT1"
-    val createDDMandate = new CreateDDMandate(bankAccountUUID,legalEntity)
+    val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
     Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
       eventually{
         val message = responseAs[ErrorMessage]
@@ -75,7 +75,7 @@ class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteT
 
     val bankAccountUUID = UUID.fromString("d4456de3-bcb0-4009-adff-803d7884c647")
     val legalEntity = "NOEXIST"
-    val createDDMandate = new CreateDDMandate(bankAccountUUID,legalEntity)
+    val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
     Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.getRoute() ~> check{
       eventually{
         status shouldBe BadRequest

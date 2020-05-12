@@ -2,9 +2,9 @@ package com.abaddon83.legal.ddMandates.domainModels
 
 import java.util.Date
 
-import com.abaddon83.legal.ddMandates.utilities.DDMandateDomainElementHelper
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.contracts.DD_MANDATE
+import com.abaddon83.legal.utilities.DDMandateDomainElementHelper
 import org.scalatest.funsuite.AnyFunSuite
 
 class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{

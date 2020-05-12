@@ -3,5 +3,5 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messa
 import java.util.UUID
 
 
-case class CreateDDMandate(bankAccountId: UUID, legalEntity: String)
+case class CreateDDMandateRequest(bankAccountId: UUID, legalEntity: String)
 

@@ -2,70 +2,25 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp
 
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandate, DDMandateJsonSupport, ErrorDDMandate, RestViewDDMandate}
+import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, ErrorDDMandate, RestViewDDMandate}
 import com.abaddon83.legal.ddMandates.domainModels.DDMandateNotAccepted
 import com.abaddon83.libs.akkaHttp.routes.{RouteRejectionHandler, Routes}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-class DDMandateRoutes(ddMandateAdapter: DDMandateAdapter) extends Routes with DDMandateJsonSupport with RouteRejectionHandler{
 
+trait DDMandateRoutes extends DDMandateAdapter with Routes with DDMandateJsonSupport with RouteRejectionHandler{
 
   override protected val routes: Route = {
     handleRejections(globalRejectionHandler) {
       extractUri { uri =>
         pathPrefix("ddmandates") {
           concat(
-            pathPrefix(JavaUUID) { mandateUUID =>
-              concat(
-                pathEndOrSingleSlash{
-                  get {
-                    onComplete(ddMandateAdapter.findByIdDDMandate(mandateUUID)){
-                      _ match {
-                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
-                        case Failure(throwable) => throwable match {
-                          case ex: NoSuchElementException => complete(StatusCodes.NotFound, ErrorDDMandate.build(ex, uri.path.toString()))
-                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
-                        }
-                      }
-                    }
-                  }
-                },
-                path("activate"){
-                  put {
-                    onComplete(ddMandateAdapter.acceptDDMandate(mandateUUID)) {
-                      _ match {
-                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
-                        case Failure(throwable) => throwable match {
-                          case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
-                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
-                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
-                        }
-                      }
-                    }
-                  }
-                },
-                path("cancel"){
-                  put {
-                    onComplete(ddMandateAdapter.cancelDDMandate(mandateUUID)) {
-                      _ match {
-                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
-                        case Failure(throwable) => throwable match {
-                          case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
-                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
-                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
-                        }
-                      }
-                    }
-                  }
-                }
-              )
-            },
             pathEndOrSingleSlash {
-              post {
-                entity(as[CreateDDMandate]) { createDDMandate =>
-                  val ddMandate: Future[DDMandateNotAccepted] = ddMandateAdapter.createDDMandate(createDDMandate.bankAccountId, createDDMandate.legalEntity)
+              post { // POST /ddmandates
+                entity(as[CreateDDMandateRequest]) { request =>
+                  val ddMandate: Future[DDMandateNotAccepted] = createDDMandate(request.bankAccountId, request.legalEntity)
                   onComplete(ddMandate) {
                     _ match {
                       case Success(ddMandate) => {complete(RestViewDDMandate(ddMandate))}
@@ -79,10 +34,57 @@ class DDMandateRoutes(ddMandateAdapter: DDMandateAdapter) extends Routes with DD
                   }
                 }
               }
+            },
+            pathPrefix(JavaUUID) { mandateUUID =>
+              concat(
+                pathEndOrSingleSlash{
+                  get { // GET /ddmandates/UUID
+                    onComplete(findByIdDDMandate(mandateUUID)){
+                      _ match {
+                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
+                        case Failure(throwable) => throwable match {
+                          case ex: NoSuchElementException => complete(StatusCodes.NotFound, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
+                        }
+                      }
+                    }
+                  }
+                },
+                path("activate"){
+                  put { // PUT /ddmandates/UUID/activate
+                    onComplete(acceptDDMandate(mandateUUID)) {
+                      _ match {
+                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
+                        case Failure(throwable) => throwable match {
+                          case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
+                        }
+                      }
+                    }
+                  }
+                },
+                path("cancel"){
+                  put { // PUT /ddmandates/UUID/cancel
+                    onComplete(cancelDDMandate(mandateUUID)) {
+                      _ match {
+                        case Success(ddMandate) => complete(RestViewDDMandate(ddMandate))
+                        case Failure(throwable) => throwable match {
+                          case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
+                          case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
+                        }
+                      }
+                    }
+                  }
+                }
+              )
             }
           )
         }
       }
     }
   }
+
 }
+

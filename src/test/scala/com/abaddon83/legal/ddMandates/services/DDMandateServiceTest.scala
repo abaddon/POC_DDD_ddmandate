@@ -8,9 +8,9 @@ import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContrac
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels._
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
-import com.abaddon83.legal.ddMandates.utilities.{DDMandateDomainElementHelper, UUIDRegistryHelper}
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.utilities.{DDMandateDomainElementHelper, UUIDRegistryHelper}
 import org.scalatest.funsuite.AnyFunSuite
 
 

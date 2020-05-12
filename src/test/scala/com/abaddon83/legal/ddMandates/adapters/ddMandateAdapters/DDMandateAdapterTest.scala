@@ -3,17 +3,13 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters
 
 import java.util.UUID
 
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, FileRepositoryPort}
-import com.abaddon83.legal.contracts.services.ContractService
-import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels.ContractUnSigned
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandatePort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports._
 import com.abaddon83.legal.ddMandates.services.DDMandateService
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
@@ -29,9 +25,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
   val creditorPort: CreditorPort = new FakeCreditorAdapter()
   val contractPort: ContractPort = new FakeContractAdapter()
   val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort,contractPort)
-  val contractRepository: ContractRepositoryPort = new FakeContractRepositoryAdapter();
-  val fileRepository: FileRepositoryPort = new FakeFileRepositoryAdapter()
-  val contractService: ContractService = new ContractService(contractRepository, fileRepository)
+
 
   val ddMandateAdapter: DDMandatePort = new DDMandateAdapter(ddMandateService)
 

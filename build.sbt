@@ -16,7 +16,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttp,
     "com.typesafe.akka" %% "akka-http-xml" % akkaHttp,
     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
-    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttp % Test,
+    "org.wvlet.airframe" %% "airframe" % "20.5.1",
+  "com.typesafe.akka" %% "akka-http-testkit" % akkaHttp % Test,
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
     "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
     "org.scalatest" %% "scalatest" % "3.1.1" % Test

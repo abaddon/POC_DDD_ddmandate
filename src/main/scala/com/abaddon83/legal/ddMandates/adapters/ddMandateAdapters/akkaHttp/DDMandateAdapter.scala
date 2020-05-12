@@ -3,7 +3,7 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp
 import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateNotAccepted}
-import com.abaddon83.legal.ddMandates.ports.DDMandatePort
+import com.abaddon83.legal.ddMandates.ports._
 import com.abaddon83.legal.ddMandates.services.DDMandateService
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
@@ -11,8 +11,13 @@ import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DDMandateAdapter(ddMandateService: DDMandateService)
-  extends DDMandatePort{
+trait DDMandateAdapter extends DDMandatePort{
+  val bankAccountPort: BankAccountPort
+  val contractPort :ContractPort
+  val creditorPort : CreditorPort
+  val ddMandateRepositoryePort : DDMandateRepositoryPort
+
+  private lazy val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepositoryePort,bankAccountPort,creditorPort,contractPort)
 
   override def createDDMandate(bankAccountId: UUID, legalEntityCode: String): Future[DDMandateNotAccepted] = {
     Future {

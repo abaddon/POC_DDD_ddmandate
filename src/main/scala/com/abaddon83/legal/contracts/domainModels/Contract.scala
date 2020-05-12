@@ -65,7 +65,6 @@ case class ContractSigned(
                            creationDate: Date,
                            signedFile: FileRepository,
                            signatureDate: Date) extends Contract {
-
 }
 
 object ContractSigned extends Entity{
