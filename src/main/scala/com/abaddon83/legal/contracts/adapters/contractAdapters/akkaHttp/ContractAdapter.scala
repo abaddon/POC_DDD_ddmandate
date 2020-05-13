@@ -34,7 +34,7 @@ trait ContractAdapter extends ContractPort{
 
   override def findByIdContract(contractId: UUID): Future[Contract] = {
     Future{
-      contractService.search().findByContractSignedByIdentity(ContractIdentity(contractId)) match {
+      contractService.search().findContractByIdentity(ContractIdentity(contractId)) match {
         case Some(value) => value
         case None => throw new NoSuchElementException(s"Contract with id: ${contractId.toString} not found ")
       }

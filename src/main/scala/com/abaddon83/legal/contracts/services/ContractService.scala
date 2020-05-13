@@ -36,7 +36,7 @@ class ContractService(
 
   def signContract(contractIdentity: ContractIdentity, signedFile: FileRepository, signedDate: Date): ContractSigned = {
 
-    val contractUnsigned = repository.findByContractUnSignedByIdentity(contractIdentity) match {
+    val contractUnsigned = repository.findContractUnSignedByIdentity(contractIdentity) match {
       case Some(value) => value
       case None => throw new IllegalArgumentException("Unsigned Contract with id: "++contractIdentity.toString++" not found")
     }

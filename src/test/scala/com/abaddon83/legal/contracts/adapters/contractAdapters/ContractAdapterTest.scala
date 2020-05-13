@@ -8,6 +8,8 @@ import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.Contract
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.utilities.UUIDRegistryHelper
+import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -23,7 +25,7 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {{
 
   val contractAdapter = session.build[ContractAdapter]
 
-  test(""){
+  test("create contract"){
     contractAdapter.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
     val contractType = "DDMANDATE"
     val ddMandateUUIDString = "79abadf2-84db-42bc-81d5-4577778d38af"
@@ -34,8 +36,29 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {{
       assert(contract.isInstanceOf[ContractUnSigned])
       assert(contract.reference == ddMandateUUIDString)
 
+      UUIDRegistryHelper.add("adapterContract",contract.identity.uuid,"unsigned")
+
     }
   }
+
+  test("get contract"){
+
+    val contractUUID: UUID = UUIDRegistryHelper.search("adapterContract","unsigned").get
+
+    whenReady(contractAdapter.findByIdContract(contractUUID)){ contract =>
+
+      assert(contract.identity.uuid == contractUUID)
+
+    }
+  }
+
+
 }
+  private def debug(message: ErrorMessage){
+    println(message.errorCode)
+    println(message.exceptionType)
+    println(message.instance)
+    println(message.message)
+  }
 
 }

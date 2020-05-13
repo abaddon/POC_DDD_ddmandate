@@ -22,15 +22,24 @@ class FakeContractRepositoryAdapter extends ContractRepositoryPort{
     contract
   }
 
-  override def findByContractUnSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractUnSigned] = {
-    repository.db.find(contractRepo => contractRepo.identity == contractIdentity && contractRepo.status == UNSIGNED)
-      .map(_.buildContract().asInstanceOf[ContractUnSigned])
+  override def findContractByIdentity(contractIdentity: ContractIdentity): Option[Contract] = {
+    repository.db.find(contractRepo => contractRepo.identity == contractIdentity)
+      .map(_.buildContract())
 
   }
 
-  override def findByContractSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractSigned] = {
-    repository.db.find(contractRepo => contractRepo.identity == contractIdentity && contractRepo.status == SIGNED)
-      .map(_.buildContract().asInstanceOf[ContractSigned])
+  override def findContractUnSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractUnSigned] = {
+    findContractByIdentity(contractIdentity) match {
+      case contract: Option[ContractUnSigned] => contract.asInstanceOf[Option[ContractUnSigned]]
+      case _ => None
+    }
+  }
+
+  override def findContractSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractSigned] = {
+    findContractByIdentity(contractIdentity) match {
+      case contract: Option[ContractSigned] => contract.asInstanceOf[Option[ContractSigned]]
+      case _ => None
+    }
   }
 
   private def saveContract(newContract: ContractRepo) = {
