@@ -8,9 +8,14 @@ import com.abaddon83.legal.ddMandates.domainModels.bankAccount.{EUBankAccount, U
 import com.abaddon83.legal.ddMandates.ports.CreditorPort
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class FakeCreditorAdapter extends CreditorPort{
-  override def findByLegalEntity(legalEntityCode: String): Option[Creditor] = {
-    creditorList.find(creditor => creditor.legalEntityCode == legalEntityCode)
+  override def findByLegalEntity(legalEntityCode: String): Future[Creditor] = {
+    Future{
+      creditorList.find(creditor => creditor.legalEntityCode == legalEntityCode).getOrElse(throw new NoSuchElementException(s"Creditor with legalEntity: ${legalEntityCode} not found"))
+    }
   }
 
   private val creditorList : List[Creditor] = List(

@@ -8,25 +8,25 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, RestViewDDMandate}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
-import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import wvlet.airframe._
 
 
-class DDMandateRoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest with Eventually with DDMandateJsonSupport{
+class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers with ScalatestRouteTest with Eventually with DDMandateJsonSupport{
 
 val session = newDesign
   .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-  .bind[ContractPort].toInstance(new FakeContractAdapter() )
+  .bind[DDMandateContractPort].toInstance(new FakeDDMandateContractAdapter() )
   .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
   .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter() )
   .newSession
@@ -122,15 +122,15 @@ val session = newDesign
     val ddMandateUUIDString="4a943d91-1ed4-4a1d-904e-9ec830106299"
 
     Get(s"/ddmandates/${ddMandateUUIDString}") ~> Route.seal(routes.ddMandateRoutes) ~> check{
-      eventually{
+      //eventually{
         val message = responseAs[ErrorMessage]
 
         assert(status == NotFound)
         assert(message.errorCode == 0)
         assert(message.exceptionType == "java.util.NoSuchElementException")
         assert(message.instance == s"/ddmandates/${ddMandateUUIDString}")
-        assert(message.message == s"DD Mandate with id: ${ddMandateUUIDString} not found ")
-      }
+        assert(message.message == s"DDMandate with id: ${DDMandateIdentity(UUID.fromString(ddMandateUUIDString))} not found")
+     // }
     }
   }
 
@@ -140,6 +140,7 @@ val session = newDesign
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+      println(response._3.toString)
       val message = responseAs[ErrorMessage]
       //debug(message)
       status shouldBe BadRequest
@@ -154,8 +155,8 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).get
-    routes.contractPort.asInstanceOf[FakeContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
     routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
 
@@ -192,9 +193,9 @@ val session = newDesign
 
       status shouldBe BadRequest
       assert(message.errorCode == 0)
-      assert(message.exceptionType == "java.lang.ClassCastException")
+      assert(message.exceptionType == "java.util.NoSuchElementException")
       assert(message.instance == s"/ddmandates/${ddMandateUUIDString}/activate")
-      assert(message.message == s"com.abaddon83.legal.ddMandates.domainModels.DDMandateAccepted cannot be cast to com.abaddon83.legal.ddMandates.domainModels.DDMandateNotAccepted")
+      assert(message.message == s"DDMandateNotAccepted with id: ${DDMandateIdentity(UUID.fromString(ddMandateUUIDString))} not found")
     }
   }
 
@@ -236,9 +237,9 @@ val session = newDesign
 
       status shouldBe BadRequest
       assert(message.errorCode == 0)
-      assert(message.exceptionType == "java.lang.ClassCastException")
+      assert(message.exceptionType == "java.util.NoSuchElementException")
       assert(message.instance == s"/ddmandates/${ddMandateUUIDString}/cancel")
-      assert(message.message == s"com.abaddon83.legal.ddMandates.domainModels.DDMandateCanceled cannot be cast to com.abaddon83.legal.ddMandates.domainModels.DDMandateAccepted")
+      assert(message.message == s"DDMandateAccepted with id: ${DDMandateIdentity(UUID.fromString(ddMandateUUIDString))} not found")
     }
   }
 

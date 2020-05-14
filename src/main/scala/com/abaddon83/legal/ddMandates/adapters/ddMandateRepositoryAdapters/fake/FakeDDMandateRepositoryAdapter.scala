@@ -2,58 +2,68 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake
 
 import java.util.Date
 
-import com.abaddon83.legal.ddMandates.domainModels.{Contract, Creditor, DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateNotAccepted, DDMandateType, Debtor}
+import com.abaddon83.legal.ddMandates.domainModels.{Creditor, DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateContract, DDMandateNotAccepted, DDMandateType, Debtor}
 import com.abaddon83.legal.ddMandates.ports.DDMandateRepositoryPort
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
 
-  override def findDDMandateNotAcceptedById(id: DDMandateIdentity): Option[DDMandateNotAccepted] = {
-    findDDMandateById(id).asInstanceOf[Option[DDMandateNotAccepted]]
-    //repository.db.find(ddMandate =>
-    //  ddMandate.identity == id && ddMandate.status == NOACCEPTED
-    //).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateNotAccepted]]
+  override def findDDMandateNotAcceptedById(id: DDMandateIdentity): Future[DDMandateNotAccepted] = {
+    findDDMandateById(id).flatMap {
+      case ddmandate: DDMandateNotAccepted => Future(ddmandate)
+      case _ => throw new NoSuchElementException(s"DDMandateNotAccepted with id: ${id.toString} not found")
+    }
   }
 
-  override def findDDMandateCancelledById(id: DDMandateIdentity): Option[DDMandateCanceled] = {
-    findDDMandateById(id).asInstanceOf[Option[DDMandateCanceled]]
+  override def findDDMandateCancelledById(id: DDMandateIdentity): Future[DDMandateCanceled] = {
+    findDDMandateById(id).flatMap {
+      case ddmandate : DDMandateCanceled => Future(ddmandate)
+      case _ =>   throw new NoSuchElementException(s"DDMandateCanceled with id: ${id.toString} not found")
+    }
   }
 
-  override def findDDMandateAcceptedById(id: DDMandateIdentity): Option[DDMandateAccepted] ={
-    findDDMandateById(id).asInstanceOf[Option[DDMandateAccepted]]
-
-    //repository.db.find(ddMandate =>
-    //  ddMandate.identity == id && ddMandate.status == ACCEPTED
-    //).map(ddDomainRepo => ddDomainRepo.buildDDMandate()).asInstanceOf[Option[DDMandateAccepted]]
+  override def findDDMandateAcceptedById(id: DDMandateIdentity): Future[DDMandateAccepted] ={
+    findDDMandateById(id).flatMap{
+      case ddmandate : DDMandateAccepted => Future(ddmandate)
+      case _ =>   throw new NoSuchElementException(s"DDMandateAccepted with id: ${id.toString} not found")
+    }
   }
 
-  override def findDDMandateById(id: DDMandateIdentity): Option[DDMandate] = {
-    repository.db.find(ddMandate =>
-      ddMandate.identity == id
-    ).map(ddDomainRepo => ddDomainRepo.buildDDMandate())
+  override def findDDMandateById(id: DDMandateIdentity): Future[DDMandate] = {
+    Future{
+      repository.db.find(ddMandate =>
+        ddMandate.identity == id
+      ).map(ddDomainRepo => ddDomainRepo.buildDDMandate())
+      .getOrElse(throw new NoSuchElementException(s"DDMandate with id: ${id.toString} not found"))
+    }
+
 
   }
 
-  override def findAllDDMandatesByBankAccount(bankAccountId: BankAccountIdentity): List[DDMandate] = {
-    repository.db.collect{
-      case ddMandate if ddMandate.debtor.bankAccount.identity == bankAccountId => ddMandate.buildDDMandate()
-    }.toList
+  override def findAllDDMandatesByBankAccount(bankAccountId: BankAccountIdentity): Future[List[DDMandate]] = {
+    Future{
+      repository.db.collect{
+        case ddMandate if ddMandate.debtor.bankAccount.identity == bankAccountId => ddMandate.buildDDMandate()
+      }.toList
+    }
   }
 
   override def save(ddMandate: DDMandateNotAccepted): DDMandateNotAccepted = {
-    saveDDMandate(DDMandateRepo.apply(ddMandate))
+    saveDDMandate(DDMandateRepo(ddMandate))
     ddMandate
   }
   override def save(ddMandate: DDMandateAccepted): DDMandateAccepted = {
-    saveDDMandate(DDMandateRepo.apply(ddMandate))
+    saveDDMandate(DDMandateRepo(ddMandate))
     ddMandate
   }
 
   override def save(ddMandate: DDMandateCanceled): DDMandateCanceled = {
-    saveDDMandate(DDMandateRepo.apply(ddMandate))
+    saveDDMandate(DDMandateRepo(ddMandate))
     ddMandate
   }
 
@@ -99,7 +109,7 @@ protected case class DDMandateRepo(
   debtor: Debtor,
   creditor: Creditor,
   creationDate: Date,
-  contract: Contract,
+  contract: DDMandateContract,
   cancellationDate: Option[Date]){
 
   def buildDDMandate(): DDMandate = {

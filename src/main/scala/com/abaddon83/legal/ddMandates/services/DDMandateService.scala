@@ -1,106 +1,89 @@
 package com.abaddon83.legal.ddMandates.services
 
 import com.abaddon83.legal.ddMandates.domainModels._
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class DDMandateService(
                         repositoryPort: DDMandateRepositoryPort,
                         bankAccountPort: BankAccountPort,
                         creditorPort: CreditorPort,
-                        contractPort: ContractPort
+                        contractPort: DDMandateContractPort
                         ) {
 
-  def createDDMandate(bankAccountId: BankAccountIdentity, legalEntity: String): DDMandateNotAccepted = {
-
-    val debtor = bankAccountPort.findDebtorByBankAccountId(bankAccountId) match {
-        case Some(value) =>value
-        case None => throw new NoSuchElementException(s"Debtor with bank account id: ${bankAccountId} not found")
-    }
-
-    if (bankAccountHasOtherMandates(bankAccountId)){
-      throw new IllegalArgumentException(s"The bank account ${bankAccountId.toString} has already a mandate associated ")
-    }
-
-    val creditor = creditorPort.findByLegalEntity(legalEntity) match {
-      case Some(value) =>value
-      case None =>  throw new NoSuchElementException(s"Creditor with legalEntity: ${legalEntity} not found")
-    }
-
-    val ddMandateDraft = DDMandateDraft(debtor, creditor)
-
-    val contract = contractPort.createContract(ddMandateDraft) match {
-      case Some(value) => value
-      case None => throw new RuntimeException("Contract not received")
-    }
-
-    val ddMandateNotAccepted = ddMandateDraft.assignContract(contract)
-
-    repositoryPort.save(ddMandateNotAccepted)
-
+  def createDDMandate(bankAccountId: BankAccountIdentity, legalEntity: String): Future[DDMandateNotAccepted] = {
+    for{
+      debtor <- findValidDebtor(bankAccountId) recoverWith {
+        case npe: Exception =>
+          Future.failed(npe)
+      }
+      creditor <- creditorPort.findByLegalEntity(legalEntity)
+      ddMandateDraft <- Future(DDMandateDraft(debtor, creditor))
+      contract <- contractPort.createContract(ddMandateDraft)
+      ddMandateNotAccepted <- Future(ddMandateDraft.assignContract(contract))
+    } yield repositoryPort.save(ddMandateNotAccepted)
 
   }
 
-  def bankAccountHasOtherMandates(bankAccountId: BankAccountIdentity): Boolean = {
-    repositoryPort.findAllDDMandatesByBankAccount(bankAccountId).collect{
-      case ddMandate if ddMandate.isInstanceOf[DDMandateAccepted] => ddMandate
-      case ddMandate if ddMandate.isInstanceOf[DDMandateNotAccepted] => ddMandate
-    }.isEmpty match {
-      case true => false
-      case false => true
+  def findValidDebtor(bankAccountIdentity: BankAccountIdentity): Future[Debtor] ={
+    for{
+      debtor <- bankAccountPort.findDebtorByBankAccountId(bankAccountIdentity)
+      hasOtherMandates  <- bankAccountHasOtherMandates(bankAccountIdentity)
+    } yield hasOtherMandates match {
+      case true => throw  new IllegalArgumentException(s"The debtor with bank account id ${bankAccountIdentity.uuid} has already a DD mandate")
+      case false => debtor
     }
   }
 
-  /*def updateContractSigned(contract: ContractSigned): DDMandateNotAccepted = {
-    val ddMandateIdentity = DDMandateIdentity(UUID.fromString(contract.reference))
 
-    val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
-      case Some(value) => value
-      case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
-    }
-    val ddMandateNotAcceptedUpdated=ddMandateNotAccepted.updateContractSigned(contract)
+  def bankAccountHasOtherMandates(bankAccountId: BankAccountIdentity): Future[Boolean] = {
+    for {
+      list <- repositoryPort.findAllDDMandatesByBankAccount(bankAccountId)
 
-    repositoryPort.save(ddMandateNotAcceptedUpdated)
-  }*/
+    } yield list.collect{
+        case ddMandate if ddMandate.isInstanceOf[DDMandateAccepted] || ddMandate.isInstanceOf[DDMandateNotAccepted]  => ddMandate
+      }.size >0
 
-  /*def updateBankAccount(ddMandateIdentity:  DDMandateIdentity, bankAccountIdentity: BankAccountIdentity): DDMandateNotAccepted = {
+  }
 
-    val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
-      case Some(value) => value
-      case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
-    }
-
-    val debtor = bankAccountPort.findDebtorByBankAccountId(bankAccountIdentity) match {
-      case Some(value) =>value
-      case None => throw new IllegalArgumentException("Debtor with bank account id: "++bankAccountIdentity.toString++" not found")
-    }
-    val ddMandateNotAcceptedUpdated=ddMandateNotAccepted.updateDebtorValidated(debtor)
-
-    repositoryPort.save(ddMandateNotAcceptedUpdated)
-
-  }*/
 
   def search(): DDMandateRepositoryPort = {
     this.repositoryPort
   }
 
-  def acceptDDMandate(ddMandateIdentity:  DDMandateIdentity): DDMandateAccepted = {
+  def acceptDDMandate(ddMandateIdentity:  DDMandateIdentity): Future[DDMandateAccepted] = {
+    for{
+      ddMandateNotAccepted <- repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity)
+      validatedDebtor <- bankAccountPort.findValidatedDebtorByBankAccountId(ddMandateNotAccepted.debtor.bankAccount.identity)
+      contractSigned <- contractPort.findSignedContractByContractId(ddMandateNotAccepted.contract.identity)
+      ddMandateAccepted = ddMandateNotAccepted.accept(contractSigned,validatedDebtor)
+    } yield repositoryPort.save(ddMandateAccepted)
+
     //get DDmandateNotAccepted
-    val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
+   /*
+   val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
       case Some(value) => value
       case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
+
     }
 
+    */
+
     //get Debtor with BankAccountValidated
+    /*
     val bankAccountIdentity = ddMandateNotAccepted.debtor.bankAccount.identity
     val validatedDebtor = bankAccountPort.findValidatedDebtorByBankAccountId(bankAccountIdentity) match {
       case Some(value) =>value
       case None => throw new NoSuchElementException(s"Validated Debtor with bank account id: ${bankAccountIdentity.toString} not found")
     }
+    */
 
     //get signed Contract
-    val contractIdentity = ddMandateNotAccepted.contract.identity
+    /*val contractIdentity = ddMandateNot// controllo il num di mandati abbinati a quel bankaccountAccepted.contract.identity
     val contractSigned = contractPort.findSignedContractByContractId(contractIdentity) match {
       case Some(value) =>value
       case None => throw new NoSuchElementException(s"Contract signed with id: ${contractIdentity.toString} not found")
@@ -110,16 +93,27 @@ class DDMandateService(
 
     repositoryPort.save(DDMandateAccepted)
 
+     */
+
   }
 
-  def cancelDDMandate(ddMandateIdentity:  DDMandateIdentity): DDMandateCanceled =
+  def cancelDDMandate(ddMandateIdentity:  DDMandateIdentity): Future[DDMandateCanceled] =
   {
+    for{
+      ddMandateAccepted <- repositoryPort.findDDMandateAcceptedById(ddMandateIdentity)
+      ddMandateCanceled = ddMandateAccepted.cancel()
+    } yield repositoryPort.save(ddMandateCanceled)
+
+    /*
     val ddMandateAccepted = repositoryPort.findDDMandateAcceptedById(ddMandateIdentity) match {
-      case Some(value) => value
+     case Some(value) => value
       case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
     }
+
     val ddMandateCanceled = ddMandateAccepted.cancel()
     repositoryPort.save(ddMandateCanceled)
+
+     */
   }
 
 }

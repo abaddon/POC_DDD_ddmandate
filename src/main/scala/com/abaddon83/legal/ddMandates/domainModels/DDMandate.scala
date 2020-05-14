@@ -22,7 +22,7 @@ case class DDMandateDraft(
         creationDate: Date) extends DDMandate {
 
 
-  def assignContract(contract:Contract): DDMandateNotAccepted = {
+  def assignContract(contract:DDMandateContract): DDMandateNotAccepted = {
 
     assertArgumentEquals(identity.uuid.toString,contract.reference,"The reference on the Contract doesn't match mandate identifier")
 
@@ -50,9 +50,9 @@ case class DDMandateNotAccepted(
                            debtor: Debtor,
                            creditor: Creditor,
                            creationDate: Date,
-                           contract: Contract) extends DDMandate {
+                           contract: DDMandateContract) extends DDMandate {
 
-  def updateContractSigned(contractSigned: ContractSigned): DDMandateNotAccepted ={
+  def updateContractSigned(contractSigned: DDMandateContract): DDMandateNotAccepted ={
 
     assert(contractSigned.identity == contract.identity, "The contract identifier is wrong")
     this.copy(contract = contractSigned)
@@ -64,14 +64,14 @@ case class DDMandateNotAccepted(
     this.copy(debtor = debtorValidated)
   }*/
 
-  def accept(contractSigned: ContractSigned, debtorValidated: Debtor): DDMandateAccepted = {
+  def accept(contractSigned: DDMandateContract, debtorValidated: Debtor): DDMandateAccepted = {
 
     DDMandateAccepted(this, contractSigned, debtorValidated)
   }
 }
 
 object DDMandateNotAccepted extends Entity{
-  def apply(ddMandateDraft: DDMandateDraft, contract: Contract): DDMandateNotAccepted = {
+  def apply(ddMandateDraft: DDMandateDraft, contract: DDMandateContract): DDMandateNotAccepted = {
     //PRE
 
     val ddMandateNotAccepted = new DDMandateNotAccepted(ddMandateDraft.identity,ddMandateDraft.ddMandateType,ddMandateDraft.debtor,ddMandateDraft.creditor,ddMandateDraft.creationDate,contract)
@@ -93,7 +93,7 @@ case class DDMandateAccepted(
                               debtor: Debtor,
                               creditor: Creditor,
                               creationDate: Date,
-                              contract: Contract) extends DDMandate {
+                              contract: DDMandateContract) extends DDMandate {
 
   def cancel(): DDMandateCanceled = {
 
@@ -102,12 +102,13 @@ case class DDMandateAccepted(
 }
 
 object DDMandateAccepted extends Entity{
-  def apply(ddMandateNotAccepted: DDMandateNotAccepted, contractSigned: ContractSigned, debtorValidated: Debtor): DDMandateAccepted = {
+  def apply(ddMandateNotAccepted: DDMandateNotAccepted, contractSigned: DDMandateContract, debtorValidated: Debtor): DDMandateAccepted = {
 
     //PRE
     assert(debtorValidated.bankAccount.isValid, "The bank account has to be valid to accept a DD Mandate")
     assert(debtorValidated.bankAccount.identity == ddMandateNotAccepted.debtor.bankAccount.identity, s"The valid debtor bankAccount is not the same, bank account expected: ${ddMandateNotAccepted.debtor.bankAccount.identity}")
     assert(contractSigned.identity == ddMandateNotAccepted.contract.identity,s"The contract signed used is not the same, contract expected: ${ddMandateNotAccepted.contract.identity}")
+    assert(contractSigned.isSigned ,s"The contract has to be signed")
 
     val ddMandateAccepted = new DDMandateAccepted(ddMandateNotAccepted.identity,ddMandateNotAccepted.ddMandateType,debtorValidated ,ddMandateNotAccepted.creditor,ddMandateNotAccepted.creationDate,contractSigned)
 
@@ -117,8 +118,6 @@ object DDMandateAccepted extends Entity{
     assert(ddMandateAccepted.creditor == ddMandateNotAccepted.creditor)
     assert(ddMandateAccepted.debtor == debtorValidated)
     assert(ddMandateAccepted.creationDate == ddMandateNotAccepted.creationDate)
-    assert(ddMandateAccepted.contract.asInstanceOf[ContractSigned] == contractSigned)
-
     ddMandateAccepted
   }
 }
@@ -129,7 +128,7 @@ case class DDMandateCanceled(
                               debtor: Debtor,
                               creditor: Creditor,
                               creationDate: Date,
-                              contract: Contract,
+                              contract: DDMandateContract,
                               cancellationDate: Date) extends DDMandate {
 
 }

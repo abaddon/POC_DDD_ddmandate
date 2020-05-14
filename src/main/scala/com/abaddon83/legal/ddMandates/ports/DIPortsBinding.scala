@@ -6,7 +6,7 @@ import wvlet.airframe._
 trait DIPortsBinding {
 
   val bankAccountPort = bind[BankAccountPort]
-  val contractPort = bind[ContractPort]
+  val contractPort = bind[DDMandateContractPort]
   val creditorPort = bind[CreditorPort]
   val ddMandateRepositoryePort = bind[DDMandateRepositoryPort]
 }

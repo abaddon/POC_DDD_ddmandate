@@ -4,25 +4,25 @@ import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels._
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.{DDMandateDomainElementHelper, UUIDRegistryHelper}
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 
 
 
 
 
-
-class DDMandateServiceTest extends AnyFunSuite with DDMandateDomainElementHelper  {
+class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateDomainElementHelper  {
    protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()
    protected val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
    protected val creditorPort: CreditorPort = new FakeCreditorAdapter()
-   protected  val contractPort: ContractPort = new FakeContractAdapter()
+   protected  val contractPort: DDMandateContractPort = new FakeDDMandateContractAdapter()
    protected val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort, contractPort)
 
 
@@ -34,30 +34,26 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateDomainElementHelper
 
 
 
-    val ddMandateIdentity = ddMandateService.createDDMandate(bankAccountId,"IT1").identity
+    val mandateCreatedIdentity=ddMandateService.createDDMandate(bankAccountId,"IT1").futureValue.identity
 
-    val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(ddMandateIdentity)
-    assert(ddMandate.isDefined)
-    assert(ddMandate.get.debtor.bankAccount.identity == bankAccountId)
-    assert(ddMandate.get.contract.isInstanceOf[ContractUnSigned])
-    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
-    assert(ddMandate.get.identity == ddMandateIdentity)
+    val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(mandateCreatedIdentity).futureValue
+    assert(ddMandate.debtor.bankAccount.identity == bankAccountId)
+    assert(ddMandate.contract.isSigned==false)
+    assert(ddMandate.isInstanceOf[DDMandateNotAccepted])
+    assert(ddMandate.identity == mandateCreatedIdentity)
 
-    UUIDRegistryHelper.add("ddmandate",ddMandate.get.identity.uuid,"not_accepted_not_signed")
+    UUIDRegistryHelper.add("ddmandate",ddMandate.identity.uuid,"not_accepted_not_signed")
   }
 
   test("Create a DD Mandate with a bank account that already has a DD mandate associated") {
-
     val ddMandateuuid =UUIDRegistryHelper.search("ddmandate","not_accepted_not_signed").get
     val ddmandateIdentity = DDMandateIdentity(ddMandateuuid)
 
-    val ddMandateExist =  ddMandateRepository.findDDMandateNotAcceptedById(ddmandateIdentity).get
+    val ddMandateExist =  ddMandateRepository.findDDMandateNotAcceptedById(ddmandateIdentity).futureValue
     val bankAccountIdentity = ddMandateExist.debtor.bankAccount.identity
 
+    assert(ddMandateService.createDDMandate(bankAccountIdentity,"IT1").failed.futureValue.isInstanceOf[java.lang.IllegalArgumentException])
 
-    assertThrows[java.lang.IllegalArgumentException] {
-      ddMandateService.createDDMandate(bankAccountIdentity,"IT1")
-    }
 
   }
 
@@ -65,25 +61,25 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateDomainElementHelper
 
     val ddMandateuuid =UUIDRegistryHelper.search("ddmandate","not_accepted_not_signed").get
     val ddmandateIdentity = DDMandateIdentity(ddMandateuuid)
-    assertThrows[NoSuchElementException] {
-      ddMandateService.acceptDDMandate(ddmandateIdentity)
-    }
 
-    val ddMandateNotAccepted =ddMandateRepository.findDDMandateNotAcceptedById(ddmandateIdentity).get
+    assert(ddMandateService.acceptDDMandate(ddmandateIdentity).failed.futureValue.isInstanceOf[NoSuchElementException])
+
+
+    val ddMandateNotAccepted =ddMandateRepository.findDDMandateNotAcceptedById(ddmandateIdentity).futureValue
 
     //sign the Contract
-    contractPort.asInstanceOf[FakeContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
     //validate the BankAccount
     bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
-    ddMandateService.acceptDDMandate(ddmandateIdentity)
+    ddMandateService.acceptDDMandate(ddmandateIdentity).futureValue
 
-    val ddMandateAccepted = ddMandateRepository.findDDMandateAcceptedById(ddmandateIdentity)
-    assert(ddMandateAccepted.get.contract.isInstanceOf[ContractSigned])
-    assert(ddMandateAccepted.get.debtor.bankAccount.isValid)
-    assert(ddMandateAccepted.get.isInstanceOf[DDMandateAccepted])
+    val ddMandateAccepted = ddMandateRepository.findDDMandateAcceptedById(ddmandateIdentity).futureValue
+    assert(ddMandateAccepted.contract.isSigned == true)
+    assert(ddMandateAccepted.debtor.bankAccount.isValid)
+    assert(ddMandateAccepted.isInstanceOf[DDMandateAccepted])
 
-    UUIDRegistryHelper.update("ddmandate",ddMandateAccepted.get.identity.value,"accepted")
+    UUIDRegistryHelper.update("ddmandate",ddMandateAccepted.identity.value,"accepted")
 
   }
 
@@ -92,14 +88,14 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateDomainElementHelper
     val ddMandateuuid =UUIDRegistryHelper.search("ddmandate","accepted").get
     val ddmandateIdentity = DDMandateIdentity(ddMandateuuid)
 
-    ddMandateService.cancelDDMandate(ddmandateIdentity)
+    ddMandateService.cancelDDMandate(ddmandateIdentity).futureValue
 
 
-    val ddMandateCancelled = ddMandateRepository.findDDMandateCancelledById(ddmandateIdentity)
+    val ddMandateCancelled = ddMandateRepository.findDDMandateCancelledById(ddmandateIdentity).futureValue
 
-    assert(ddMandateCancelled.get.identity == ddmandateIdentity)
+    assert(ddMandateCancelled.identity == ddmandateIdentity)
 
-    UUIDRegistryHelper.update("ddmandate",ddMandateCancelled.get.identity.value,"cencelled")
+    UUIDRegistryHelper.update("ddmandate",ddMandateCancelled.identity.value,"cencelled")
 
   }
 
@@ -108,19 +104,16 @@ class DDMandateServiceTest extends AnyFunSuite with DDMandateDomainElementHelper
     val ddMandateuuid =UUIDRegistryHelper.search("ddmandate","cencelled").get
     val ddmandateIdentity = DDMandateIdentity(ddMandateuuid)
 
-    val ddMandateCancelled = ddMandateRepository.findDDMandateCancelledById(ddmandateIdentity)
+    val ddMandateCancelled = ddMandateRepository.findDDMandateCancelledById(ddmandateIdentity).futureValue
 
-    val bankAccountIdentity = ddMandateCancelled.get.debtor.bankAccount.identity
+    val bankAccountIdentity = ddMandateCancelled.debtor.bankAccount.identity
 
-    val newDDMandateIdentity = ddMandateService.createDDMandate(bankAccountIdentity,"IT1").identity
+    val newDDMandateIdentity = ddMandateService.createDDMandate(bankAccountIdentity,"IT1").futureValue.identity
 
-
-    val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(newDDMandateIdentity)
-    assert(ddMandate.isDefined)
-    assert(ddMandate.get.debtor.bankAccount.identity == bankAccountIdentity)
-    assert(ddMandate.get.isInstanceOf[DDMandateNotAccepted])
-    assert(ddMandate.get.identity == newDDMandateIdentity)
-
+    val ddMandate = ddMandateRepository.findDDMandateNotAcceptedById(newDDMandateIdentity).futureValue
+    assert(ddMandate.debtor.bankAccount.identity == bankAccountIdentity)
+    assert(ddMandate.isInstanceOf[DDMandateNotAccepted])
+    assert(ddMandate.identity == newDDMandateIdentity)
   }
   
 }

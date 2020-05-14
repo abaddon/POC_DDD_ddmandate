@@ -10,21 +10,24 @@ import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.libs.DateUtils
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class FakeBankAccountAdapter extends BankAccountPort{
-  override def findDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor] = {
-
-    val result = bankAccountService.find(debtor =>
-      debtor.bankAccount.identity == bankAccountId
-    )
-    result
+  override def findDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Future[Debtor] = {
+    Future{
+      bankAccountService.find(debtor =>
+        debtor.bankAccount.identity == bankAccountId
+      ).getOrElse(throw new NoSuchElementException(s"Debtor with bank account id: ${bankAccountId} not found"))
+    }
   }
 
-  override def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Option[Debtor] = {
+  override def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Future[Debtor] = {
     findDebtorByBankAccountId(bankAccountId).filter(_.bankAccount.isValid)
   }
 
-  override def findBankAccountByBankAccountId(bankAccountId: BankAccountIdentity): Option[BankAccount] = ???
+  override def findBankAccountByBankAccountId(bankAccountId: BankAccountIdentity): Future[BankAccount] = ???
 
 
   def acceptBankAccount(bankAccountIdentity: BankAccountIdentity) = {

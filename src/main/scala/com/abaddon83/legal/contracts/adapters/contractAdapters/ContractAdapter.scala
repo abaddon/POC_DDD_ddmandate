@@ -1,4 +1,4 @@
-package com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp
+package com.abaddon83.legal.contracts.adapters.contractAdapters
 
 import java.util.{Date, UUID}
 

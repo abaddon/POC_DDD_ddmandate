@@ -66,13 +66,13 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
   test("update the correct signedContract to a not accepted mandate"){
     val bankAccountId : BankAccountIdentity = BankAccountIdentity()
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(false,bankAccountId),isContractSigned = false)
-    val currentUnSignedContract=  ddMandateNotAccepted.contract.asInstanceOf[ContractUnSigned]
-    val signedContract = ContractSigned(currentUnSignedContract.identity,currentUnSignedContract.reference,currentUnSignedContract.contractType,currentUnSignedContract.name,currentUnSignedContract.format,currentUnSignedContract.creationDate,new Date())
+    val currentUnSignedContract=  ddMandateNotAccepted.contract
+    val signedContract = DDMandateContract(currentUnSignedContract.identity,currentUnSignedContract.reference,currentUnSignedContract.contractType,currentUnSignedContract.name,currentUnSignedContract.format,currentUnSignedContract.creationDate,Some(new Date()))
 
 
     val ddMandateNotAcceptedSigned = ddMandateNotAccepted.updateContractSigned(signedContract)
 
-    assert(ddMandateNotAcceptedSigned.contract.isInstanceOf[ContractSigned])
+    assert(ddMandateNotAcceptedSigned.contract.isSigned)
     assert(ddMandateNotAcceptedSigned.contract.identity == ddMandateNotAccepted.contract.identity)
   }
 
@@ -81,7 +81,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
 
     val bankAccount = buildEUBankAccount(false)
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(bankAccount,isContractSigned = true)
-    val contractSigned = ddMandateNotAccepted.contract.asInstanceOf[ContractSigned]
+    val contractSigned = ddMandateNotAccepted.contract
     val debtor = ddMandateNotAccepted.debtor
 
     assertThrows[java.lang.AssertionError] {
@@ -93,7 +93,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
   test("accept DD mandate with a bank account valid and contract signed"){
 
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(true),isContractSigned = true)
-    val contractSigned = ddMandateNotAccepted.contract.asInstanceOf[ContractSigned]
+    val contractSigned = ddMandateNotAccepted.contract
     val debtor = ddMandateNotAccepted.debtor
 
     val ddMandateAccepted = ddMandateNotAccepted.accept(contractSigned,debtor)
@@ -105,6 +105,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
     assert(ddMandateAccepted.debtor == ddMandateNotAccepted.debtor)
     assert(ddMandateAccepted.ddMandateType == ddMandateNotAccepted.ddMandateType)
     assert(ddMandateAccepted.contract == ddMandateNotAccepted.contract)
+    assert(ddMandateAccepted.contract.isSigned )
 
 
   }

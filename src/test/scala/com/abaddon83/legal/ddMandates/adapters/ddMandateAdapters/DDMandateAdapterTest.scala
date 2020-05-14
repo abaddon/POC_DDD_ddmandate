@@ -5,11 +5,10 @@ import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractAdapters.fake.FakeContractAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.domainModels.ContractUnSigned
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, DDMandateContractPort, CreditorPort, DDMandateRepositoryPort}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -23,7 +22,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
   val session = newDesign
       .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-      .bind[ContractPort].toInstance(new FakeContractAdapter() )
+      .bind[DDMandateContractPort].toInstance(new FakeDDMandateContractAdapter() )
       .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
       .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter())
       .newSession
@@ -39,7 +38,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
     whenReady(ddMandateAdapter.createDDMandate(bankAccountUUID,legalEntity)){ ddMandateNotAccepted =>
       assert(ddMandateNotAccepted.debtor.bankAccount.identity.uuid.toString == bankAccountIdString)
       assert(ddMandateNotAccepted.creditor.legalEntityCode == legalEntity)
-      assert(ddMandateNotAccepted.contract.isInstanceOf[ContractUnSigned])
+      assert(ddMandateNotAccepted.contract.isSigned == false)
     }
   }
 

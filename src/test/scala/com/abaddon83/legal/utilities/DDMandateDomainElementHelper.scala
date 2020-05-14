@@ -24,22 +24,22 @@ trait DDMandateDomainElementHelper {
 
   protected def buildAcceptedDDMandate : DDMandateAccepted = {
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(true),isContractSigned = true)
-    ddMandateNotAccepted.accept(ddMandateNotAccepted.contract.asInstanceOf[ContractSigned],ddMandateNotAccepted.debtor)
+    ddMandateNotAccepted.accept(ddMandateNotAccepted.contract,ddMandateNotAccepted.debtor)
   }
 
-  protected def buildContract(ddMandate:DDMandate, isSigned: Boolean):Contract={
+  protected def buildContract(ddMandate:DDMandate, isSigned: Boolean):DDMandateContract={
     isSigned match {
-      case true => ContractSigned(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date(),new Date())
-      case false => ContractUnSigned(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date())
+      case true => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date(),Some(new Date))
+      case false => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date(), None)
     }
   }
 
-  protected def buildUnsignedContract(): ContractUnSigned ={
-    buildContract(buildDraftDDMandate(buildEUBankAccount(false)),false).asInstanceOf[ContractUnSigned]
+  protected def buildUnsignedContract(): DDMandateContract ={
+    buildContract(buildDraftDDMandate(buildEUBankAccount(false)),false)
   }
 
-  protected def buildSignedContract(): ContractSigned = {
-    buildContract(buildDraftDDMandate(buildEUBankAccount(false)),true).asInstanceOf[ContractSigned]
+  protected def buildSignedContract(): DDMandateContract = {
+    buildContract(buildDraftDDMandate(buildEUBankAccount(false)),true)
   }
 
   protected def buildDebtor(bankAccount: BankAccount):Debtor = {

@@ -24,6 +24,14 @@ case object UUIDRegistryHelper {
     list.find(e => e.itemType==itemType && e.status == status).map(e => e.uuid)
   }
 
+  def printAll() = {
+    println("printAll() started")
+    list.foreach(element =>
+      println(element)
+    )
+    println("printAll() ended")
+  }
+
   private def remove(element: Element): Unit ={
     list -= element
   }
@@ -44,7 +52,11 @@ case object UUIDRegistryHelper {
 case class Element( itemType: String,
                     uuid: UUID,
                     status: String
-                    )
+                    ) {
+  override def toString: String = {
+    s"itemType: ${itemType}, uuid: ${uuid}, status: ${status}"
+  }
+}
 
 
 
