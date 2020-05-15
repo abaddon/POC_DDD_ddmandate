@@ -3,8 +3,10 @@ package com.abaddon83.legal.contracts.ports
 import com.abaddon83.legal.contracts.domainModels.DDMandate
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
+import scala.concurrent.Future
+
 trait DDMandatePort {
 
-  def findDDMandateById(ddMandateIdentity: DDMandateIdentity): Option[DDMandate]
+  def findDDMandateById(ddMandateIdentity: DDMandateIdentity): Future[DDMandate]
 
 }

@@ -8,43 +8,55 @@ import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePor
 import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+
 class ContractService(
   repository: ContractRepositoryPort,
   fileRepository: FileRepositoryPort,
   ddMandatePort: DDMandatePort
-) {
+  ) {
 
-  def createDDMandateContract(ddMandateIdentity: DDMandateIdentity): ContractUnSigned ={
+  def createDDMandateContract(ddMandateIdentity: DDMandateIdentity): Future[ContractUnSigned] ={
+    for{
+      ddMandate <- ddMandatePort.findDDMandateById(ddMandateIdentity)
+      unsignedFile <- fileRepository.createUnsignedDDMandate(ddMandate)
+    } yield repository.save(ContractUnSigned(ddMandate,unsignedFile))
 
-    val ddMandate = ddMandatePort.findDDMandateById(ddMandateIdentity) match {
+    /*val ddMandate = ddMandatePort.findDDMandateById(ddMandateIdentity) match {
       case Some(value) => value
       case None => throw new IllegalArgumentException(s"DD Mandate with id ${ddMandateIdentity.uuid} not found")
     }
+     */
+    /*
     val unsignedFile = fileRepository.createUnsignedDDMandate(ddMandate) match {
       case Some(value) => value
       case None => throw new NoSuchElementException("Unsigned file not created")
     }
+    */
+    //val contractUnSigned = ContractUnSigned(ddMandate,unsignedFile)
 
-    val contractUnSigned = ContractUnSigned(ddMandate,unsignedFile)
-
-    repository.save(contractUnSigned)
+    //repository.save(contractUnSigned)
   }
 
-  def createTCContract(): ContractUnSigned = {
+  def createTCContract(): Future[ContractUnSigned] = {
     throw new NotImplementedError("T&C Contract not implemented")
   }
 
-  def signContract(contractIdentity: ContractIdentity, signedFile: FileRepository, signedDate: Date): ContractSigned = {
+  def signContract(contractIdentity: ContractIdentity, signedFile: FileRepository, signedDate: Date): Future[ContractSigned] = {
+    for{
+      contractUnsigned <- repository.findContractUnSignedByIdentity(contractIdentity)
+    } yield repository.save(contractUnsigned.sign(signedFile,signedDate))
 
-    val contractUnsigned = repository.findContractUnSignedByIdentity(contractIdentity) match {
+    /*val contractUnsigned = repository.findContractUnSignedByIdentity(contractIdentity) match {
       case Some(value) => value
       case None => throw new IllegalArgumentException("Unsigned Contract with id: "++contractIdentity.toString++" not found")
-    }
+    }*/
 
-    val contractSigned = contractUnsigned.sign(signedFile,signedDate)
-
+    /*val contractSigned =
     repository.save(contractSigned)
-
+    */
   }
 
   def search(): ContractRepositoryPort = {

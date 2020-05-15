@@ -7,8 +7,8 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.ContractRoutes
-import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.messages.{ContractJsonSupport, ContractView, CreateContractRequest, SignContractRequest}
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp.ContractRoutes
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp.messages.{ContractJsonSupport, ContractView, CreateContractRequest, SignContractRequest}
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
@@ -64,8 +64,6 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
       assert(response.reference == ddMandateUUIDString)
       assert(response.status == "unsigned")
 
-
-
     }
   }
 
@@ -88,7 +86,6 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
       assert(response.signatureDate.get.toString == signatureDate.toString)
 
       UUIDRegistryHelper.update("contract",contractUUID,"signed")
-
     }
 
   }

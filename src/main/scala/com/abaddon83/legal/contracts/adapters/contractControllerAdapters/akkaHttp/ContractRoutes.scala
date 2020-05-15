@@ -1,9 +1,9 @@
-package com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp
+package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp
 
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
-import com.abaddon83.legal.contracts.adapters.contractAdapters.ContractAdapter
-import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.messages._
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp.messages.{ContractJsonSupport, ContractView, CreateContractRequest, ErrorContract, SignContractRequest}
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.S3FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
 import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler

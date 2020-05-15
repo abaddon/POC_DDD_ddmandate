@@ -1,4 +1,4 @@
-package com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.messages
+package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp.messages
 
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 

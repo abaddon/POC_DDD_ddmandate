@@ -8,6 +8,9 @@ import com.abaddon83.legal.contracts.ports.ContractRepositoryPort
 import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, ContractType, DD_MANDATE, Format, PDF}
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class FakeContractRepositoryAdapter extends ContractRepositoryPort{
 
@@ -22,23 +25,30 @@ class FakeContractRepositoryAdapter extends ContractRepositoryPort{
     contract
   }
 
-  override def findContractByIdentity(contractIdentity: ContractIdentity): Option[Contract] = {
-    repository.db.find(contractRepo => contractRepo.identity == contractIdentity)
-      .map(_.buildContract())
-
-  }
-
-  override def findContractUnSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractUnSigned] = {
-    findContractByIdentity(contractIdentity) match {
-      case contract: Option[ContractUnSigned] => contract.asInstanceOf[Option[ContractUnSigned]]
-      case _ => None
+  override def findContractByIdentity(contractIdentity: ContractIdentity): Future[Contract] = {
+    Future{
+      repository.db.find(contractRepo => contractRepo.identity == contractIdentity)
+        .map(_.buildContract())
+        .getOrElse(throw new NoSuchElementException(s"Contract with id: ${contractIdentity} not found"))
     }
   }
 
-  override def findContractSignedByIdentity(contractIdentity: ContractIdentity): Option[ContractSigned] = {
-    findContractByIdentity(contractIdentity) match {
-      case contract: Option[ContractSigned] => contract.asInstanceOf[Option[ContractSigned]]
-      case _ => None
+
+  override def findContractUnSignedByIdentity(contractIdentity: ContractIdentity): Future[ContractUnSigned] = {
+    for{
+      contract <- findContractByIdentity(contractIdentity)
+    } yield contract match {
+      case ct: ContractUnSigned => ct.asInstanceOf[ContractUnSigned]
+      case _ =>  throw new NoSuchElementException(s"Contract unsigned with id: ${contractIdentity} not found")
+    }
+  }
+
+  override def findContractSignedByIdentity(contractIdentity: ContractIdentity): Future[ContractSigned] = {
+    for{
+      contract <- findContractByIdentity(contractIdentity)
+    } yield contract match {
+      case ct: ContractSigned => ct.asInstanceOf[ContractSigned]
+      case _ =>  throw new NoSuchElementException(s"Contract signed with id: ${contractIdentity} not found")
     }
   }
 

@@ -5,7 +5,7 @@ import akka.event.Logging
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
-import com.abaddon83.legal.contracts.adapters.contractAdapters.akkaHttp.ContractRoutes
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akkaHttp.ContractRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateRoutes
 import com.abaddon83.libs.akkaHttp.routes.RouteExceptionHandling
 

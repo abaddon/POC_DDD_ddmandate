@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
