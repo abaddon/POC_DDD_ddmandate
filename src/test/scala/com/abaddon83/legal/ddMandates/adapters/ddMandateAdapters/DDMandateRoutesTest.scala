@@ -135,19 +135,46 @@ val session = newDesign
   }
 
 
-  test("activate a DD Mandate not accepted with a contract not signed") {
+  test("activate a DD Mandate not accepted with bank account valid and contract not signed") {
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
+    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    //routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
-      println(response._3.toString)
+      //println(response)
       val message = responseAs[ErrorMessage]
+      //println(message)
       //debug(message)
       status shouldBe BadRequest
       assert(message.errorCode == 0)
       assert(message.exceptionType == "java.util.NoSuchElementException")
       assert(message.instance == s"/ddmandates/${ddMandateUUIDString}/activate")
-      assert(message.message == s"Validated Debtor with bank account id: BankAccount-146a525d-402b-4bce-a317-3f00d05aede0 not found")
+      assert(message.message == s"Contract signed with id: ${ddMandateNotAccepted.contract.identity} not found")
+    }
+  }
+
+  test("activate a DD Mandate not accepted with bank account not valid and contract signed") {
+
+    val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
+
+    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+      //println(response)
+      val message = responseAs[ErrorMessage]
+      //println(message)
+      //debug(message)
+      status shouldBe BadRequest
+      assert(message.errorCode == 0)
+      assert(message.exceptionType == "java.util.NoSuchElementException")
+      assert(message.instance == s"/ddmandates/${ddMandateUUIDString}/activate")
+
+      assert(message.message == s"Debtor with bank account id: ${ddMandateNotAccepted.debtor.bankAccount.identity} is not validated")
     }
   }
 

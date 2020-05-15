@@ -5,17 +5,15 @@ import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, DDMandateContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import wvlet.airframe.newDesign
-
-import scala.concurrent.Await
-import scala.concurrent.duration._
 
 
 class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
@@ -63,9 +61,9 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
   test("find a DD mandate"){
     val legalEntity = "IT1"
     val bankAccountUUID = UUID.fromString("4a943d91-1ed4-4a1d-904e-9ec830106299")
-    val ddmandate = Await.result(
-      ddMandateAdapter.createDDMandate(bankAccountUUID, legalEntity),
-      1.seconds)
+    val ddmandate = ddMandateAdapter.createDDMandate(bankAccountUUID, legalEntity).futureValue
+
+    UUIDRegistryHelper.add("ddMandate_adapter",ddmandate.identity.uuid,"not_accepted")
 
     val ddMandateUUID = ddmandate.identity.uuid
 
@@ -80,6 +78,13 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
     val ddMandateUUID = UUID.fromString("4a943d91-1ed4-4a1d-904e-9ec830106299")
 
     ddMandateAdapter.findByIdDDMandate(ddMandateUUID).failed.futureValue shouldBe an [java.util.NoSuchElementException]
+  }
+
+  test("accept a DD mandate with a contract not signed"){
+    val ddmandateUUID = UUIDRegistryHelper.search("ddMandate_adapter","not_accepted").get
+
+    assert(ddMandateAdapter.acceptDDMandate(ddmandateUUID).failed.futureValue.isInstanceOf[NoSuchElementException])
+
   }
 
 }

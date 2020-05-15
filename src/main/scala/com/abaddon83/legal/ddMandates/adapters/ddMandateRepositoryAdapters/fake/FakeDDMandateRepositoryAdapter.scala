@@ -23,14 +23,14 @@ class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
   override def findDDMandateCancelledById(id: DDMandateIdentity): Future[DDMandateCanceled] = {
     findDDMandateById(id).flatMap {
       case ddmandate : DDMandateCanceled => Future(ddmandate)
-      case _ =>   throw new NoSuchElementException(s"DDMandateCanceled with id: ${id.toString} not found")
+      case _ => throw new NoSuchElementException(s"DDMandateCanceled with id: ${id.toString} not found")
     }
   }
 
   override def findDDMandateAcceptedById(id: DDMandateIdentity): Future[DDMandateAccepted] ={
     findDDMandateById(id).flatMap{
       case ddmandate : DDMandateAccepted => Future(ddmandate)
-      case _ =>   throw new NoSuchElementException(s"DDMandateAccepted with id: ${id.toString} not found")
+      case _ => throw new NoSuchElementException(s"DDMandateAccepted with id: ${id.toString} not found")
     }
   }
 

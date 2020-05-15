@@ -63,57 +63,13 @@ class DDMandateService(
       ddMandateAccepted = ddMandateNotAccepted.accept(contractSigned,validatedDebtor)
     } yield repositoryPort.save(ddMandateAccepted)
 
-    //get DDmandateNotAccepted
-   /*
-   val ddMandateNotAccepted = repositoryPort.findDDMandateNotAcceptedById(ddMandateIdentity) match {
-      case Some(value) => value
-      case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
-
-    }
-
-    */
-
-    //get Debtor with BankAccountValidated
-    /*
-    val bankAccountIdentity = ddMandateNotAccepted.debtor.bankAccount.identity
-    val validatedDebtor = bankAccountPort.findValidatedDebtorByBankAccountId(bankAccountIdentity) match {
-      case Some(value) =>value
-      case None => throw new NoSuchElementException(s"Validated Debtor with bank account id: ${bankAccountIdentity.toString} not found")
-    }
-    */
-
-    //get signed Contract
-    /*val contractIdentity = ddMandateNot// controllo il num di mandati abbinati a quel bankaccountAccepted.contract.identity
-    val contractSigned = contractPort.findSignedContractByContractId(contractIdentity) match {
-      case Some(value) =>value
-      case None => throw new NoSuchElementException(s"Contract signed with id: ${contractIdentity.toString} not found")
-    }
-
-    val DDMandateAccepted = ddMandateNotAccepted.accept(contractSigned,validatedDebtor)
-
-    repositoryPort.save(DDMandateAccepted)
-
-     */
-
   }
 
-  def cancelDDMandate(ddMandateIdentity:  DDMandateIdentity): Future[DDMandateCanceled] =
-  {
-    for{
+  def cancelDDMandate(ddMandateIdentity:  DDMandateIdentity): Future[DDMandateCanceled] = {
+    for {
       ddMandateAccepted <- repositoryPort.findDDMandateAcceptedById(ddMandateIdentity)
       ddMandateCanceled = ddMandateAccepted.cancel()
     } yield repositoryPort.save(ddMandateCanceled)
-
-    /*
-    val ddMandateAccepted = repositoryPort.findDDMandateAcceptedById(ddMandateIdentity) match {
-     case Some(value) => value
-      case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateIdentity.toString} not found ")
-    }
-
-    val ddMandateCanceled = ddMandateAccepted.cancel()
-    repositoryPort.save(ddMandateCanceled)
-
-     */
   }
 
 }

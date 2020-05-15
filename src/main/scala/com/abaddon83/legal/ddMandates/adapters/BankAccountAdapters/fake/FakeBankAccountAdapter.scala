@@ -24,7 +24,12 @@ class FakeBankAccountAdapter extends BankAccountPort{
   }
 
   override def findValidatedDebtorByBankAccountId(bankAccountId: BankAccountIdentity): Future[Debtor] = {
-    findDebtorByBankAccountId(bankAccountId).filter(_.bankAccount.isValid)
+    for{
+      debtorFound <- findDebtorByBankAccountId(bankAccountId)
+    } yield debtorFound match {
+        case debtor: Debtor if(debtor.bankAccount.isValid) => debtor
+        case _ => throw new NoSuchElementException(s"Debtor with bank account id: ${bankAccountId} is not validated")
+    }
   }
 
   override def findBankAccountByBankAccountId(bankAccountId: BankAccountIdentity): Future[BankAccount] = ???
@@ -34,7 +39,12 @@ class FakeBankAccountAdapter extends BankAccountPort{
     bankAccountService.find(debtor => debtor.bankAccount.identity == bankAccountIdentity) match {
       case Some(debtorUnsigned: Debtor) => update(debtorUnsigned,validate(debtorUnsigned))
     }
+  }
 
+  def rejectBankAccount(bankAccountIdentity: BankAccountIdentity) = {
+    bankAccountService.find(debtor => debtor.bankAccount.identity == bankAccountIdentity) match {
+      case Some(debtorUnsigned: Debtor) => update(debtorUnsigned,reject(debtorUnsigned))
+    }
   }
 
   private def update(oldDebtor: Debtor, updatedDebtor: Debtor) = {
@@ -42,6 +52,14 @@ class FakeBankAccountAdapter extends BankAccountPort{
 
     bankAccountService.addOne(updatedDebtor)
 
+  }
+
+  private def reject(debtor: Debtor): Debtor = {
+    val rejectedBankAccount = debtor.bankAccount match {
+      case bankAccount : EUBankAccount => bankAccount.copy(validated = false)
+      case bankAccount : UKBankAccount => bankAccount.copy(validated = false)
+    }
+    debtor.copy(bankAccount = rejectedBankAccount)
   }
 
 

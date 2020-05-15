@@ -59,6 +59,7 @@ trait DDMandateRoutes extends DDMandateAdapter with DDMandateJsonSupport with Ro
                           case ex: NoSuchElementException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
                           case ex: ClassCastException => complete(StatusCodes.BadRequest, ErrorDDMandate.build(ex, uri.path.toString()))
                           case ex: Exception => complete(StatusCodes.InternalServerError, ErrorDDMandate.build(ex, uri.path.toString()))
+                          //case x =>
                         }
                       }
                     }
