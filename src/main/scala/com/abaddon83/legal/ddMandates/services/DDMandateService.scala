@@ -1,7 +1,7 @@
 package com.abaddon83.legal.ddMandates.services
 
 import com.abaddon83.legal.ddMandates.domainModels._
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, ContractDDMandatePort, DDMandateRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
@@ -12,7 +12,7 @@ class DDMandateService(
                         repositoryPort: DDMandateRepositoryPort,
                         bankAccountPort: BankAccountPort,
                         creditorPort: CreditorPort,
-                        contractPort: DDMandateContractPort
+                        contractPort: ContractDDMandatePort
                         ) {
 
   def createDDMandate(bankAccountId: BankAccountIdentity, legalEntity: String): Future[DDMandateNotAccepted] = {

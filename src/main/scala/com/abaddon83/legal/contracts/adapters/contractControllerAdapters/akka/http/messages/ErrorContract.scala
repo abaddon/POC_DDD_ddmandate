@@ -1,9 +1,9 @@
-package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages
+package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages
 
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 
 
-object ErrorDDMandate{
+object ErrorContract{
   def build(exception: Throwable, apiResource: String): ErrorMessage ={
     ErrorMessage(apiResource,exception.getMessage,exception.getClass().getCanonicalName(),0)
   }

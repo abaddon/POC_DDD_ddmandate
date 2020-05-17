@@ -8,11 +8,11 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateRoutes
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, RestViewDDMandate}
+import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.http.DDMandateRoutes
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
@@ -26,7 +26,7 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
 
 val session = newDesign
   .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-  .bind[DDMandateContractPort].toInstance(new FakeDDMandateContractAdapter() )
+  .bind[ContractDDMandatePort].toInstance(new FakeContractDDMandateAdapter() )
   .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
   .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter() )
   .newSession
@@ -41,7 +41,7 @@ val session = newDesign
     Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
       eventually{
         status shouldBe OK
-        val viewDDMandate = responseAs[RestViewDDMandate]
+        val viewDDMandate = responseAs[DDMandateView]
         assert(viewDDMandate.creditor.legalEntityCode == legalEntity)
         assert(viewDDMandate.debtor.bankAccountId.toString == bankAccountUUID.toString)
         assert(viewDDMandate.id.isInstanceOf[UUID])
@@ -110,7 +110,7 @@ val session = newDesign
     Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
-        val viewDDMandate = responseAs[RestViewDDMandate]
+        val viewDDMandate = responseAs[DDMandateView]
         assert(viewDDMandate.id.toString == ddMandateUUIDString)
         assert(viewDDMandate.status == "Not Accepted")
       }
@@ -161,7 +161,7 @@ val session = newDesign
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
     val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    routes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
     routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
@@ -183,12 +183,12 @@ val session = newDesign
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
     val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    routes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
     routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
-      val message = responseAs[RestViewDDMandate]
+      val message = responseAs[DDMandateView]
 
       status shouldBe OK
       assert(message.id.toString == ddMandateUUIDString)
@@ -204,7 +204,7 @@ val session = newDesign
     Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
-        val viewDDMandate = responseAs[RestViewDDMandate]
+        val viewDDMandate = responseAs[DDMandateView]
         assert(viewDDMandate.id.toString == ddMandateUUIDString)
         assert(viewDDMandate.status == "Accepted")
       }
@@ -231,7 +231,7 @@ val session = newDesign
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
     Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(routes.ddMandateRoutes) ~> check {
-      val message = responseAs[RestViewDDMandate]
+      val message = responseAs[DDMandateView]
 
       status shouldBe OK
       assert(message.id.toString == ddMandateUUIDString)
@@ -247,7 +247,7 @@ val session = newDesign
     Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
       eventually {
         status shouldBe OK
-        val viewDDMandate = responseAs[RestViewDDMandate]
+        val viewDDMandate = responseAs[DDMandateView]
         assert(viewDDMandate.id.toString == ddMandateUUIDString)
         assert(viewDDMandate.status == "Canceled")
       }

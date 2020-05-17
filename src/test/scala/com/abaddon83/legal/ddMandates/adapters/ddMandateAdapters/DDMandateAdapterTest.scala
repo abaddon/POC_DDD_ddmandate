@@ -5,10 +5,10 @@ import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.DDMandateAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.FakeDDMandateContractAdapter
+import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
@@ -20,7 +20,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
   val session = newDesign
       .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-      .bind[DDMandateContractPort].toInstance(new FakeDDMandateContractAdapter() )
+      .bind[ContractDDMandatePort].toInstance(new FakeContractDDMandateAdapter() )
       .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
       .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter())
       .newSession

@@ -1,16 +1,16 @@
-package com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake
+package com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake
 
 import java.util.Date
 
 import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateContract}
-import com.abaddon83.legal.ddMandates.ports.DDMandateContractPort
+import com.abaddon83.legal.ddMandates.ports.ContractDDMandatePort
 import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, PDF}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class FakeDDMandateContractAdapter extends DDMandateContractPort{
+class FakeContractDDMandateAdapter extends ContractDDMandatePort{
 
   override def findSignedContractByContractId(contractIdentity: ContractIdentity): Future[DDMandateContract] = {
     Future{

@@ -10,5 +10,6 @@ import scala.concurrent.Future
 trait ContractPort {
   def createContract(contractType: String, reference: UUID): Future[ContractUnSigned]
   def findByIdContract(contractId: UUID): Future[Contract]
+  def findSignedContractByIdContract(contractId: UUID): Future[ContractSigned]
   def signContract(contractId: UUID, file: FileRepository, signatureDate: Date ): Future[ContractSigned]
 }

@@ -68,8 +68,7 @@ class FakeContractRepositoryAdapter extends ContractRepositoryPort{
 
   private def persist(contract: ContractRepo) = {
     repository.db = repository.db.addOne(contract)
-
-    //debug()
+    debug()
   }
 
   private def update(oldContract: ContractRepo,newContract: ContractRepo) = {

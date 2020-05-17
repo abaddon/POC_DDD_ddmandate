@@ -1,4 +1,4 @@
-package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp
+package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters
 
 import java.util.UUID
 
@@ -7,17 +7,15 @@ import com.abaddon83.legal.ddMandates.ports._
 import com.abaddon83.legal.ddMandates.services.DDMandateService
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
-import wvlet.airframe._
 
 import scala.concurrent.Future
 
+trait DDMandateAdapter extends DDMandatePort {
 
-trait DDMandateAdapter extends DDMandatePort{
-
-  val bankAccountPort: BankAccountPort = bind[BankAccountPort]
-  val contractPort :DDMandateContractPort = bind[DDMandateContractPort]
-  val creditorPort : CreditorPort = bind[CreditorPort]
-  val ddMandateRepositoryePort : DDMandateRepositoryPort = bind[DDMandateRepositoryPort]
+  val bankAccountPort: BankAccountPort
+  val contractPort :ContractDDMandatePort
+  val creditorPort : CreditorPort
+  val ddMandateRepositoryePort : DDMandateRepositoryPort
 
   private lazy val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepositoryePort,bankAccountPort,creditorPort,contractPort)
 
@@ -28,10 +26,6 @@ trait DDMandateAdapter extends DDMandatePort{
 
   override def findByIdDDMandate(ddMandateId: UUID): Future[DDMandate] = {
     ddMandateService.search.findDDMandateById(DDMandateIdentity.apply(ddMandateId))
-    /*match {
-      case Some(value) => value
-      case None => throw new NoSuchElementException(s"DD Mandate with id: ${ddMandateId.toString} not found ")
-    }*/
 
   }
 

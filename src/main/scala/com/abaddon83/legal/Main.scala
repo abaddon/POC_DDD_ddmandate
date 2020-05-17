@@ -1,10 +1,6 @@
 package com.abaddon83.legal
 
-import com.abaddon83.legal.contracts.ContractBindedAdapters
-import com.abaddon83.legal.ddMandates.DDMandateBindedAdapters
-import wvlet.airframe._
-
-
+/* with DI
 object Main extends App with ContractBindedAdapters  with DDMandateBindedAdapters {
 
   val adaptersBound = newDesign.add(contractBindDesign).add(ddMandateBindDesign)
@@ -13,5 +9,15 @@ object Main extends App with ContractBindedAdapters  with DDMandateBindedAdapter
     val app = session.build[AkkaHttpServer]
     app.startServer()
   }
+
+}
+*/
+
+object Main extends App with AkkaHttpServer{
+
+
+
+    startServer()
+
 
 }

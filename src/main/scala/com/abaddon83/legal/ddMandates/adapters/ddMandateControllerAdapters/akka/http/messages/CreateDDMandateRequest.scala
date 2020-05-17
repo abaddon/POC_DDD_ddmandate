@@ -1,4 +1,4 @@
-package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters.akkaHttp.messages
+package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages
 
 import java.util.UUID
 

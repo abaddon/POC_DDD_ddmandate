@@ -5,7 +5,7 @@ import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 
 import scala.concurrent.Future
 
-trait DDMandateContractPort {
+trait ContractDDMandatePort {
   def findSignedContractByContractId(contractIdentity: ContractIdentity): Future[DDMandateContract]
 
   def createContract(ddMandate: DDMandate): Future[DDMandateContract]
