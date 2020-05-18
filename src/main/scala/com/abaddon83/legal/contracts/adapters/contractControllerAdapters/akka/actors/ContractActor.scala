@@ -1,6 +1,7 @@
 package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.pattern.pipe
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
@@ -10,38 +11,31 @@ import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.internal.DDManda
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Success
+import scala.language.postfixOps
 
 class ContractActor()(implicit actorSystem: ActorSystem ) extends ContractAdapter with Actor with ActorLogging{
 
   override val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter //bind[DDMandatePort]
-  override val contractRepositoryPort : ContractRepositoryPort = new FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
+  override val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
   override val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
 
   override def receive: Receive = {
+
     case GiveMeSignedContractCmd(contractIdentity) => {
-      log.info("MSG GiveMeSignedContractCmd RICEVUTO")
-      log.debug(s"contractIdentity: ${contractIdentity.uuid}")
-      for{
+      log.info(s"RECEVICED CMD GiveMeSignedContractCmd(${contractIdentity}")
+      (for{
         contractSigned <- findSignedContractByIdContract(contractIdentity.uuid)
-      } yield sender ! ContractMsg(contractSigned)
+      } yield ContractMsg(contractSigned)).pipeTo(sender())
     }
+
     case CreateDDMandateContractCmd(dDMandateIdentity) => {
-      log.info("MSG CreateDDMandateContractCmd RICEVUTO")
-      log.debug(s"CreateDDMandateContractCmd -> dDMandateIdentity: ${dDMandateIdentity.uuid}")
-      //val contract=ContractUnSigned(ContractIdentity(),DD_MANDATE,dDMandateIdentity.uuid.toString,"CIAO",PDF,S3FileRepository("",""),new Date())
-      //
-      //val contractUnsigned = createContract("DDMANDATE", dDMandateIdentity.uuid)
-
-        createContract("DDMANDATE", dDMandateIdentity.uuid) onComplete{
-          case Success(value) => sender ! value
-        }
-
-        //contractMsg = ContractMsg(contractUnsigned)
-
-      //contractUnsigned.flatMap(contract => Future(ContractMsg(contract))).pipeTo(sender)
+      log.info(s"RECEVICED CMD CreateDDMandateContractCmd(${dDMandateIdentity})")
+      (for{
+        contractUnSigned <- createContract("DDMANDATE", dDMandateIdentity.uuid)
+      } yield ContractMsg(contractUnSigned)).pipeTo(sender())
     }
-    case _ => println("MSG AKKA NON RICOSCIUTO?")
+
+    case cmd => log.debug(s"RECEIVED CMD ${cmd.getClass().getTypeName} NOT RECOGNISED")
   }
 }
 

@@ -1,6 +1,7 @@
 package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors
 
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.pattern.pipe
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.internal.ContractDDMandateInternalAdapter
@@ -12,21 +13,23 @@ import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandateP
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class DDMandateActor(implicit actorSystem: ActorSystem ) extends DDMandateAdapter with Actor{
+class DDMandateActor(implicit actorSystem: ActorSystem ) extends DDMandateAdapter with Actor with ActorLogging{
 
   override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter() //bind[BankAccountPort]
   override val contractPort :ContractDDMandatePort = new ContractDDMandateInternalAdapter() //bind[ContractDDMandatePort]
   override val creditorPort : CreditorPort = new FakeCreditorAdapter()//bind[CreditorPort]
-  override val ddMandateRepositoryePort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()//bind[DDMandateRepositoryPort]
+  override val ddMandateRepositoryePort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapter//bind[DDMandateRepositoryPort]
 
   override def receive: Receive = {
+
     case GiveMeDDMandateCmd(ddMandateUUID) => {
-      println("MSG AKKA RICEVUTO")
-      for{
-        ddmandate <- findByIdDDMandate(ddMandateUUID)
-      } yield sender ! DDMandateMsg(ddmandate)
+      log.debug(s"RECEIVED CMD GiveMeDDMandateCmd(${ddMandateUUID})")
+      (for{
+        ddMandate <- findByIdDDMandate(ddMandateUUID)
+      } yield DDMandateMsg(ddMandate)).pipeTo(sender())
     }
-    case _ => println("MSG AKKA NON RICOSCIUTO?")
+
+    case cmd => log.debug(s"RECEIVED CMD ${cmd.getClass().getTypeName} NOT RECOGNISED")
   }
 }
 

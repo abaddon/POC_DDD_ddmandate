@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
 class ContractRoutes(implicit actorSystem: ActorSystem ) extends ContractAdapter with ContractJsonSupport with RouteRejectionHandler{
 
   override val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter //bind[DDMandatePort]
-  override val contractRepositoryPort : ContractRepositoryPort = new FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
+  override val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
   override val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
 
   private lazy val contractService: ContractService = new ContractService(contractRepositoryPort,fileRepositoryPort,ddMandatePort)

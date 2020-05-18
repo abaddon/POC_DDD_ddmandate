@@ -4,7 +4,6 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
-
 //sealed trait ResponseMsg
 final case class ContractMsg(id: UUID, status: String, contractType: String, reference: String, name: String, format: String, file: FileRepositoryView, creationDate: Date, signedFile: Option[FileRepositoryView], signatureDate: Option[Date]) //extends ResponseMsg
 

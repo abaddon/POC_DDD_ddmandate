@@ -11,7 +11,7 @@ import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
+object FakeDDMandateRepositoryAdapter extends DDMandateRepositoryPort{
 
   override def findDDMandateNotAcceptedById(id: DDMandateIdentity): Future[DDMandateNotAccepted] = {
     findDDMandateById(id).flatMap {

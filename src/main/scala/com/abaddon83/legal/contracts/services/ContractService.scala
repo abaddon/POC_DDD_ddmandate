@@ -3,7 +3,7 @@ package com.abaddon83.legal.contracts.services
 import java.util.Date
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
-import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
+import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned, DDMandate}
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
@@ -19,8 +19,9 @@ class ContractService(
   ) {
 
   def createDDMandateContract(ddMandateIdentity: DDMandateIdentity): Future[ContractUnSigned] ={
+    val ddMandate=DDMandate(ddMandateIdentity)
     for{
-      ddMandate <- ddMandatePort.findDDMandateById(ddMandateIdentity)
+      //ddMandate <- ddMandatePort.findDDMandateById(ddMandateIdentity)
       unsignedFile <- fileRepository.createUnsignedDDMandate(ddMandate)
     } yield repository.save(ContractUnSigned(ddMandate,unsignedFile))
 

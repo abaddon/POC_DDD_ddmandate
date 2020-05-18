@@ -5,11 +5,12 @@ import java.util.{Date, UUID}
 import com.abaddon83.legal.ddMandates.domainModels._
 
 
-case class DDMandateView(id: UUID, status: String, creditor: RestCreditor, debtor: RestDebtor, ddMandateType: String, creationDate: Date)
+case class DDMandateView(id: UUID, status: String, creditor: RestCreditor, debtor: RestDebtor, contract: RestContract, ddMandateType: String, creationDate: Date)
 
 case class RestCreditor(legalEntityCode: String, businessName: String, bankAccountId: UUID, debtCode: String)
 
 case class RestDebtor(userId: Int, firstName: String, lastName: String, taxCode:String, birthDate: Date, bankAccountId: UUID)
+case class RestContract(id: UUID, isSigned: Boolean)
 
 
 object DDMandateView{
@@ -23,15 +24,21 @@ object DDMandateView{
   }
 
   private def convertTo(ddmandate: DDMandateNotAccepted):DDMandateView = {
-    new DDMandateView(ddmandate.identity.uuid,"Not Accepted",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),ddmandate.ddMandateType.toString,ddmandate.creationDate)
+    new DDMandateView(ddmandate.identity.uuid,"Not Accepted",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),RestContract(ddmandate.contract),ddmandate.ddMandateType.toString,ddmandate.creationDate)
   }
   private def convertTo(ddmandate: DDMandateAccepted):DDMandateView = {
-    new DDMandateView(ddmandate.identity.uuid,"Accepted",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),ddmandate.ddMandateType.toString,ddmandate.creationDate)
+    new DDMandateView(ddmandate.identity.uuid,"Accepted",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),RestContract(ddmandate.contract),ddmandate.ddMandateType.toString,ddmandate.creationDate)
   }
   private def convertTo(ddmandate: DDMandateCanceled):DDMandateView = {
-    new DDMandateView(ddmandate.identity.uuid,"Canceled",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),ddmandate.ddMandateType.toString,ddmandate.creationDate)
+    new DDMandateView(ddmandate.identity.uuid,"Canceled",RestCreditor.apply(ddmandate.creditor),RestDebtor.apply(ddmandate.debtor),RestContract(ddmandate.contract),ddmandate.ddMandateType.toString,ddmandate.creationDate)
   }
 
+}
+
+object RestContract{
+  def apply(contract: DDMandateContract): RestContract = {
+    new RestContract(contract.identity.uuid,contract.isSigned)
+  }
 }
 
 object RestCreditor{

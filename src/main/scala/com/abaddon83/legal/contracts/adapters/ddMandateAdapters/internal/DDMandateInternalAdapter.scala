@@ -16,21 +16,20 @@ import scala.language.postfixOps
 
 class DDMandateInternalAdapter(implicit actorSystem: ActorSystem ) extends DDMandatePort {
   implicit val timeout: Timeout = Timeout(5 seconds)
-
   val actorName = "ddMandateActor"
 
   override def findDDMandateById(ddMandateIdentity: DDMandateIdentity): Future[DDMandate] = {
     for {
-      ddMAndateView <- ask(getActor(actorName), GiveMeDDMandateCmd(ddMandateIdentity.uuid)).mapTo[DDMandateMsg]
-    } yield convertDDMandateViewToDDMandate(ddMAndateView)
-  }
-
-  private def convertDDMandateViewToDDMandate(ddmandateView: DDMandateMsg): DDMandate ={
-      DDMandate(DDMandateIdentity(ddmandateView.id))
+      ddMandateView <- ask(getActor(actorName), GiveMeDDMandateCmd(ddMandateIdentity.uuid)).mapTo[DDMandateMsg]
+    } yield convertDDMandateViewToDDMandate(ddMandateView)
   }
 
   private def getActor(actorName: String): ActorSelection = {
     actorSystem.actorSelection(s"akka://DDMandate/user/${actorName}")
+  }
+
+  private def convertDDMandateViewToDDMandate(ddmandateView: DDMandateMsg): DDMandate ={
+    DDMandate(DDMandateIdentity(ddmandateView.id))
   }
 
 }

@@ -22,7 +22,7 @@ class DDMandateRoutes(implicit actorSystem: ActorSystem ) extends DDMandateAdapt
   override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter() //bind[BankAccountPort]
   override val contractPort :ContractDDMandatePort = new ContractDDMandateInternalAdapter() //bind[ContractDDMandatePort]
   override val creditorPort : CreditorPort = new FakeCreditorAdapter()//bind[CreditorPort]
-  override val ddMandateRepositoryePort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()//bind[DDMandateRepositoryPort]
+  override val ddMandateRepositoryePort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapter//bind[DDMandateRepositoryPort]
 
 
   val route: Route = {

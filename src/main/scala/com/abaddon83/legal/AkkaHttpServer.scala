@@ -25,7 +25,7 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
   implicit val actorSystem: ActorSystem = ActorSystem(name = "DDMandate")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter //bind[DDMandatePort]
-  implicit val contractRepositoryPort : ContractRepositoryPort = new FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
+  implicit val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
   implicit val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
   lazy val logger = Logging(actorSystem, classOf[App])
 
