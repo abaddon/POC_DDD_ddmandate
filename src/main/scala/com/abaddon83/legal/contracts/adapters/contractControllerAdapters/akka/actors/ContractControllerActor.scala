@@ -2,7 +2,7 @@ package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.a
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.pipe
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.commands.{CreateDDMandateContractCmd, GiveMeSignedContractCmd}
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.responses.ContractMsg
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
@@ -10,12 +10,12 @@ import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePor
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
 
-class ContractActor()(implicit
-                      actorSystem: ActorSystem,
-                      ddMandateAdapter : DDMandatePort,
-                      contractRepositoryAdapter : ContractRepositoryPort,
-                      fileRepositoryAdapter : FileRepositoryPort
-) extends ContractAdapter with Actor with ActorLogging{
+class ContractControllerActor()(implicit
+                                actorSystem: ActorSystem,
+                                ddMandateAdapter : DDMandatePort,
+                                contractRepositoryAdapter : ContractRepositoryPort,
+                                fileRepositoryAdapter : FileRepositoryPort
+) extends ContractControllerAdapter with Actor with ActorLogging{
 
   override val ddMandatePort : DDMandatePort = ddMandateAdapter
   override val contractRepositoryPort : ContractRepositoryPort =  contractRepositoryAdapter
@@ -41,11 +41,11 @@ class ContractActor()(implicit
   }
 }
 
-object ContractActor {
+object ContractControllerActor {
   def props()(implicit
               actorSystem: ActorSystem,
               ddMandateAdapter : DDMandatePort,
               contractRepositoryAdapter : ContractRepositoryPort,
-              fileRepositoryAdapter : FileRepositoryPort) = Props(new ContractActor())
+              fileRepositoryAdapter : FileRepositoryPort) = Props(new ContractControllerActor())
 }
 

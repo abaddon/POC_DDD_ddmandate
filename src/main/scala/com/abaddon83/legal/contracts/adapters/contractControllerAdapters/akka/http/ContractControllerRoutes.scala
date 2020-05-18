@@ -3,7 +3,7 @@ package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.h
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages._
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.S3FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
@@ -15,12 +15,12 @@ import scala.util.{Failure, Success}
 
 
 
-class ContractRoutes()(implicit
-                       actorSystem: ActorSystem,
-                       ddMandateAdapter : DDMandatePort,
-                       contractRepositoryAdapter : ContractRepositoryPort,
-                       fileRepositoryAdapter : FileRepositoryPort
-  ) extends ContractAdapter with ContractJsonSupport with RouteRejectionHandler{
+class ContractControllerRoutes()(implicit
+                                 actorSystem: ActorSystem,
+                                 ddMandateAdapter : DDMandatePort,
+                                 contractRepositoryAdapter : ContractRepositoryPort,
+                                 fileRepositoryAdapter : FileRepositoryPort
+  ) extends ContractControllerAdapter with ContractJsonSupport with RouteRejectionHandler{
 
   override val ddMandatePort : DDMandatePort = ddMandateAdapter// new DDMandateInternalAdapter //bind[DDMandatePort]
   override val contractRepositoryPort : ContractRepositoryPort =contractRepositoryAdapter //  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]

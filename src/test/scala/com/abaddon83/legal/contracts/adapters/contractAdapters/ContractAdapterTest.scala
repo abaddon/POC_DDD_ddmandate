@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
@@ -16,7 +16,7 @@ import org.scalatest.matchers.should.Matchers
 
 class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val contractAdapter = new ContractAdapter() {
+  val contractAdapter = new ContractControllerAdapter() {
     override implicit val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
     override implicit val contractRepositoryPort: ContractRepositoryPort = new FakeContractRepositoryAdapter
     override implicit val fileRepositoryPort: FileRepositoryPort = new FakeFileRepositoryAdapter

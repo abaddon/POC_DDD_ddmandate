@@ -9,7 +9,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.http.DDMandateRoutes
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.http.DDMandateControllerRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView}
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
@@ -28,7 +28,7 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
   implicit val creditorPort : CreditorPort = new FakeCreditorAdapter()
   implicit val ddMandateRepositoryPort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
 
-  val ddMandateRoutes = new DDMandateRoutes()
+  val ddMandateRoutes = new DDMandateControllerRoutes()
 
   test("Create a new DD Mandate"){
 

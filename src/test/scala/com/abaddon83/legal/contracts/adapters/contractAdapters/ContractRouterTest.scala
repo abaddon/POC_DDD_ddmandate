@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.ContractRoutes
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.ContractControllerRoutes
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages.{ContractJsonSupport, ContractView, CreateContractRequest, SignContractRequest}
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
@@ -23,7 +23,7 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
   implicit val contractRepositoryPort : ContractRepositoryPort =  new FakeContractRepositoryAdapter
   implicit val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter
 
-  val contractRoutes = new ContractRoutes()
+  val contractRoutes = new ContractControllerRoutes()
 
   contractRoutes.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
 

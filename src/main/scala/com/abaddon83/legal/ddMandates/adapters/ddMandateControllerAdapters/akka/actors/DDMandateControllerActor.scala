@@ -2,20 +2,20 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.pipe
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateControllerAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.commands.GiveMeDDMandateCmd
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.responses.DDMandateMsg
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class DDMandateActor(implicit
-                     actorSystem: ActorSystem,
-                     bankAccountAdapter: BankAccountPort,
-                     contractAdapter :ContractDDMandatePort,
-                     creditorAdapter : CreditorPort,
-                     ddMandateRepositoryAdapter : DDMandateRepositoryPort
-                    ) extends DDMandateAdapter with Actor with ActorLogging{
+class DDMandateControllerActor(implicit
+                               actorSystem: ActorSystem,
+                               bankAccountAdapter: BankAccountPort,
+                               contractAdapter :ContractDDMandatePort,
+                               creditorAdapter : CreditorPort,
+                               ddMandateRepositoryAdapter : DDMandateRepositoryPort
+                    ) extends DDMandateControllerAdapter with Actor with ActorLogging{
 
   override val bankAccountPort: BankAccountPort = bankAccountAdapter
   override val contractPort :ContractDDMandatePort = contractAdapter
@@ -35,11 +35,11 @@ class DDMandateActor(implicit
   }
 }
 
-object DDMandateActor {
+object DDMandateControllerActor {
   def props()(implicit
               actorSystem: ActorSystem,
               bankAccountAdapter: BankAccountPort,
               contractAdapter :ContractDDMandatePort,
               creditorAdapter : CreditorPort,
-              ddMandateRepositoryAdapter : DDMandateRepositoryPort) = Props(new DDMandateActor())
+              ddMandateRepositoryAdapter : DDMandateRepositoryPort) = Props(new DDMandateControllerActor())
 }

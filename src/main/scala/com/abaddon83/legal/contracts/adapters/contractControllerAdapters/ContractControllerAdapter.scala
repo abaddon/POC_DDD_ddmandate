@@ -4,7 +4,7 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.contracts.ports.{ContractPort, ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.ports.{ContractControllerPort, ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
 import com.abaddon83.legal.contracts.services.ContractService
 import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
@@ -12,7 +12,7 @@ import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 import scala.concurrent.Future
 
 
-trait ContractAdapter extends ContractPort{
+trait ContractControllerAdapter extends ContractControllerPort{
 
   implicit val ddMandatePort : DDMandatePort
   implicit val contractRepositoryPort : ContractRepositoryPort

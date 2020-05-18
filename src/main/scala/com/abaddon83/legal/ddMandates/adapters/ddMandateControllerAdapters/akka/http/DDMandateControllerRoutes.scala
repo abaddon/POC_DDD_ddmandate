@@ -3,7 +3,7 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateControllerAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView, ErrorDDMandate}
 import com.abaddon83.legal.ddMandates.domainModels.DDMandateNotAccepted
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
@@ -13,13 +13,13 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 
-class DDMandateRoutes()(
+class DDMandateControllerRoutes()(
    implicit actorSystem: ActorSystem,
    bankAccountAdapter: BankAccountPort,
    contractAdapter :ContractDDMandatePort,
    creditorAdapter : CreditorPort,
    ddMandateRepositoryAdapter : DDMandateRepositoryPort
-) extends DDMandateAdapter with DDMandateJsonSupport with RouteRejectionHandler{
+) extends DDMandateControllerAdapter with DDMandateJsonSupport with RouteRejectionHandler{
 
 
   override val bankAccountPort: BankAccountPort = bankAccountAdapter

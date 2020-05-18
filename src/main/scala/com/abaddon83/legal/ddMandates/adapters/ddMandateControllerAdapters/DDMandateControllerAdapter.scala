@@ -10,7 +10,7 @@ import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
 import scala.concurrent.Future
 
-trait DDMandateAdapter extends DDMandatePort {
+trait DDMandateControllerAdapter extends DDMandateControllerPort {
 
   val bankAccountPort: BankAccountPort
   val contractPort :ContractDDMandatePort

@@ -6,7 +6,7 @@ import java.util.UUID
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateControllerAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
@@ -17,7 +17,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val ddMandateAdapter = new DDMandateAdapter() {
+  val ddMandateAdapter = new DDMandateControllerAdapter() {
     override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
     override val contractPort: ContractDDMandatePort = new FakeContractDDMandateAdapter()
     override val creditorPort: CreditorPort = new FakeCreditorAdapter()

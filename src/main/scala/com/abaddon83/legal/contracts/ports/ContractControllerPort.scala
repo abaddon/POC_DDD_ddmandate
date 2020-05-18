@@ -7,7 +7,7 @@ import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, Con
 
 import scala.concurrent.Future
 
-trait ContractPort {
+trait ContractControllerPort {
   def createContract(contractType: String, reference: UUID): Future[ContractUnSigned]
   def findByIdContract(contractId: UUID): Future[Contract]
   def findSignedContractByIdContract(contractId: UUID): Future[ContractSigned]
