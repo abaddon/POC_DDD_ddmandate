@@ -19,26 +19,23 @@ import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import wvlet.airframe._
 
 
 class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers with ScalatestRouteTest with Eventually with DDMandateJsonSupport{
 
-val session = newDesign
-  .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-  .bind[ContractDDMandatePort].toInstance(new FakeContractDDMandateAdapter() )
-  .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
-  .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter() )
-  .newSession
+  implicit val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
+  implicit val contractPort :ContractDDMandatePort = new FakeContractDDMandateAdapter()
+  implicit val creditorPort : CreditorPort = new FakeCreditorAdapter()
+  implicit val ddMandateRepositoryPort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
 
-  val routes = session.build[DDMandateRoutes]
+  val ddMandateRoutes = new DDMandateRoutes()
 
   test("Create a new DD Mandate"){
 
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede0")
     val legalEntity = "IT1"
     val createDDMandate = CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
+    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.route ~> check{
       eventually{
         status shouldBe OK
         val viewDDMandate = responseAs[DDMandateView]
@@ -58,7 +55,7 @@ val session = newDesign
     val bankAccountUUID = UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede1")
     val legalEntity = "IT1"
     val createDDMandate = new CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
+    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.route ~> check{
       eventually{
         val message = responseAs[ErrorMessage]
         status shouldBe BadRequest
@@ -75,7 +72,7 @@ val session = newDesign
     val bankAccountUUID = UUID.fromString("d4456de3-bcb0-4009-adff-803d7884c647")
     val legalEntity = "NOEXIST"
     val createDDMandate = CreateDDMandateRequest(bankAccountUUID,legalEntity)
-    Post("/ddmandates",createDDMandate) ~> routes.ddMandateRoutes ~> check{
+    Post("/ddmandates",createDDMandate) ~> ddMandateRoutes.route ~> check{
       eventually{
         status shouldBe BadRequest
         val viewDDMandate = responseAs[ErrorMessage]
@@ -92,7 +89,7 @@ val session = newDesign
     val bankAccountUUID = "146a525d"
     val legalEntity = "IT1"
 
-    Post("/ddmandates",HttpEntity(ContentTypes.`application/json`, s"""{ "bankAccountId": "${bankAccountUUID}", "legalEntity": "IT5"}""")) ~> Route.seal(routes.ddMandateRoutes) ~> check{
+    Post("/ddmandates",HttpEntity(ContentTypes.`application/json`, s"""{ "bankAccountId": "${bankAccountUUID}", "legalEntity": "IT5"}""")) ~> Route.seal(ddMandateRoutes.route) ~> check{
 
         status shouldBe BadRequest
         val message = responseAs[ErrorMessage]
@@ -107,7 +104,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.route ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[DDMandateView]
@@ -121,7 +118,7 @@ val session = newDesign
 
     val ddMandateUUIDString="4a943d91-1ed4-4a1d-904e-9ec830106299"
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> Route.seal(routes.ddMandateRoutes) ~> check{
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> Route.seal(ddMandateRoutes.route) ~> check{
       //eventually{
         val message = responseAs[ErrorMessage]
 
@@ -139,11 +136,11 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    //routes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    //ddMandateRoutes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       //println(response)
       val message = responseAs[ErrorMessage]
       //println(message)
@@ -160,11 +157,11 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    routes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    ddMandateRoutes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       //println(response)
       val message = responseAs[ErrorMessage]
       //println(message)
@@ -182,12 +179,12 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
-    val ddMandateNotAccepted = routes.ddMandateRepositoryePort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    routes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    routes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
+    ddMandateRoutes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       val message = responseAs[DDMandateView]
 
       status shouldBe OK
@@ -201,7 +198,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.route ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[DDMandateView]
@@ -215,7 +212,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       val message = responseAs[ErrorMessage]
 
       status shouldBe BadRequest
@@ -230,7 +227,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","accepted").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(ddMandateRoutes.route) ~> check {
       val message = responseAs[DDMandateView]
 
       status shouldBe OK
@@ -244,7 +241,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","canceled").get.toString
 
-    Get(s"/ddmandates/${ddMandateUUIDString}") ~> routes.ddMandateRoutes ~> check {
+    Get(s"/ddmandates/${ddMandateUUIDString}") ~> ddMandateRoutes.route ~> check {
       eventually {
         status shouldBe OK
         val viewDDMandate = responseAs[DDMandateView]
@@ -258,7 +255,7 @@ val session = newDesign
 
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","canceled").get.toString
 
-    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(routes.ddMandateRoutes) ~> check {
+    Put(s"/ddmandates/${ddMandateUUIDString}/cancel") ~> Route.seal(ddMandateRoutes.route) ~> check {
 
       val message = responseAs[ErrorMessage]
 

@@ -3,12 +3,8 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
-import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
-import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.internal.ContractDDMandateInternalAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView, ErrorDDMandate}
-import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels.DDMandateNotAccepted
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler
@@ -17,13 +13,27 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 
-class DDMandateRoutes(implicit actorSystem: ActorSystem ) extends DDMandateAdapter with DDMandateJsonSupport with RouteRejectionHandler{
+class DDMandateRoutes()(
+   implicit actorSystem: ActorSystem,
+   bankAccountAdapter: BankAccountPort,
+   contractAdapter :ContractDDMandatePort,
+   creditorAdapter : CreditorPort,
+   ddMandateRepositoryAdapter : DDMandateRepositoryPort
+) extends DDMandateAdapter with DDMandateJsonSupport with RouteRejectionHandler{
 
-  override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter() //bind[BankAccountPort]
-  override val contractPort :ContractDDMandatePort = new ContractDDMandateInternalAdapter() //bind[ContractDDMandatePort]
-  override val creditorPort : CreditorPort = new FakeCreditorAdapter()//bind[CreditorPort]
-  override val ddMandateRepositoryePort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapter//bind[DDMandateRepositoryPort]
 
+  override val bankAccountPort: BankAccountPort = bankAccountAdapter
+  override val contractPort :ContractDDMandatePort = contractAdapter
+  override val creditorPort : CreditorPort = creditorAdapter
+  override val ddMandateRepositoryPort : DDMandateRepositoryPort = ddMandateRepositoryAdapter
+
+
+  /*
+  override val bankAccountPort: BankAccountPort = bind[BankAccountPort]
+  override val contractPort :ContractDDMandatePort = bind[ContractDDMandatePort]
+  override val creditorPort : CreditorPort = bind[CreditorPort]
+  override val ddMandateRepositoryPort : DDMandateRepositoryPort = bind[DDMandateRepositoryPort]
+  */
 
   val route: Route = {
     extractUri { uri =>

@@ -19,7 +19,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 
 class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateDomainElementHelper  {
-   protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter()
+   protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
    protected val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
    protected val creditorPort: CreditorPort = new FakeCreditorAdapter()
    protected  val contractPort: ContractDDMandatePort = new FakeContractDDMandateAdapter()

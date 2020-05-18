@@ -13,17 +13,14 @@ import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import wvlet.airframe._
 
-class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {{
+class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val session = newDesign
-    .bind[DDMandatePort].toInstance(new FakeDDMandateAdapter())
-    .bind[ContractRepositoryPort].toInstance(new FakeContractRepositoryAdapter() )
-    .bind[FileRepositoryPort].toInstance(new FakeFileRepositoryAdapter())
-    .newSession
-
-  val contractAdapter = session.build[ContractAdapter]
+  val contractAdapter = new ContractAdapter() {
+    override implicit val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
+    override implicit val contractRepositoryPort: ContractRepositoryPort = new FakeContractRepositoryAdapter
+    override implicit val fileRepositoryPort: FileRepositoryPort = new FakeFileRepositoryAdapter
+  }
 
   test("create contract"){
     contractAdapter.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
@@ -52,8 +49,6 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {{
     }
   }
 
-
-}
   private def debug(message: ErrorMessage){
     println(message.errorCode)
     println(message.exceptionType)

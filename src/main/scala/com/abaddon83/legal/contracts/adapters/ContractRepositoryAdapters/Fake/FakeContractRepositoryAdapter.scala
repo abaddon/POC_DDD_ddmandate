@@ -12,7 +12,12 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-object FakeContractRepositoryAdapter extends ContractRepositoryPort{
+object FakeContractRepositoryAdapterSingleton extends ContractRepositoryAdapter
+
+
+class FakeContractRepositoryAdapter extends ContractRepositoryAdapter
+
+trait ContractRepositoryAdapter extends ContractRepositoryPort{
 
   override def save(contract: ContractUnSigned): ContractUnSigned = {
 
@@ -26,7 +31,7 @@ object FakeContractRepositoryAdapter extends ContractRepositoryPort{
   }
 
   override def findContractByIdentity(contractIdentity: ContractIdentity): Future[Contract] = {
-    debug()
+    //debug()
     Future{
       repository.db.find(contractRepo => contractRepo.identity == contractIdentity)
         .map(_.buildContract())
@@ -69,7 +74,7 @@ object FakeContractRepositoryAdapter extends ContractRepositoryPort{
 
   private def persist(contract: ContractRepo) = {
     repository.db = repository.db.addOne(contract)
-    debug()
+    //debug()
   }
 
   private def update(oldContract: ContractRepo,newContract: ContractRepo) = {

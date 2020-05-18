@@ -13,20 +13,16 @@ import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import wvlet.airframe.newDesign
 
 
 class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val session = newDesign
-      .bind[BankAccountPort].toInstance(new FakeBankAccountAdapter())
-      .bind[ContractDDMandatePort].toInstance(new FakeContractDDMandateAdapter() )
-      .bind[CreditorPort].toInstance(new FakeCreditorAdapter() )
-      .bind[DDMandateRepositoryPort].toInstance(new FakeDDMandateRepositoryAdapter())
-      .newSession
-
-  val ddMandateAdapter = session.build[DDMandateAdapter]
-
+  val ddMandateAdapter = new DDMandateAdapter() {
+    override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
+    override val contractPort: ContractDDMandatePort = new FakeContractDDMandateAdapter()
+    override val creditorPort: CreditorPort = new FakeCreditorAdapter()
+    override val ddMandateRepositoryPort: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
+  }
 
   test("create a new mandate no signed"){
     val bankAccountIdString= "146a525d-402b-4bce-a317-3f00d05aede0"

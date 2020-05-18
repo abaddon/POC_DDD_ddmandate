@@ -15,9 +15,9 @@ trait DDMandateAdapter extends DDMandatePort {
   val bankAccountPort: BankAccountPort
   val contractPort :ContractDDMandatePort
   val creditorPort : CreditorPort
-  val ddMandateRepositoryePort : DDMandateRepositoryPort
+  val ddMandateRepositoryPort : DDMandateRepositoryPort
 
-  private lazy val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepositoryePort,bankAccountPort,creditorPort,contractPort)
+  private lazy val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepositoryPort,bankAccountPort,creditorPort,contractPort)
 
   override def createDDMandate(bankAccountId: UUID, legalEntityCode: String): Future[DDMandateNotAccepted] = {
       val bankAccountIdentity = BankAccountIdentity(bankAccountId)

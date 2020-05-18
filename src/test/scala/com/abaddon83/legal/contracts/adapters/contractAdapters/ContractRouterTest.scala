@@ -16,18 +16,16 @@ import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.Eventually
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import wvlet.airframe.newDesign
 
 class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTest with Eventually with ContractJsonSupport{
 
-  val session = newDesign
-    .bind[DDMandatePort].toInstance(new FakeDDMandateAdapter())
-    .bind[ContractRepositoryPort].toInstance(new FakeContractRepositoryAdapter() )
-    .bind[FileRepositoryPort].toInstance(new FakeFileRepositoryAdapter())
-    .newSession
+  implicit val ddMandatePort : DDMandatePort = new FakeDDMandateAdapter
+  implicit val contractRepositoryPort : ContractRepositoryPort =  new FakeContractRepositoryAdapter
+  implicit val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter
 
-  val routes = session.build[ContractRoutes]
-  routes.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
+  val contractRoutes = new ContractRoutes()
+
+  contractRoutes.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
 
   test("create a new Contract"){
 
@@ -35,7 +33,7 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
     val ddMandateUUIDReference: UUID = UUID.fromString("79abadf2-84db-42bc-81d5-4577778d38af")
     val createContractRequest = CreateContractRequest(contractType,ddMandateUUIDReference)
 
-    Post("/contracts",createContractRequest) ~> Route.seal(routes.contractRoutes) ~> check{
+    Post("/contracts",createContractRequest) ~> Route.seal(contractRoutes.routes) ~> check{
 
         status shouldBe OK
         val response = responseAs[ContractView]
@@ -55,7 +53,7 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
     val contractUUID = UUIDRegistryHelper.search("contract","unsigned").get
     val ddMandateUUIDString = "79abadf2-84db-42bc-81d5-4577778d38af"
     println(s"GET /contracts/${contractUUID}")
-    Get(s"/contracts/${contractUUID}") ~> Route.seal(routes.contractRoutes) ~> check{
+    Get(s"/contracts/${contractUUID}") ~> Route.seal(contractRoutes.routes) ~> check{
 
       status shouldBe OK
       val response = responseAs[ContractView]
@@ -75,7 +73,7 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
     val signContractRequest = SignContractRequest(signatureDate)
 
 
-    Put(s"/contracts/${contractUUID}/sign",signContractRequest) ~> Route.seal(routes.contractRoutes) ~> check{
+    Put(s"/contracts/${contractUUID}/sign",signContractRequest) ~> Route.seal(contractRoutes.routes) ~> check{
 
       status shouldBe OK
       val response = responseAs[ContractView]

@@ -14,6 +14,7 @@ case class FileRepositoryView(provider: String, url: String){
 
 object ContractMsg{
   def apply(contract: Contract):ContractMsg = {
+    println(s"Creating ContractMsg: ${contract.identity}")
     contract match {
       case contractUnsigned: ContractUnSigned => convertTo(contractUnsigned)
       case contractSigned: ContractSigned => convertTo(contractSigned)

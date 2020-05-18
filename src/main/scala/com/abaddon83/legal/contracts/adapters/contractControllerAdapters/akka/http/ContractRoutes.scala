@@ -3,15 +3,11 @@ package com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.h
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
-import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractAdapter
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages.{ContractJsonSupport, ContractView, CreateContractRequest, ErrorContract, SignContractRequest}
-import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.internal.DDMandateInternalAdapter
+import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages._
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.S3FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
-import com.abaddon83.legal.contracts.services.ContractService
 import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler
 
 import scala.concurrent.Future
@@ -19,13 +15,18 @@ import scala.util.{Failure, Success}
 
 
 
-class ContractRoutes(implicit actorSystem: ActorSystem ) extends ContractAdapter with ContractJsonSupport with RouteRejectionHandler{
+class ContractRoutes()(implicit
+                       actorSystem: ActorSystem,
+                       ddMandateAdapter : DDMandatePort,
+                       contractRepositoryAdapter : ContractRepositoryPort,
+                       fileRepositoryAdapter : FileRepositoryPort
+  ) extends ContractAdapter with ContractJsonSupport with RouteRejectionHandler{
 
-  override val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter //bind[DDMandatePort]
-  override val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
-  override val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
+  override val ddMandatePort : DDMandatePort = ddMandateAdapter// new DDMandateInternalAdapter //bind[DDMandatePort]
+  override val contractRepositoryPort : ContractRepositoryPort =contractRepositoryAdapter //  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
+  override val fileRepositoryPort : FileRepositoryPort = fileRepositoryAdapter// new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
 
-  private lazy val contractService: ContractService = new ContractService(contractRepositoryPort,fileRepositoryPort,ddMandatePort)
+
 
   val routes: Route = {
     extractUri { uri =>

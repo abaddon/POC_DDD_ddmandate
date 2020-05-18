@@ -36,10 +36,8 @@ class ContractDDMandateInternalAdapter(implicit actorSystem: ActorSystem ) exten
 
   private def ddMandateContractFactory( contract: ContractMsg): DDMandateContract = {
     println("build DDMandateContract")
-    DDMandateContract(ContractIdentity(contract.id),contract.reference,DD_MANDATE,contract.name,PDF,contract.creationDate,None)
+    DDMandateContract(ContractIdentity(contract.id),contract.reference,DD_MANDATE,contract.name,PDF,contract.creationDate,contract.signatureDate)
   }
-
-
 }
 
 
