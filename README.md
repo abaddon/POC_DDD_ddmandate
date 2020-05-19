@@ -11,7 +11,9 @@ The scope of this POC is to implement a service based on:
 
 The main goals that I want to achive are:
 
- 1. Create an application well organised with a package structure code easily to nav
+ 1. Create an application well organised with a package structure easily to navigate
+ 2. Mantain each aggregate completly indipendent from the others
+ 3. 
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -41,6 +43,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA0ODM3NzA2MSwxODM4MzY0MjUsNTE4Nj
-A2MTk2LC0xNDgwNzYwNTUwXX0=
+eyJoaXN0b3J5IjpbLTE0NDEwMzIwNTgsMTgzODM2NDI1LDUxOD
+YwNjE5NiwtMTQ4MDc2MDU1MF19
 -->
