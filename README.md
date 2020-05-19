@@ -1,11 +1,10 @@
 # POC DDD Direct Debit mandate
 ![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
-
 ## Why this POC
 
 The scope of this POC is to implement a service based on:
 
- - [EventStorming](https://www.eventstorming.com/)  as software design tool
+ - [EventStorming](https://www.eventstorming.com/)  to help me to discover the domain, 
  - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to organise the domain model
  - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) as architectural pattern to organise all the components of the services
 
@@ -15,6 +14,7 @@ The main goals that I want to achive are:
  2. Mantain each aggregate completly indipendent from the others
  3. Be able to separate the aggregates managed in the same app in 2  or more app one for aggregate for example with a very limited effort and touching only the most external part.
 
+## Why this POC
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -44,6 +44,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMDc5MDkxOCwxODM4MzY0MjUsNTE4Nj
+eyJoaXN0b3J5IjpbMTcyMzcwNzI2MiwxODM4MzY0MjUsNTE4Nj
 A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
