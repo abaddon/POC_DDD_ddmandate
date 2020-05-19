@@ -14,7 +14,7 @@ The main goals that I want to achive are:
  2. Mantain each aggregate completly indipendent from the others
  3. Be able to separate the aggregates managed in the same app in 2  or more app one for aggregate for example with a very limited effort and touching only the most external part.
 
-## Why this POC
+## Step 1. Domain discovery  
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -44,6 +44,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjQ0MjQ4ODA1LDE4MzgzNjQyNSw1MTg2MD
-YxOTYsLTE0ODA3NjA1NTBdfQ==
+eyJoaXN0b3J5IjpbLTE0ODczNDc5ODYsMTgzODM2NDI1LDUxOD
+YwNjE5NiwtMTQ4MDc2MDU1MF19
 -->
