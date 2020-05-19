@@ -1,6 +1,4 @@
 # POC DDD Direct Debit mandate
-Status: WIP
-
 ![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
 
 ## Description
@@ -30,5 +28,5 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0ODA3NjA1NTBdfQ==
+eyJoaXN0b3J5IjpbNTE4NjA2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
