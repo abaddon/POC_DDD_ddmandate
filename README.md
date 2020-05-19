@@ -26,9 +26,10 @@ The first stem is discover the domain and the EventStorming - Big Picture is the
 One of the possible outcome of thr Big Picture is the Context map. 
 The context map is a map that explain which contexts are involved in your process, their responsability and how they communicate.
 ![Context Map](https://raw.githubusercontent.com/abaddon/POC_DDD_ddmandate/master/docs/ContextsMap.jpg)
-
 To manage a DD Payment there are at least 4 context involved:
-1. **Legal** : its scope is manage correctly the DD Mandate request and its document (called Contract). In this contex we have to validate 
+### Legal
+Here we have manage all the rules (business logic) related to a DD mandate su
+its scope is manage correctly the DD Mandate request and its document (called Contract). In this context we have to validate if we can accept a mandate
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -57,7 +58,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTY5OTM0OTQxOSwtMTcyOTY1MzMyNywtMj
-AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
-NTUwXX0=
+eyJoaXN0b3J5IjpbNDYwNDk5NTg5LC0xNzI5NjUzMzI3LC0yMD
+I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
+NTBdfQ==
 -->
