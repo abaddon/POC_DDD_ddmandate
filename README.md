@@ -40,7 +40,7 @@ This regualation rules generate then a conseguence on the DD Mandate subscriptio
 The Payment context use the DD mandate offered by the Legal context to understand if it's possible accept the instruction received from the customer related a recurring payment of xx $$. 
 Accepted the customer instruction (called Payment Order) then the context will generate the payment every time the instruction will ask to trigger a new payment.
 All the business logic related to the payment order and Payment will stay here.
-### Accounting 
+### Accounting Context
 Accounting is the last context that we found in this use case and manage the assets of the customer. Every time a payment arrives to the firm and pass the payment context validation then it will be allocated on the customer account.
 It's rapresent the assets of the customer in the financial firm.
 
@@ -79,7 +79,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDQ0ODI1NTE0LC0xNzI5NjUzMzI3LC0yMD
+eyJoaXN0b3J5IjpbMjgwODkxNjk3LC0xNzI5NjUzMzI3LC0yMD
 I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
 NTBdfQ==
 -->
