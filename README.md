@@ -22,7 +22,8 @@ Few thigs to know regarding the payments in the financial world:
 1. SEPA and Bacs doesn't have any kind of protocol that evaluate if the customer is subscribing a DD Mandate using his banks or not... this check is in charge to the firm
 2. An investment firm can accept investment only from the customer's bank accounts. It's not possible accept money that come from a parent's bank account or other
 
-The first stem is discover the domain involving 
+The first stem is discover the domain and the EventStorming - Big Picture is the perfect tool for this phase.
+One of the possible outcome of thr Bi
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -51,6 +52,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3Mjk2NTMzMjcsLTIwMjY3NzQzNTEsMT
-gzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2MDU1MF19
+eyJoaXN0b3J5IjpbMjczODYzMTYwLC0xNzI5NjUzMzI3LC0yMD
+I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
+NTBdfQ==
 -->
