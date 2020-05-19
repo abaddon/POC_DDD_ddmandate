@@ -28,8 +28,9 @@ The context map is a map that explain which contexts are involved in your proces
 ![Context Map](https://raw.githubusercontent.com/abaddon/POC_DDD_ddmandate/master/docs/ContextsMap.jpg)
 To manage a DD Payment there are at least 4 context involved:
 ### Legal
-Here we have manage all the rules (business logic) related to a DD mandate subscription. 
-The debtor is validated (the firm checke
+Here we have manage all the rules (business logic) related to a DD mandate subscription like:
+- The Contract is created correclty?
+The debtor is valid? (the firm checked who is the bank account owner? 
 its scope is manage correctly the DD Mandate request and its document (called Contract). In this context we have to validate if we can accept a mandate
 
 
@@ -59,7 +60,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNjcyOTQ2NjMsLTE3Mjk2NTMzMjcsLT
-IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
-MDU1MF19
+eyJoaXN0b3J5IjpbMzQwMzg2MzYzLC0xNzI5NjUzMzI3LC0yMD
+I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
+NTBdfQ==
 -->
