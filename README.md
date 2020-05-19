@@ -13,7 +13,7 @@ The main goals that I want to achive are:
 
  1. Create an application well organised with a package structure easily to navigate
  2. Mantain each aggregate completly indipendent from the others
- 3. Be able to split the application in 2 or more applications with a very minimal effort cutting it 
+ 3. Be able to separate the aggregates managed in the same app in 2  or more app one for aggregate for example with a very limited effort and touching only the 
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -43,6 +43,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NDM4MzI1MzQsMTgzODM2NDI1LDUxOD
-YwNjE5NiwtMTQ4MDc2MDU1MF19
+eyJoaXN0b3J5IjpbMTQ1NDQ5NTkyNSwxODM4MzY0MjUsNTE4Nj
+A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
