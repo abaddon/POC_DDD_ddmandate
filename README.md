@@ -27,12 +27,14 @@ One of the possible outcome of thr Big Picture is the Context map.
 The context map is a map that explain which contexts are involved in your process, their responsability and how they communicate.
 ![Context Map](https://raw.githubusercontent.com/abaddon/POC_DDD_ddmandate/master/docs/ContextsMap.jpg)
 To manage a DD Payment there are at least 4 context involved:
-### Legal
+### Legal Context
 Here we have manage all the rules (business logic) related to a DD mandate subscription like:
 - The DD Mandate contract is created correclty? is it signed?
 - The DD Mandate is associated to a valid Debtor?
+- The DD Mandate could be accepted or cancelled?
 - etc..
--
+### Regulation
+
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -60,7 +62,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTYyODM2MjI4NywtMTcyOTY1MzMyNywtMj
-AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
-NTUwXX0=
+eyJoaXN0b3J5IjpbNzkzODkzMDAsLTE3Mjk2NTMzMjcsLTIwMj
+Y3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2MDU1
+MF19
 -->
