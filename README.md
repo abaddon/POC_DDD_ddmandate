@@ -37,8 +37,8 @@ Here we have manage all the rules (business logic) related to a DD mandate subsc
 As we said previously the financial regulator ask to the firm to validate the bank account before accept the money. The financial firms often doesn't have a bank licence and then they can't accept money that come from bank accounts where the owner is not the customer.
 This regualation rules generate then a conseguence on the DD Mandate subscription process. The firm can accept DD Mandate with debtor validated.
 ### Payment
-The Payment context is used to manage the Payment order, the instruction receveid from the customer when
-
+The Payment context use the DD mandate offered by the Legal context to understand if it's possible accept the instruction received from the customer related a recurring payment of xx $$. 
+Accepted the customer instruction, then 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -66,7 +66,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTUyMjkxOTE5NCwtMTcyOTY1MzMyNywtMj
-AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
-NTUwXX0=
+eyJoaXN0b3J5IjpbLTE2MTkxNDg2MDQsLTE3Mjk2NTMzMjcsLT
+IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
+MDU1MF19
 -->
