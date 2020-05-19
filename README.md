@@ -33,7 +33,8 @@ Here we have manage all the rules (business logic) related to a DD mandate subsc
 - The DD Mandate is associated to a valid Debtor?
 - The DD Mandate could be accepted or cancelled?
 - etc..
-### Regulation
+### Regulation Context
+As we said previously the financial regulator ask to the firm to validate the bank account before accept the money. The financial firms often doesn't have a bank licence and then they can't accept money that come from bank accou
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -62,7 +63,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzkzODkzMDAsLTE3Mjk2NTMzMjcsLTIwMj
-Y3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2MDU1
-MF19
+eyJoaXN0b3J5IjpbLTE4OTE2MDU2MjksLTE3Mjk2NTMzMjcsLT
+IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
+MDU1MF19
 -->
