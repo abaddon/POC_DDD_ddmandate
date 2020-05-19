@@ -29,10 +29,10 @@ The context map is a map that explain which contexts are involved in your proces
 To manage a DD Payment there are at least 4 context involved:
 ### Legal
 Here we have manage all the rules (business logic) related to a DD mandate subscription like:
-- The Contract is created correclty?
-The debtor is valid? (the firm checked who is the bank account owner? 
-its scope is manage correctly the DD Mandate request and its document (called Contract). In this context we have to validate if we can accept a mandate
-
+- The DD Mandate contract is created correclty? is it signed?
+- The DD Mandate is associated to a valid Debtor?
+- etc..
+-
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -60,7 +60,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzQwMzg2MzYzLC0xNzI5NjUzMzI3LC0yMD
-I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
-NTBdfQ==
+eyJoaXN0b3J5IjpbMTYyODM2MjI4NywtMTcyOTY1MzMyNywtMj
+AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
+NTUwXX0=
 -->
