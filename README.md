@@ -2,7 +2,12 @@
 ![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
 
 ## Description
-the scope of this POC is to implement a service to manage Direct Debit mandate using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
+The scope of this POC is to implement a service using:
+- 
+
+to manage the subscription of a  Direct Debit mandate.
+
+ using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
 The service lives in the Legel Context, so this service doesn't manage any payment logic but implement only the business rules needed to manage the mandate as agreement between the Debitor and the Debitor.
 
@@ -28,6 +33,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MD
-c2MDU1MF19
+eyJoaXN0b3J5IjpbMzE2NTg0Mjc2LDE4MzgzNjQyNSw1MTg2MD
+YxOTYsLTE0ODA3NjA1NTBdfQ==
 -->
