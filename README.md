@@ -44,7 +44,7 @@ All the business logic related to the payment order and Payment will stay here.
 Accounting is the last context that we found in this use case and manage the assets of the customer. Every time a payment arrives to the firm and pass the payment context validation then it will be allocated on the customer account.
 It's rapresent the assets of the customer in the financial firm.
 
-We could have other context or a different organisation of the 
+We could have other contexts for example a CRM context to manage the customer communication
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -73,7 +73,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIwODAzNDI1MywtMTcyOTY1MzMyNywtMj
+eyJoaXN0b3J5IjpbMTQ4MDMxNTAwNSwtMTcyOTY1MzMyNywtMj
 AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
 NTUwXX0=
 -->
