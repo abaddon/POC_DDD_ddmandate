@@ -49,6 +49,8 @@ If you want to know more about the contexts DDD and EventStorming are a good sta
 
 We split our initial problem in 4 smaller problems linked.
 
+In the next step we'll take in charge one of these problems and we'll try to design its features.
+
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
 The service lives in the Legel Context, so this service doesn't manage any payment logic but implement only the business rules needed to manage the mandate as agreement between the Debitor and the Debitor.
@@ -75,7 +77,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5NTI5MTE2ODksLTE3Mjk2NTMzMjcsLT
-IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
-MDU1MF19
+eyJoaXN0b3J5IjpbMTk1NzI3NzIyMCwtMTcyOTY1MzMyNywtMj
+AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
+NTUwXX0=
 -->
