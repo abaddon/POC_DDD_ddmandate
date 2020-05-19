@@ -4,8 +4,8 @@
 
 The scope of this POC is to implement a service based on:
 
- - [EventStorming](https://www.eventstorming.com/)  to help me to discover the domain, 
- - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to organise the domain model
+ - [EventStorming](https://www.eventstorming.com/)  to help me to discover the domain and then define the logic on the paper
+ - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html), it's the approach that I want to follow to manage the business logic and its information 
  - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) as architectural pattern to organise all the components of the services
 
 The main goals that I want to achive are:
@@ -44,6 +44,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTcyMzcwNzI2MiwxODM4MzY0MjUsNTE4Nj
+eyJoaXN0b3J5IjpbMTgxMTU3MTMxMCwxODM4MzY0MjUsNTE4Nj
 A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
