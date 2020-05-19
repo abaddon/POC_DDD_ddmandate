@@ -28,7 +28,7 @@ The context map is a map that explain which contexts are involved in your proces
 ![Context Map](https://raw.githubusercontent.com/abaddon/POC_DDD_ddmandate/master/docs/ContextsMap.jpg)
 
 To manage a DD Payment there are at least 4 context involved:
-1. **Legal** : its scope is 
+1. **Legal** : its scope is manage correctly the DD Mandate request and its document (called Contract). In this contex we have to validate 
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -57,7 +57,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTM0NzkzMDQ2MiwtMTcyOTY1MzMyNywtMj
+eyJoaXN0b3J5IjpbMTY5OTM0OTQxOSwtMTcyOTY1MzMyNywtMj
 AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
 NTUwXX0=
 -->
