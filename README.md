@@ -1,7 +1,7 @@
 # POC DDD Direct Debit mandate
 ![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
 
-## Description
+## Why this POC
 
 The scope of this POC is to implement a service based on:
 
@@ -13,7 +13,7 @@ The main goals that I want to achive are:
 
  1. Create an application well organised with a package structure easily to navigate
  2. Mantain each aggregate completly indipendent from the others
- 3. 
+ 3. Be able to split the application in 2 or more applications with a very minimal effort cutting it 
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -43,6 +43,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NDEwMzIwNTgsMTgzODM2NDI1LDUxOD
+eyJoaXN0b3J5IjpbLTE0NDM4MzI1MzQsMTgzODM2NDI1LDUxOD
 YwNjE5NiwtMTQ4MDc2MDU1MF19
 -->
