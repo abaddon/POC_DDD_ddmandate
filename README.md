@@ -18,7 +18,8 @@ The main goals that I want to achive are:
 ## Step 1. Domain discovery  
 
 The domain that I decided to analyse is the creation of a Direct Debit in the financial word.
-Few thigs to know regarding th
+Few thigs to know regarding this domain:
+1. SEPA and Bacs doesn't have any kind of protocol that evaluate if the customer is subscribing a DD Mandate using it's  
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -48,6 +49,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjEwNTA1MDY1NywxODM4MzY0MjUsNTE4Nj
+eyJoaXN0b3J5IjpbLTI1NDgzNzg3NSwxODM4MzY0MjUsNTE4Nj
 A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
