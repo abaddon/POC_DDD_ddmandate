@@ -52,34 +52,8 @@ We split our initial problem in 4 smaller problems linked.
 In the next step, I took in charge of one of these problems and I tried to design its features.
 ## Step 2. Software Design
 
-
- using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
-
-The service lives in the Legel Context, so this service doesn't manage any payment logic but implement only the business rules needed to manage the mandate as agreement between the Debitor and the Debitor.
-
-To design the service I used the [EventStorming](https://www.eventstorming.com/) methodology. The outcome of the ES design is visible [here](#event-storming-design).
-
-The Context map below should helps to contestualise the project and the parts not touched.
-
-
-Aggregates: 
-- DD Mandate
-- Contract
-
-## Hexagonal architecture
-![Hexagonal architecture](./docs/HexagonalArchitecture.jpg)
-
-## Event Storming Design
-
-![EventStorming - The picture that explains everything!](./docs/EventStormingDesignLegend.jpg)
-![EventStorming - Design](./docs/EventStormingDesign.jpg)
-### Event Storming - Aggregate view
-![EventStorming - Aggregates](./docs/AggregateDefinition.jpg)
-
-## Domain model
-![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjgwODkxNjk3LC0xNzI5NjUzMzI3LC0yMD
-I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
-NTBdfQ==
+eyJoaXN0b3J5IjpbMTg3MzMwNjE4MSwtMTcyOTY1MzMyNywtMj
+AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
+NTUwXX0=
 -->
