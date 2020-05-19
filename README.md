@@ -47,8 +47,7 @@ It's rapresent the assets of the customer in the financial firm.
 We could have other contexts for example a CRM context to manage the  communications to the customer or maybe less context it's depends by your situation. 
 If you want to know more about the contexts DDD and EventStorming are a good starting point
 
-We splitted our initial problem in 4 smaller problems linked 
-I decided to focus my a
+We split our initial problem in 4 smaller problems linked.
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -76,7 +75,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MjIwNDkxMTUsLTE3Mjk2NTMzMjcsLT
+eyJoaXN0b3J5IjpbLTE5NTI5MTE2ODksLTE3Mjk2NTMzMjcsLT
 IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
 MDU1MF19
 -->
