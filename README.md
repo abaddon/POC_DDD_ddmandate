@@ -17,7 +17,8 @@ The main goals that I want to achive are:
 
 ## Step 1. Domain discovery  
 
-The domain that I decided to analyse is the creation of a Direct Debit 
+The domain that I decided to analyse is the creation of a Direct Debit in the financial word.
+Few thigs to know regarding th
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -47,6 +48,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3MzY4NjE0MDQsMTgzODM2NDI1LDUxOD
-YwNjE5NiwtMTQ4MDc2MDU1MF19
+eyJoaXN0b3J5IjpbMjEwNTA1MDY1NywxODM4MzY0MjUsNTE4Nj
+A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
