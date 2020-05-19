@@ -11,7 +11,7 @@ The service lives in the Legel Context, so this service doesn't manage any payme
 To design the service I used the [EventStorming](https://www.eventstorming.com/) methodology. The outcome of the ES design is visible [here](#event-storming-design).
 
 The Context map below should helps to contestualise the project and the parts not touched.
-![Context Map](./docs/ContextsMap.jpg)
+
 
 Aggregates: 
 - DD Mandate
@@ -29,3 +29,6 @@ Aggregates:
 
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTE5NDc0MjY3OF19
+-->
