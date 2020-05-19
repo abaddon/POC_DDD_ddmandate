@@ -9,7 +9,9 @@ The scope of this POC is to implement a service based on:
  - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to organise the domain model
  - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) as architectural pattern to organise all the components of the services
 
-The application will
+The main goals that I want to achive are:
+
+ 1. Create an application well organised with a package structure code easily to nav
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -39,6 +41,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjU2ODMzOTU5LDE4MzgzNjQyNSw1MTg2MD
-YxOTYsLTE0ODA3NjA1NTBdfQ==
+eyJoaXN0b3J5IjpbMTA0ODM3NzA2MSwxODM4MzY0MjUsNTE4Nj
+A2MTk2LC0xNDgwNzYwNTUwXX0=
 -->
