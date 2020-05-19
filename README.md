@@ -6,10 +6,10 @@
 The scope of this POC is to implement a service based on:
 
  - [EventStorming](https://www.eventstorming.com/)  as software design tool
- - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to orgni
- - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
+ - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to organise the domain model
+ - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) as architectural pattern to organise all the components of the services
 
-I tried to add attention on the Aggregates definition and in 
+The application will
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -39,6 +39,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDg2ODc4OTQxLDE4MzgzNjQyNSw1MTg2MD
+eyJoaXN0b3J5IjpbMjU2ODMzOTU5LDE4MzgzNjQyNSw1MTg2MD
 YxOTYsLTE0ODA3NjA1NTBdfQ==
 -->
