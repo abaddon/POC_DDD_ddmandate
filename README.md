@@ -38,7 +38,9 @@ As we said previously the financial regulator ask to the firm to validate the ba
 This regualation rules generate then a conseguence on the DD Mandate subscription process. The firm can accept DD Mandate with debtor validated.
 ### Payment
 The Payment context use the DD mandate offered by the Legal context to understand if it's possible accept the instruction received from the customer related a recurring payment of xx $$. 
-Accepted the customer instruction, then 
+Accepted the customer instruction (called Payment Order) then the context will generate the payment every time the instruction will ask to trigger a new payment.
+All the business logi
+
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -66,7 +68,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MTkxNDg2MDQsLTE3Mjk2NTMzMjcsLT
-IwMjY3NzQzNTEsMTgzODM2NDI1LDUxODYwNjE5NiwtMTQ4MDc2
-MDU1MF19
+eyJoaXN0b3J5IjpbNjE5NzM0OTYxLC0xNzI5NjUzMzI3LC0yMD
+I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
+NTBdfQ==
 -->
