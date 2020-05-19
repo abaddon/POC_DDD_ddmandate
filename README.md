@@ -20,7 +20,9 @@ The main goals that I want to achive are:
 The domain that I decided to analyse is the creation of a Direct Debit in the financial word.
 Few thigs to know regarding this domain:
 1. SEPA and Bacs doesn't have any kind of protocol that evaluate if the customer is subscribing a DD Mandate using his banks or not... this check is in charge to the firm
-2. An investment firm can accept investment only from
+2. An investment firm can accept investment only from customer's bank accounts. It's not possible accept money that come from a parent's bank account or other
+
+Su
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -50,6 +52,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM5NjEwODI5LDE4MzgzNjQyNSw1MTg2MD
+eyJoaXN0b3J5IjpbNzYzNjY5MDYyLDE4MzgzNjQyNSw1MTg2MD
 YxOTYsLTE0ODA3NjA1NTBdfQ==
 -->
