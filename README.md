@@ -5,7 +5,8 @@
 
 The scope of this POC is to implement a service based on:
 
- - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)
+ - [EventStorming](https://www.eventstorming.com/)  as software design tool
+ - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html) as methodology to orgni
  - [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
 
 I tried to add attention on the Aggregates definition and in 
@@ -38,6 +39,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NjY4ODc0NSwxODM4MzY0MjUsNTE4Nj
-A2MTk2LC0xNDgwNzYwNTUwXX0=
+eyJoaXN0b3J5IjpbNDg2ODc4OTQxLDE4MzgzNjQyNSw1MTg2MD
+YxOTYsLTE0ODA3NjA1NTBdfQ==
 -->
