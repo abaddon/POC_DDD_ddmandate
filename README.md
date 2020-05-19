@@ -23,7 +23,10 @@ Few thigs to know regarding the payments in the financial world:
 2. An investment firm can accept investment only from the customer's bank accounts. It's not possible accept money that come from a parent's bank account or other
 
 The first stem is discover the domain and the EventStorming - Big Picture is the perfect tool for this phase.
-One of the possible outcome of thr Bi
+One of the possible outcome of thr Big Picture is the Context map. 
+The context map is a map that explain which contexts are involved in your process, their responsability and how they communicate.
+It'
+
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -52,7 +55,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjczODYzMTYwLC0xNzI5NjUzMzI3LC0yMD
+eyJoaXN0b3J5IjpbNDUwNDkxOTM5LC0xNzI5NjUzMzI3LC0yMD
 I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
 NTBdfQ==
 -->
