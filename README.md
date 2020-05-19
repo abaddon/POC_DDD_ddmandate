@@ -36,11 +36,11 @@ Here we have manage all the rules (business logic) related to a DD mandate subsc
 ### Regulation Context
 As we said previously the financial regulator ask to the firm to validate the bank account before accept the money. The financial firms often doesn't have a bank licence and then they can't accept money that come from bank accounts where the owner is not the customer.
 This regualation rules generate then a conseguence on the DD Mandate subscription process. The firm can accept DD Mandate with debtor validated.
-### Payment
+### Payment Context
 The Payment context use the DD mandate offered by the Legal context to understand if it's possible accept the instruction received from the customer related a recurring payment of xx $$. 
 Accepted the customer instruction (called Payment Order) then the context will generate the payment every time the instruction will ask to trigger a new payment.
 All the business logic related to the payment order and Payment will stay here.
-### Accounting
+### Accounting 
 Accounting is the last context that we found in this use case and manage the assets of the customer. Every time a payment arrives to the firm and pass the payment context validation then it will be allocated on the customer account.
 It's rapresent the assets of the customer in the financial firm.
 
@@ -49,7 +49,9 @@ If you want to know more about the contexts DDD and EventStorming are a good sta
 
 We split our initial problem in 4 smaller problems linked.
 
-In the next step we'll take in charge one of these problems and we'll try to design its features.
+In the next step, I took in charge of one of these problems and I tried to design its features.
+## Step 2. Software Design
+
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
 
@@ -77,7 +79,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk1NzI3NzIyMCwtMTcyOTY1MzMyNywtMj
-AyNjc3NDM1MSwxODM4MzY0MjUsNTE4NjA2MTk2LC0xNDgwNzYw
-NTUwXX0=
+eyJoaXN0b3J5IjpbNDQ0ODI1NTE0LC0xNzI5NjUzMzI3LC0yMD
+I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
+NTBdfQ==
 -->
