@@ -39,7 +39,9 @@ This regualation rules generate then a conseguence on the DD Mandate subscriptio
 ### Payment
 The Payment context use the DD mandate offered by the Legal context to understand if it's possible accept the instruction received from the customer related a recurring payment of xx $$. 
 Accepted the customer instruction (called Payment Order) then the context will generate the payment every time the instruction will ask to trigger a new payment.
-All the business logi
+All the business logic related to the payment order and Payment will stay here.
+### Accounting
+Accounting is the last context that we found in this use case and manage the assets of the customer. Every time a payment arrives to
 
 
  using the [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)  approach and the [Hexagonal_architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)).
@@ -68,7 +70,7 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjE5NzM0OTYxLC0xNzI5NjUzMzI3LC0yMD
+eyJoaXN0b3J5IjpbNDgwMTg4OTQ5LC0xNzI5NjUzMzI3LC0yMD
 I2Nzc0MzUxLDE4MzgzNjQyNSw1MTg2MDYxOTYsLTE0ODA3NjA1
 NTBdfQ==
 -->
