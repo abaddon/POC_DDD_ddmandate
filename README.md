@@ -2,8 +2,11 @@
 ![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
 
 ## Description
-The scope of this POC is to implement a service using:
-- 
+
+The scope of this POC is to implement a service based on:
+ - [Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)
+ - 
+ - [Hexagonal_architecture] (https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
 
 to manage the subscription of a  Direct Debit mandate.
 
@@ -33,6 +36,6 @@ Aggregates:
 ## Domain model
 ![Domain Model](./docs/DomainModel.jpg)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzE2NTg0Mjc2LDE4MzgzNjQyNSw1MTg2MD
+eyJoaXN0b3J5IjpbMTk1Njg4MzU3LDE4MzgzNjQyNSw1MTg2MD
 YxOTYsLTE0ODA3NjA1NTBdfQ==
 -->
