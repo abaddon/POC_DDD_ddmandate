@@ -6,11 +6,11 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapterSingleton
-import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.ContractControllerActor
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.ContractControllerRoutes
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.internal.DDMandateInternalAdapter
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.adapters.documentAdapters.fake.FakeDocumentAdapter
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.internal.ContractDDMandateInternalAdapter
@@ -39,7 +39,7 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
   //Implicit X Contract
   implicit val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter()
   implicit val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapterSingleton
-  implicit val fileRepositoryPort : FileRepositoryPort = new FakeFileRepositoryAdapter
+  implicit val fileRepositoryPort : DocumentPort = new FakeDocumentAdapter
 
   lazy val logger = Logging(actorSystem, classOf[App])
 

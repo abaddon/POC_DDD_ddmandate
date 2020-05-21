@@ -3,10 +3,10 @@ package com.abaddon83.legal.contracts.services
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
+import com.abaddon83.legal.contracts.adapters.documentAdapters.fake.FakeDocumentAdapter
 import com.abaddon83.legal.contracts.domainModels.{ContractUnSigned, DDMandate}
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
 import com.abaddon83.legal.contracts.utilities.ContractDomainElementHelper
 import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE}
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
@@ -17,7 +17,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class ContractServiceTest extends AnyFunSuite with ScalaFutures with ContractDomainElementHelper {
 
   val contractRepository: ContractRepositoryPort = new FakeContractRepositoryAdapter
-  val fileRepository: FileRepositoryPort = new FakeFileRepositoryAdapter
+  val fileRepository: DocumentPort = new FakeDocumentAdapter
   val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
   val contractService: ContractService = new ContractService(contractRepository,fileRepository,ddMandatePort)
 

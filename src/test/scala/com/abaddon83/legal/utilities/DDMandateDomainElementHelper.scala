@@ -6,7 +6,7 @@ import com.abaddon83.legal.ddMandates.domainModels
 import com.abaddon83.legal.ddMandates.domainModels.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
 import com.abaddon83.legal.ddMandates.domainModels._
 import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, PDF}
+import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, Format}
 import com.abaddon83.libs.DateUtils
 
 trait DDMandateDomainElementHelper {
@@ -29,8 +29,8 @@ trait DDMandateDomainElementHelper {
 
   protected def buildContract(ddMandate:DDMandate, isSigned: Boolean):DDMandateContract={
     isSigned match {
-      case true => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date(),Some(new Date))
-      case false => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",PDF,new Date(), None)
+      case true => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(),Some(new Date))
+      case false => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(), None)
     }
   }
 

@@ -4,7 +4,7 @@ import java.util.Date
 
 import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateContract}
 import com.abaddon83.legal.ddMandates.ports.ContractDDMandatePort
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, PDF}
+import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, Format}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -23,7 +23,7 @@ class FakeContractDDMandateAdapter extends ContractDDMandatePort{
 
   override def createContract(ddMandate: DDMandate): Future[DDMandateContract] = {
     Future{
-      val contract = DDMandateContract.apply(ContractIdentity(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD mandate contract",PDF,new Date(),None)
+      val contract = DDMandateContract.apply(ContractIdentity(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD mandate contract",Format.PDF,new Date(),None)
       persist(contract)
       contract
     }

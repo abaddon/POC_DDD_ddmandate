@@ -5,7 +5,7 @@ import java.util.{Date, UUID}
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
 import com.abaddon83.legal.contracts.ports.ContractRepositoryPort
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, ContractType, DD_MANDATE, Format, PDF}
+import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, ContractType, DD_MANDATE, Format}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -68,7 +68,7 @@ trait ContractRepositoryAdapter extends ContractRepositoryPort{
 
   private object repository{
     var db: ListBuffer[ContractRepo]= ListBuffer(
-      ContractRepo.Apply(new ContractUnSigned(ContractIdentity(UUID.fromString("1469e8b0-7b98-4755-96b4-c3efea1a5894")),DD_MANDATE,"6bde5e29-f9d9-443a-9c86-66af81879383","fake dd mandate",PDF,fakeFileRepository,new Date()))
+      ContractRepo.Apply(new ContractUnSigned(ContractIdentity(UUID.fromString("1469e8b0-7b98-4755-96b4-c3efea1a5894")),DD_MANDATE,"6bde5e29-f9d9-443a-9c86-66af81879383","fake dd mandate",Format.PDF,fakeFileRepository,new Date()))
     )
   }
 

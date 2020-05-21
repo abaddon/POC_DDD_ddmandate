@@ -4,8 +4,8 @@ import java.util.Date
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned, DDMandate}
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
-import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
+import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, Format}
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -13,17 +13,16 @@ import scala.concurrent.Future
 
 
 class ContractService(
-  repository: ContractRepositoryPort,
-  fileRepository: FileRepositoryPort,
-  ddMandatePort: DDMandatePort
+                       repository: ContractRepositoryPort,
+                       documentPort: DocumentPort,
+                       ddMandatePort: DDMandatePort
   ) {
 
   def createDDMandateContract(ddMandateIdentity: DDMandateIdentity): Future[ContractUnSigned] ={
     val ddMandate=DDMandate(ddMandateIdentity)
     for{
-      //ddMandate <- ddMandatePort.findDDMandateById(ddMandateIdentity)
-      unsignedFile <- fileRepository.createUnsignedDDMandate(ddMandate)
-    } yield repository.save(ContractUnSigned(ddMandate,unsignedFile))
+      document <- documentPort.createDocument(ddMandate, Format.PDF)
+    } yield repository.save(ContractUnSigned(ddMandate,document))
 
     /*val ddMandate = ddMandatePort.findDDMandateById(ddMandateIdentity) match {
       case Some(value) => value

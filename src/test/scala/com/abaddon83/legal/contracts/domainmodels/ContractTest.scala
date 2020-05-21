@@ -4,7 +4,7 @@ import java.util.Date
 
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.utilities.ContractDomainElementHelper
-import com.abaddon83.legal.sharedValueObjects.contracts.{DD_MANDATE, PDF}
+import com.abaddon83.legal.sharedValueObjects.contracts.{DD_MANDATE, Format}
 import org.scalatest.funsuite.AnyFunSuite
 
 
@@ -17,7 +17,7 @@ class ContractTest extends AnyFunSuite with ContractDomainElementHelper{
     val contractUnSigned = ContractUnSigned(ddMandate,fakeFileRepository)
 
     assert(contractUnSigned.contractType == DD_MANDATE)
-    assert(contractUnSigned.format == PDF)
+    assert(contractUnSigned.format == Format.PDF)
     assert(contractUnSigned.name == s"DD_MANDATE ${ddMandate.identity.toString}")
     assert(contractUnSigned.reference == ddMandate.identity.uuid.toString)
     assert(contractUnSigned.file == fakeFileRepository)
