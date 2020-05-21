@@ -3,11 +3,11 @@ package com.abaddon83.legal.contracts.adapters.contractAdapters
 import java.util.UUID
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.FileRepositoryAdapters.Fake.FakeFileRepositoryAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
+import com.abaddon83.legal.contracts.adapters.documentAdapters.fake.FakeDocumentAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.ScalaFutures
@@ -19,7 +19,7 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
   val contractAdapter = new ContractControllerAdapter() {
     override implicit val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
     override implicit val contractRepositoryPort: ContractRepositoryPort = new FakeContractRepositoryAdapter
-    override implicit val fileRepositoryPort: FileRepositoryPort = new FakeFileRepositoryAdapter
+    override implicit val fileRepositoryPort: DocumentPort = new FakeDocumentAdapter
   }
 
   test("create contract"){

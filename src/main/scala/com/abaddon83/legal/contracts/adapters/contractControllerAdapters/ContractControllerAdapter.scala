@@ -4,7 +4,7 @@ import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.contracts.ports.{ContractControllerPort, ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.ports.{ContractControllerPort, ContractRepositoryPort, DDMandatePort, DocumentPort}
 import com.abaddon83.legal.contracts.services.ContractService
 import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
 import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
@@ -16,7 +16,7 @@ trait ContractControllerAdapter extends ContractControllerPort{
 
   implicit val ddMandatePort : DDMandatePort
   implicit val contractRepositoryPort : ContractRepositoryPort
-  implicit val fileRepositoryPort : FileRepositoryPort
+  implicit val fileRepositoryPort : DocumentPort
 
   private lazy val contractService: ContractService = new ContractService(contractRepositoryPort,fileRepositoryPort,ddMandatePort)
 

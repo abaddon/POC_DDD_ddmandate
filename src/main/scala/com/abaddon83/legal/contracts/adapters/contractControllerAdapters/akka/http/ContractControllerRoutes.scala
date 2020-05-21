@@ -7,7 +7,7 @@ import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.Contrac
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages._
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.S3FileRepository
 import com.abaddon83.legal.contracts.domainModels.{ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileRepositoryPort}
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
 import com.abaddon83.libs.akkaHttp.routes.RouteRejectionHandler
 
 import scala.concurrent.Future
@@ -19,12 +19,12 @@ class ContractControllerRoutes()(implicit
                                  actorSystem: ActorSystem,
                                  ddMandateAdapter : DDMandatePort,
                                  contractRepositoryAdapter : ContractRepositoryPort,
-                                 fileRepositoryAdapter : FileRepositoryPort
+                                 fileRepositoryAdapter : DocumentPort
   ) extends ContractControllerAdapter with ContractJsonSupport with RouteRejectionHandler{
 
   override val ddMandatePort : DDMandatePort = ddMandateAdapter// new DDMandateInternalAdapter //bind[DDMandatePort]
   override val contractRepositoryPort : ContractRepositoryPort =contractRepositoryAdapter //  FakeContractRepositoryAdapter //bind[ContractRepositoryPort]
-  override val fileRepositoryPort : FileRepositoryPort = fileRepositoryAdapter// new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
+  override val fileRepositoryPort : DocumentPort = fileRepositoryAdapter// new FakeFileRepositoryAdapter //bind[FileRepositoryPort]
 
 
 

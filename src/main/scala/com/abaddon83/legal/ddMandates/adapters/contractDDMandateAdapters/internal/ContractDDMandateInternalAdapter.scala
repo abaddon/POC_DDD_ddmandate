@@ -7,7 +7,7 @@ import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.ac
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.responses.ContractMsg
 import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateContract}
 import com.abaddon83.legal.ddMandates.ports.ContractDDMandatePort
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, PDF}
+import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, Format}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ class ContractDDMandateInternalAdapter(implicit actorSystem: ActorSystem ) exten
 
   private def ddMandateContractFactory( contract: ContractMsg): DDMandateContract = {
     println("build DDMandateContract")
-    DDMandateContract(ContractIdentity(contract.id),contract.reference,DD_MANDATE,contract.name,PDF,contract.creationDate,contract.signatureDate)
+    DDMandateContract(ContractIdentity(contract.id),contract.reference,DD_MANDATE,contract.name,Format.PDF,contract.creationDate,contract.signatureDate)
   }
 }
 
