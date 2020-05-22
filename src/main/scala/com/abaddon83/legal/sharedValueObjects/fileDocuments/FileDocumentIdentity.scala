@@ -21,8 +21,11 @@ object FileDocumentIdentity {
 
   }
   def apply(fileName: String): FileDocumentIdentity = {
-    val subString = fileName.split(".")
-    assert(subString.size == 2, "FileName not recognised")
+    println(s"---->fileName: ${fileName}")
+    val subString = fileName.split('.')
+    assert(subString.length == 2, "FileName not recognised")
+    println(s"---->subString.size: ${subString(0)}")
+    println(s"---->subString.size: ${subString(1)}")
     val uuid=UUID.fromString(subString(0))
     val format=Format.valueOf(subString(1))
     new FileDocumentIdentity(uuid,format)

@@ -4,4 +4,5 @@ import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
 
 case class DDMandate(
                       identity: DDMandateIdentity
+
                     )

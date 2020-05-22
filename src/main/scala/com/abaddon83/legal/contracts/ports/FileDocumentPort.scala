@@ -6,7 +6,7 @@ import com.abaddon83.legal.sharedValueObjects.contracts.Format
 
 import scala.concurrent.Future
 
-trait DocumentPort {
+trait FileDocumentPort {
 
   def createDocument(ddMandate: DDMandate, format: Format) : Future[FileRepository]
 }

@@ -9,8 +9,8 @@ import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.Fa
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.ContractControllerActor
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.ContractControllerRoutes
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.internal.DDMandateInternalAdapter
-import com.abaddon83.legal.contracts.adapters.documentAdapters.fake.FakeDocumentAdapter
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
+import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.akka.AkkaFileDocumentAdapter
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
 import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.internal.ContractDDMandateInternalAdapter
@@ -18,6 +18,12 @@ import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.
 import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.http.DDMandateControllerRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapterSingleton
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local.LocalFileDocumentRepositoryAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.FileDocumentUIActorAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.FileDocumentUIHttpAdapter
+import com.abaddon83.legal.fileDocuments.adapters.pdfBuilderAdapters.pdfbox.PdfBoxPdfBuilderAdapter
+import com.abaddon83.legal.fileDocuments.adapters.templateRepositoryAdapters.fake.FakeTemplateRepository
+import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, PDFBuilderPort, TemplateRepositoryPort}
 import com.abaddon83.libs.akkaHttp.routes.RouteExceptionHandling
 
 import scala.concurrent.Await
@@ -39,13 +45,19 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
   //Implicit X Contract
   implicit val ddMandatePort : DDMandatePort = new DDMandateInternalAdapter()
   implicit val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapterSingleton
-  implicit val fileRepositoryPort : DocumentPort = new FakeDocumentAdapter
+  implicit val fileRepositoryPort : FileDocumentPort = new AkkaFileDocumentAdapter
+
+  //Implicit X FileDocument
+  implicit val pdfMakerPort: PDFBuilderPort = new PdfBoxPdfBuilderAdapter()
+  implicit val templateRepository: TemplateRepositoryPort = new FakeTemplateRepository()
+  implicit val fileDocumentRepository: FileDocumentRepositoryPort = new LocalFileDocumentRepositoryAdapter()
 
   lazy val logger = Logging(actorSystem, classOf[App])
 
 //val ref = context.actorOf(SomeActor.props(someLong)), "actor")
   val contractActor = actorSystem.actorOf(ContractControllerActor.props(),name = "contractActor")
   val ddMandateActor = actorSystem.actorOf(DDMandateControllerActor.props(),name = "ddMandateActor")
+  val fileDocumentActor = actorSystem.actorOf(FileDocumentUIActorAdapter.props(),name = "fileDocumentActor")
 
 
 
@@ -59,12 +71,14 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
 
   val ddMandateRoutes = new DDMandateControllerRoutes()
   val contractRoutes = new ContractControllerRoutes()
+  val fileDocumentRoutes = new FileDocumentUIHttpAdapter()
 
   lazy val routes: Route = handleExceptions(globalExceptionHandler){
     pathPrefix("api") {
       concat(
         contractRoutes.routes,
-        ddMandateRoutes.route
+        ddMandateRoutes.route,
+        fileDocumentRoutes.routes
       )
     }
   }

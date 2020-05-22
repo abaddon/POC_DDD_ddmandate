@@ -20,7 +20,7 @@ class FileDocumentService(pdfMakerPort: PDFBuilderPort,
     } yield fileDocumentRepository.save(PDFFileDocument(fileBinaries))
   }
 
-  def giveMeFileDocument(documentId: String): Future[FileDocument] = {
-    fileDocumentRepository.findByFileId(FileDocumentIdentity(documentId))
+  def giveMeFileDocument(fileDocumentId: FileDocumentIdentity): Future[FileDocument] = {
+    fileDocumentRepository.findByFileId(fileDocumentId)
   }
 }

@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class LocalFileDocumentRepositoryAdapter extends FileDocumentRepositoryPort{
 
-  var path: String = "."
+  var path: String = "./fileRepository"
 
   override def save(fileDocument: FileDocument): FileDocument = {
     persist(fileDocument)
