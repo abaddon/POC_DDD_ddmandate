@@ -34,7 +34,7 @@ class DDMandateService(
       debtor <- bankAccountPort.findDebtorByBankAccountId(bankAccountIdentity)
       hasOtherMandates  <- bankAccountHasOtherMandates(bankAccountIdentity)
     } yield hasOtherMandates match {
-      case true => throw  new IllegalArgumentException(s"The debtor with bank account id ${bankAccountIdentity.uuid} has already a DD mandate")
+      case true => throw  new IllegalArgumentException(s"The debtor with bank account id ${bankAccountIdentity} has already a DD mandate")
       case false => debtor
     }
   }

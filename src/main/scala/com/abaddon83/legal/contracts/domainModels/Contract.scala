@@ -40,12 +40,12 @@ object ContractUnSigned extends Entity{
   def apply(ddMandate : DDMandate, unsignedfile: FileRepository): ContractUnSigned = {
 
     val name = s"DD_MANDATE ${ddMandate.identity.toString}"
-    val contractUnsigned  = new ContractUnSigned(ContractIdentity(),DD_MANDATE, ddMandate.identity.uuid.toString, name, Format.PDF,unsignedfile , new Date())
+    val contractUnsigned  = new ContractUnSigned(ContractIdentity(),DD_MANDATE, ddMandate.identity.convertTo().toString, name, Format.PDF,unsignedfile , new Date())
 
     //POST
     assert(contractUnsigned.contractType == DD_MANDATE,"The contract should have type DD_MANDATE")
     assert(UUID.fromString(contractUnsigned.reference).isInstanceOf[UUID])
-    assert(contractUnsigned.reference == ddMandate.identity.uuid.toString, "The reference and the DD mandate id are different")
+    assert(contractUnsigned.reference == ddMandate.identity.convertTo().toString, "The reference and the DD mandate id are different")
     assert(contractUnsigned.name.length > 0, "The contract name cannot be empty")
     assert(contractUnsigned.format == Format.PDF, "The contract format has to be a pdf")
 

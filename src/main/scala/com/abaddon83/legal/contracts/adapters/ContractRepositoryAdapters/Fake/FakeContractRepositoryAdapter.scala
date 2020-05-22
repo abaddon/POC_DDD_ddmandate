@@ -92,7 +92,7 @@ trait ContractRepositoryAdapter extends ContractRepositoryPort{
     println(s"Contract Repository size: ${repository.db.size}")
     println("---start---")
     repository.db.foreach(contractRepo => {
-      println(s"ID: ${contractRepo.identity.uuid.toString}")
+      println(s"ID: ${contractRepo.identity}")
       println(s"--- STATUS: ${contractRepo.status}")
       println(s"--- ContractType: ${contractRepo.contractType}")
       println(s"--- Reference: ${contractRepo.reference}")

@@ -19,7 +19,7 @@ class ContractTest extends AnyFunSuite with ContractDomainElementHelper{
     assert(contractUnSigned.contractType == DD_MANDATE)
     assert(contractUnSigned.format == Format.PDF)
     assert(contractUnSigned.name == s"DD_MANDATE ${ddMandate.identity.toString}")
-    assert(contractUnSigned.reference == ddMandate.identity.uuid.toString)
+    assert(contractUnSigned.reference == ddMandate.identity.convertTo().toString)
     assert(contractUnSigned.file == fakeFileRepository)
   }
 

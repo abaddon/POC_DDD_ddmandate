@@ -32,8 +32,8 @@ class ContractServiceTest extends AnyFunSuite with ScalaFutures with ContractDom
     val contractPersisted = contractRepository.findContractUnSignedByIdentity(contract.identity).futureValue
 
     assert(contractPersisted.contractType == DD_MANDATE)
-    assert(contractPersisted.reference == ddMandate.identity.uuid.toString)
-    UUIDRegistryHelper.add("service_contract",contract.identity.uuid,"unsigned")
+    assert(contractPersisted.reference == ddMandate.identity.convertTo().toString)
+    UUIDRegistryHelper.add("service_contract",contract.identity.convertTo(),"unsigned")
   }
 
   test("sign a contract unsigned"){
@@ -48,7 +48,7 @@ class ContractServiceTest extends AnyFunSuite with ScalaFutures with ContractDom
     val contractUpdated = contractRepository.findContractSignedByIdentity(contractIdentity).futureValue
     assert(contractUpdated.signatureDate == signatureDate)
 
-    UUIDRegistryHelper.update("service_contract",contractUpdated.identity.uuid,"signed")
+    UUIDRegistryHelper.update("service_contract",contractUpdated.identity.convertTo(),"signed")
   }
 
   test("sign a contract signed"){

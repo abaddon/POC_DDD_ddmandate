@@ -18,16 +18,16 @@ object ContractMsg{
     contract match {
       case contractUnsigned: ContractUnSigned => convertTo(contractUnsigned)
       case contractSigned: ContractSigned => convertTo(contractSigned)
-      case _ => throw new IllegalArgumentException(s"Unrecognised status of Contract ${contract.identity.uuid}")
+      case _ => throw new IllegalArgumentException(s"Unrecognised status of Contract ${contract.identity}")
     }
   }
 
    def convertTo(contract: ContractUnSigned): ContractMsg = {
-    new ContractMsg(contract.identity.uuid,"unsigned",contract.contractType.toString,contract.reference,contract.name,contract.format.toString,FileRepositoryView(contract.file),contract.creationDate,None,None)
+    new ContractMsg(contract.identity.convertTo(),"unsigned",contract.contractType.toString,contract.reference,contract.name,contract.format.toString,FileRepositoryView(contract.file),contract.creationDate,None,None)
   }
 
    def convertTo(contract: ContractSigned): ContractMsg = {
-    new ContractMsg(contract.identity.uuid,"signed",contract.contractType.toString,contract.reference,contract.name,contract.format.toString,FileRepositoryView(contract.file),contract.creationDate,Some(FileRepositoryView(contract.signedFile)),Some(contract.signatureDate))
+    new ContractMsg(contract.identity.convertTo(),"signed",contract.contractType.toString,contract.reference,contract.name,contract.format.toString,FileRepositoryView(contract.file),contract.creationDate,Some(FileRepositoryView(contract.signedFile)),Some(contract.signatureDate))
   }
 }
 

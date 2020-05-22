@@ -42,7 +42,7 @@ class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateD
     assert(ddMandate.isInstanceOf[DDMandateNotAccepted])
     assert(ddMandate.identity == mandateCreatedIdentity)
 
-    UUIDRegistryHelper.add("ddmandate",ddMandate.identity.uuid,"not_accepted_not_signed")
+    UUIDRegistryHelper.add("ddmandate",ddMandate.identity.convertTo(),"not_accepted_not_signed")
   }
 
   test("Create a DD Mandate with a bank account that already has a DD mandate associated") {
@@ -79,7 +79,7 @@ class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateD
     assert(ddMandateAccepted.debtor.bankAccount.isValid)
     assert(ddMandateAccepted.isInstanceOf[DDMandateAccepted])
 
-    UUIDRegistryHelper.update("ddmandate",ddMandateAccepted.identity.value,"accepted")
+    UUIDRegistryHelper.update("ddmandate",ddMandateAccepted.identity.convertTo(),"accepted")
 
   }
 
@@ -95,7 +95,7 @@ class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateD
 
     assert(ddMandateCancelled.identity == ddmandateIdentity)
 
-    UUIDRegistryHelper.update("ddmandate",ddMandateCancelled.identity.value,"cencelled")
+    UUIDRegistryHelper.update("ddmandate",ddMandateCancelled.identity.convertTo(),"cencelled")
 
   }
 

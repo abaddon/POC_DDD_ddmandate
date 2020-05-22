@@ -33,7 +33,7 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
       assert(contract.isInstanceOf[ContractUnSigned])
       assert(contract.reference == ddMandateUUIDString)
 
-      UUIDRegistryHelper.add("adapterContract",contract.identity.uuid,"unsigned")
+      UUIDRegistryHelper.add("adapterContract",contract.identity.convertTo(),"unsigned")
 
     }
   }
@@ -44,7 +44,7 @@ class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
     whenReady(contractAdapter.findByIdContract(contractUUID)){ contract =>
 
-      assert(contract.identity.uuid == contractUUID)
+      assert(contract.identity.convertTo() == contractUUID)
 
     }
   }

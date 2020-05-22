@@ -46,6 +46,6 @@ class LocalFileDocumentRepositoryAdapter extends FileDocumentRepositoryPort{
   }
 
   private def getFullPath(fileDocumentIdentity: FileDocumentIdentity): String = {
-    s"${path}/${fileDocumentIdentity.id}"
+    s"${path}/${fileDocumentIdentity.convertTo()}"
   }
 }

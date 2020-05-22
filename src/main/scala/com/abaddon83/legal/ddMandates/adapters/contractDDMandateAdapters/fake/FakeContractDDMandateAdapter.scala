@@ -23,7 +23,7 @@ class FakeContractDDMandateAdapter extends ContractDDMandatePort{
 
   override def createContract(ddMandate: DDMandate): Future[DDMandateContract] = {
     Future{
-      val contract = DDMandateContract.apply(ContractIdentity(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD mandate contract",Format.PDF,new Date(),None)
+      val contract = DDMandateContract.apply(ContractIdentity(),ddMandate.identity.convertTo().toString,DD_MANDATE,"DD mandate contract",Format.PDF,new Date(),None)
       persist(contract)
       contract
     }
@@ -63,7 +63,7 @@ class FakeContractDDMandateAdapter extends ContractDDMandatePort{
     println(s"Contract Repository size: ${repository.db.size}")
     println("---start---")
     repository.db.foreach(contract => {
-      println(s"ID: ${contract.identity.uuid.toString}")
+      println(s"ID: ${contract.identity.toString}")
       println(s"--- Reference: ${contract.reference}")
       println(s"--- SIGNED: ${contract.isSigned}")
     })

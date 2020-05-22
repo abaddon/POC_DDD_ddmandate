@@ -2,11 +2,11 @@ package com.abaddon83.legal.sharedValueObjects.ddMandates
 
 import java.util.UUID
 
-import com.abaddon83.libs.ddd.AggregateUUIDId
+import com.abaddon83.libs.ddd.AggregateUUIDIdentity
 
-case class DDMandateIdentity private(uuid:UUID) extends AggregateUUIDId{
-  override val value : UUID = uuid
-  override def toString: String = "DDMandate-"+value.toString
+case class DDMandateIdentity (private val value:UUID) extends AggregateUUIDIdentity{
+  override protected val id: UUID = value
+  override def toString: String = "DDMandate-"+id.toString
 }
 
 object DDMandateIdentity{
