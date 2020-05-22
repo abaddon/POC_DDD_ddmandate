@@ -1,6 +1,6 @@
 package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern._
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.commands.{CreateFileDocumentCmd, GiveMeFileDocumentCmd}
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.messages.FileDocumentMsg
@@ -8,14 +8,15 @@ import com.abaddon83.legal.fileDocuments.domainModels.FileDocument
 import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileDocumentUIPort, PDFBuilderPort, TemplateRepositoryPort}
 import com.abaddon83.legal.fileDocuments.services.FileDocumentService
 import com.abaddon83.legal.sharedValueObjects.contracts.Format
+import com.abaddon83.legal.sharedValueObjects.fileDocuments.FileDocumentIdentity
 import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AkkaFileDocumentUIAdapter()(implicit pdfMakerPort: PDFBuilderPort,
-                                  templateRepository: TemplateRepositoryPort,
-                                  fileDocumentRepository: FileDocumentRepositoryPort
+class FileDocumentUIActorAdapter()(implicit pdfMakerPort: PDFBuilderPort,
+                                   templateRepository: TemplateRepositoryPort,
+                                   fileDocumentRepository: FileDocumentRepositoryPort
 ) extends FileDocumentUIPort with Actor with ActorLogging{
 
   override protected val fileDocumentService: FileDocumentService = new FileDocumentService(pdfMakerPort,templateRepository,fileDocumentRepository)
@@ -44,8 +45,15 @@ class AkkaFileDocumentUIAdapter()(implicit pdfMakerPort: PDFBuilderPort,
   }
 
   def findFileDocumentById(fileDocumentId: String): Future[FileDocument] ={
-    fileDocumentService.giveMeFileDocument(fileDocumentId)
+    fileDocumentService.giveMeFileDocument(FileDocumentIdentity(fileDocumentId))
   }
 
+  override def getFileDocument(fileDocumentIdentity: FileDocumentIdentity): Future[FileDocument] = ???
+}
 
+object FileDocumentUIActorAdapter {
+  def props()(implicit pdfMakerPort: PDFBuilderPort,
+              templateRepository: TemplateRepositoryPort,
+              fileDocumentRepository: FileDocumentRepositoryPort
+  ) = Props(new FileDocumentUIActorAdapter())
 }

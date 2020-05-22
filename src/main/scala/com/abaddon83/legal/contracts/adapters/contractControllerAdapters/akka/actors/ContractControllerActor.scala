@@ -5,7 +5,7 @@ import akka.pattern.pipe
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.commands.{CreateDDMandateContractCmd, GiveMeSignedContractCmd}
 import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.actors.responses.ContractMsg
-import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, DocumentPort}
+import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
@@ -14,12 +14,12 @@ class ContractControllerActor()(implicit
                                 actorSystem: ActorSystem,
                                 ddMandateAdapter : DDMandatePort,
                                 contractRepositoryAdapter : ContractRepositoryPort,
-                                fileRepositoryAdapter : DocumentPort
+                                fileRepositoryAdapter : FileDocumentPort
 ) extends ContractControllerAdapter with Actor with ActorLogging{
 
   override val ddMandatePort : DDMandatePort = ddMandateAdapter
   override val contractRepositoryPort : ContractRepositoryPort =  contractRepositoryAdapter
-  override val fileRepositoryPort : DocumentPort = fileRepositoryAdapter
+  override val fileRepositoryPort : FileDocumentPort = fileRepositoryAdapter
 
 
   override def receive: Receive = {
@@ -47,6 +47,6 @@ object ContractControllerActor {
               actorSystem: ActorSystem,
               ddMandateAdapter : DDMandatePort,
               contractRepositoryAdapter : ContractRepositoryPort,
-              fileRepositoryAdapter : DocumentPort) = Props(new ContractControllerActor())
+              fileRepositoryAdapter : FileDocumentPort) = Props(new ContractControllerActor())
 }
 

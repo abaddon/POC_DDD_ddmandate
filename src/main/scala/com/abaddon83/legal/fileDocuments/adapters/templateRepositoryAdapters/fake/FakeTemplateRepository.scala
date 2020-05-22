@@ -10,9 +10,13 @@ import scala.concurrent.Future
 
 
 class FakeTemplateRepository extends TemplateRepositoryPort{
+
+  var templatePath: String = "./fileRepository/templates"
+
   override def findTemplateByName(name: String): Future[DocumentTemplate] = {
+
     Future{
-        val byteArray = Files.readAllBytes(Paths.get("./FakeTemplate.pdf"))
+        val byteArray = Files.readAllBytes(Paths.get(s"$templatePath/$name"))
         DocumentTemplate(name,byteArray)
     }
   }
