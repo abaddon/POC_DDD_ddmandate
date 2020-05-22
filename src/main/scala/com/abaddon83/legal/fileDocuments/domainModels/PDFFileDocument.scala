@@ -14,7 +14,7 @@ case class PDFFileDocument( identity: FileDocumentIdentity,
   val path: String = "."
 
   def getLocalPath(): String = {
-    s"${path}/${identity.id}"
+    s"${path}/${identity.convertTo()}"
   }
 }
 

@@ -8,6 +8,7 @@ import com.abaddon83.legal.fileDocuments.domainModels.FileDocument
 import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileDocumentUIPort, PDFBuilderPort, TemplateRepositoryPort}
 import com.abaddon83.legal.fileDocuments.services.FileDocumentService
 import com.abaddon83.legal.sharedValueObjects.contracts.Format
+import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,8 +38,8 @@ class AkkaFileDocumentUIAdapter()(implicit pdfMakerPort: PDFBuilderPort,
   override def createFileDocument(documentTemplateName: String, documentDetails: Map[String, String], format: Format): Future[FileDocument] = {
     format match {
       case Format.PDF => fileDocumentService.createNewPDFFileDocument(documentTemplateName, documentDetails)
-      case Format.DOC => throw new NotImplementedError()(s"File format ${Format.DOC} not implemented")
-      case Format.JPG => throw new NotImplementedError()(s"File format ${Format.JPG} not implemented")
+      case Format.DOC => throw new NotImplementedException()
+      case Format.JPG => throw new NotImplementedException()
     }
   }
 

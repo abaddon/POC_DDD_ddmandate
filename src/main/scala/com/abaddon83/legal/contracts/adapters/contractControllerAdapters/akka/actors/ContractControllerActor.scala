@@ -21,19 +21,20 @@ class ContractControllerActor()(implicit
   override val contractRepositoryPort : ContractRepositoryPort =  contractRepositoryAdapter
   override val fileRepositoryPort : DocumentPort = fileRepositoryAdapter
 
+
   override def receive: Receive = {
 
     case GiveMeSignedContractCmd(contractIdentity) => {
       log.info(s"RECEVICED CMD GiveMeSignedContractCmd(${contractIdentity}")
       (for{
-        contractSigned <- findSignedContractByIdContract(contractIdentity.uuid)
+        contractSigned <- findSignedContractByIdContract(contractIdentity.convertTo())
       } yield ContractMsg(contractSigned)).pipeTo(sender())
     }
 
     case CreateDDMandateContractCmd(dDMandateIdentity) => {
       log.info(s"RECEVICED CMD CreateDDMandateContractCmd(${dDMandateIdentity})")
       (for{
-        contractUnSigned <- createContract("DDMANDATE", dDMandateIdentity.uuid)
+        contractUnSigned <- createContract("DDMANDATE", dDMandateIdentity.convertTo())
       } yield ContractMsg(contractUnSigned)).pipeTo(sender())
     }
 

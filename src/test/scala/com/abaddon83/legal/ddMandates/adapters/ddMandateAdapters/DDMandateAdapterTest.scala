@@ -30,7 +30,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
     val bankAccountUUID = UUID.fromString(bankAccountIdString)
 
     whenReady(ddMandateAdapter.createDDMandate(bankAccountUUID,legalEntity)){ ddMandateNotAccepted =>
-      assert(ddMandateNotAccepted.debtor.bankAccount.identity.uuid.toString == bankAccountIdString)
+      assert(ddMandateNotAccepted.debtor.bankAccount.identity.convertTo().toString == bankAccountIdString)
       assert(ddMandateNotAccepted.creditor.legalEntityCode == legalEntity)
       assert(ddMandateNotAccepted.contract.isSigned == false)
     }
@@ -59,13 +59,13 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
     val bankAccountUUID = UUID.fromString("4a943d91-1ed4-4a1d-904e-9ec830106299")
     val ddmandate = ddMandateAdapter.createDDMandate(bankAccountUUID, legalEntity).futureValue
 
-    UUIDRegistryHelper.add("ddMandate_adapter",ddmandate.identity.uuid,"not_accepted")
+    UUIDRegistryHelper.add("ddMandate_adapter",ddmandate.identity.convertTo(),"not_accepted")
 
-    val ddMandateUUID = ddmandate.identity.uuid
+    val ddMandateUUID = ddmandate.identity.convertTo()
 
     whenReady(ddMandateAdapter.findByIdDDMandate(ddMandateUUID)) { ddMandateFound =>
-          assert(ddMandateFound.identity.uuid == ddMandateUUID)
-          assert(ddMandateFound.debtor.bankAccount.identity.uuid == bankAccountUUID)
+          assert(ddMandateFound.identity.convertTo() == ddMandateUUID)
+          assert(ddMandateFound.debtor.bankAccount.identity.convertTo() == bankAccountUUID)
           assert(ddMandateFound.creditor.legalEntityCode == legalEntity)
         }
     }

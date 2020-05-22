@@ -29,8 +29,8 @@ trait DDMandateDomainElementHelper {
 
   protected def buildContract(ddMandate:DDMandate, isSigned: Boolean):DDMandateContract={
     isSigned match {
-      case true => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(),Some(new Date))
-      case false => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.uuid.toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(), None)
+      case true => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.convertTo().toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(),Some(new Date))
+      case false => DDMandateContract(ContractIdentity.apply(),ddMandate.identity.convertTo().toString,DD_MANDATE,"DD MANDATE name",Format.PDF,new Date(), None)
     }
   }
 

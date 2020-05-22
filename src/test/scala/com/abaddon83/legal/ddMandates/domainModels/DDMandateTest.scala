@@ -36,7 +36,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
     assert(ddMandateNotAccepted.ddMandateType == ddMandateDraft.ddMandateType)
 
     assert(ddMandateNotAccepted.contract == contract)
-    assert(ddMandateNotAccepted.contract.reference == ddMandateDraft.identity.uuid.toString)
+    assert(ddMandateNotAccepted.contract.reference == ddMandateDraft.identity.convertTo().toString)
     assert(ddMandateNotAccepted.contract.contractType == DD_MANDATE)
 
   }
@@ -55,7 +55,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
 
 
   test("update a wrong signedContract to a not accepted mandate"){
-    val bankAccountId : BankAccountIdentity = BankAccountIdentity()
+    val bankAccountId : BankAccountIdentity = BankAccountIdentity.randomIdentity()
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(false,bankAccountId),isContractSigned = false)
 
     assertThrows[java.lang.AssertionError] {
@@ -64,7 +64,7 @@ class DDMandateTest extends AnyFunSuite with DDMandateDomainElementHelper{
   }
 
   test("update the correct signedContract to a not accepted mandate"){
-    val bankAccountId : BankAccountIdentity = BankAccountIdentity()
+    val bankAccountId : BankAccountIdentity = BankAccountIdentity.randomIdentity()
     val ddMandateNotAccepted = buildNotAcceptedDDMandate(buildEUBankAccount(false,bankAccountId),isContractSigned = false)
     val currentUnSignedContract=  ddMandateNotAccepted.contract
     val signedContract = DDMandateContract(currentUnSignedContract.identity,currentUnSignedContract.reference,currentUnSignedContract.contractType,currentUnSignedContract.name,currentUnSignedContract.format,currentUnSignedContract.creationDate,Some(new Date()))

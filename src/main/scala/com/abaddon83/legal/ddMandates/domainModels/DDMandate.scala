@@ -24,7 +24,7 @@ case class DDMandateDraft(
 
   def assignContract(contract:DDMandateContract): DDMandateNotAccepted = {
 
-    assertArgumentEquals(identity.uuid.toString,contract.reference,"The reference on the Contract doesn't match mandate identifier")
+    assertArgumentEquals(identity.convertTo().toString,contract.reference,"The reference on the Contract doesn't match mandate identifier")
 
     DDMandateNotAccepted(this,contract)
   }

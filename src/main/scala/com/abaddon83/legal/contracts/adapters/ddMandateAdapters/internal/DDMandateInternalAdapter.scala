@@ -20,7 +20,7 @@ class DDMandateInternalAdapter(implicit actorSystem: ActorSystem ) extends DDMan
 
   override def findDDMandateById(ddMandateIdentity: DDMandateIdentity): Future[DDMandate] = {
     for {
-      ddMandateView <- ask(getActor(actorName), GiveMeDDMandateCmd(ddMandateIdentity.uuid)).mapTo[DDMandateMsg]
+      ddMandateView <- ask(getActor(actorName), GiveMeDDMandateCmd(ddMandateIdentity.convertTo())).mapTo[DDMandateMsg]
     } yield convertDDMandateViewToDDMandate(ddMandateView)
   }
 

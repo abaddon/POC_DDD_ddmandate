@@ -98,8 +98,8 @@ trait DDMandateRepositoryAdapter extends DDMandateRepositoryPort{
     println(s"DD Mandate Repository size: ${repository.db.size}")
     println("---start---")
     repository.db.foreach(mandate => {
-      println(s"mandate id: ${mandate.identity.uuid.toString} STATUS: ${mandate.status}")
-      println(s"-->bankAccount id: ${mandate.debtor.bankAccount.identity.uuid.toString}")
+      println(s"mandate id: ${mandate.identity} STATUS: ${mandate.status}")
+      println(s"-->bankAccount id: ${mandate.debtor.bankAccount.identity}")
     })
     println("---end---")
   }
