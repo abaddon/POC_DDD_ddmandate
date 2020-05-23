@@ -3,4 +3,8 @@
 /project/target/
 /project/project/
 /target/
+<<<<<<< HEAD
 fileRepository
+=======
+/fileRepository/
+>>>>>>> remove document folder form git
