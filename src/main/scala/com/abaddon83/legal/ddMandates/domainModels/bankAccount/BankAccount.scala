@@ -1,6 +1,6 @@
 package com.abaddon83.legal.ddMandates.domainModels.bankAccount
 
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
 
 trait BankAccount{
   val identity: BankAccountIdentity

@@ -4,7 +4,7 @@ import java.util.Date
 
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.utilities.ContractDomainElementHelper
-import com.abaddon83.legal.sharedValueObjects.contracts.{DD_MANDATE, Format}
+import com.abaddon83.legal.shares.contracts.{DD_MANDATE, Format}
 import org.scalatest.funsuite.AnyFunSuite
 
 

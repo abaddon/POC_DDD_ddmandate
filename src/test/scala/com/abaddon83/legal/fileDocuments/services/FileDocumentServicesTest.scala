@@ -1,12 +1,12 @@
 package com.abaddon83.legal.fileDocuments.services
 
 
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local.LocalFileDocumentRepositoryAdapter
-import com.abaddon83.legal.fileDocuments.adapters.pdfBuilderAdapters.pdfbox.PdfBoxPdfBuilderAdapter
-import com.abaddon83.legal.fileDocuments.adapters.templateRepositoryAdapters.fake.FakeTemplateRepository
+import com.abaddon83.legal.fileDocuments.adapters.fileBodyAdapters.pdfBox.FileBodyPdfBoxAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.localFS.FileDocumentRepositoryLocalFSAdapter
+import com.abaddon83.legal.fileDocuments.adapters.templateRepositoryAdapters.fake.TemplateRepositoryFakeAdapter
 import com.abaddon83.legal.fileDocuments.domainModels.{DocumentTemplate, PDFFileDocument}
-import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, PDFBuilderPort, TemplateRepositoryPort}
-import com.abaddon83.legal.sharedValueObjects.contracts.Format
+import com.abaddon83.legal.fileDocuments.ports.{FileBodyPort, FileDocumentRepositoryPort, TemplateRepositoryPort}
+import com.abaddon83.legal.shares.contracts.Format
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -16,9 +16,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class FileDocumentServicesTest extends AnyFunSuite with ScalaFutures  {
 
-  val pdfMakerPort: PDFBuilderPort = new PdfBoxPdfBuilderAdapter()
-  val templateRepository: TemplateRepositoryPort = new FakeTemplateRepository()
-  val fileDocumentRepository: FileDocumentRepositoryPort = new LocalFileDocumentRepositoryAdapter()
+  val pdfMakerPort: FileBodyPort = new FileBodyPdfBoxAdapter()
+  val templateRepository: TemplateRepositoryPort = new TemplateRepositoryFakeAdapter()
+  val fileDocumentRepository: FileDocumentRepositoryPort = new FileDocumentRepositoryLocalFSAdapter()
   val fileDocumentService: FileDocumentService = new FileDocumentService(pdfMakerPort,templateRepository,fileDocumentRepository)
 
   test("store a file"){

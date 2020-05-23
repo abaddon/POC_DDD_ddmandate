@@ -2,8 +2,8 @@ package com.abaddon83.legal.ddMandates.domainModels
 
 import java.util.Date
 
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.contracts.DD_MANDATE
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.contracts.DD_MANDATE
 import com.abaddon83.legal.utilities.DDMandateDomainElementHelper
 import org.scalatest.funsuite.AnyFunSuite
 

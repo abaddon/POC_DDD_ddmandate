@@ -2,8 +2,8 @@ package com.abaddon83.legal.fileDocuments.ports
 
 import com.abaddon83.legal.fileDocuments.domainModels.FileDocument
 import com.abaddon83.legal.fileDocuments.services.FileDocumentService
-import com.abaddon83.legal.sharedValueObjects.contracts.Format
-import com.abaddon83.legal.sharedValueObjects.fileDocuments.FileDocumentIdentity
+import com.abaddon83.legal.shares.contracts.Format
+import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 
 import scala.concurrent.Future
 

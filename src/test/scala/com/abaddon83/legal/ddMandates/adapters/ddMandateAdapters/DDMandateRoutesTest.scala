@@ -7,13 +7,14 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
-import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.actors.http.DDMandateControllerRoutes
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView}
+import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akka.akkaHttp.messages.CreateDDMandateRequest
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.DDMandateUIRoutes
+import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, DDMandateContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
@@ -23,12 +24,12 @@ import org.scalatest.matchers.should.Matchers
 
 class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers with ScalatestRouteTest with Eventually with DDMandateJsonSupport{
 
-  implicit val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
-  implicit val contractPort :ContractDDMandatePort = new FakeContractDDMandateAdapter()
+  implicit val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
+  implicit val contractPort :DDMandateContractPort = new DDMandateContractFakeAdapter()
   implicit val creditorPort : CreditorPort = new FakeCreditorAdapter()
   implicit val ddMandateRepositoryPort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
 
-  val ddMandateRoutes = new DDMandateControllerRoutes()
+  val ddMandateRoutes = new DDMandateUIRoutes()
 
   test("Create a new DD Mandate"){
 
@@ -138,7 +139,7 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
 
     val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
     //ddMandateRoutes.contractPort.asInstanceOf[FakeDDMandateContractAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[BankAccountFakeAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       //println(response)
@@ -158,8 +159,8 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
     val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    ddMandateRoutes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    ddMandateRoutes.contractPort.asInstanceOf[DDMandateContractFakeAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[BankAccountFakeAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
       //println(response)
@@ -180,8 +181,8 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
     val ddMandateUUIDString= UUIDRegistryHelper.search("ddMandate","not_accepted").get.toString
 
     val ddMandateNotAccepted = ddMandateRoutes.ddMandateRepositoryPort.findDDMandateNotAcceptedById(DDMandateIdentity(UUID.fromString(ddMandateUUIDString))).futureValue
-    ddMandateRoutes.contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
-    ddMandateRoutes.bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    ddMandateRoutes.contractPort.asInstanceOf[DDMandateContractFakeAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    ddMandateRoutes.bankAccountPort.asInstanceOf[BankAccountFakeAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {

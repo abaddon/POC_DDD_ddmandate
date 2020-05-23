@@ -98,42 +98,45 @@ The two aggregates haven't any shared class, only the identifier classes, and so
 
 The package structure used:
 ```
-com.abaddon83                              //root    
+com.abaddon83                                                               
 │
-└───libs                                    //libs
-│   └───DDD                                 // some class reusable in other projects maybe
+└───libs                                                                
+│   └───{libName}                                                       
 │   └───[..]                                
 │
-└───legal                                   // context   
-    └───shares                             // In this folder there are all the classes that are right shared across the context
-    │   └───[entity]                        // sharable classes related to the entity
-    │   │      └───[Entity]Identity.scala   // class used to manage the identity of an entity
+└───{contextName}                                                          
+    └───shares                                                          
+    │   └───"{entity}s"                                                 
+    │   │      └───{Entity}Identity.scala                               
     │   │
-    │   └───[..]
+    │   └───"{entity}s"
     │
-    └───contracts                           //Aggregate root
-    │   └───adapters                        //Adapters folder
-    │   │   └───[PortName]adapters          //Entity Adapter folder
-    │   │   │   └───[folders]               //folders and file necessary to the adapters
-    │   │   │   └───[files]                 //folders and file necessary to the adapters
+    └───{aggregate}s                           
+    │   └───adapters                        
+    │   │   └───{entity}[scope]Adapter          
+    │   │   │   └───{technology}               
+    │   │   │   │           └───{Entity}[scope][technology]Adapter.scala                 
+    │   │   │   └───[..]
     │   │   └───[..]
     │   │
-    │   └───ports                           //Ports folder
-    │   │   └───[xyz]Port.scala             //Port definition
+    │   └───ports                           
+    │   │   └───{Entity}[scope]Port.scala   
     │   │   └───[..]
     │   │
-    │   └───domainModels                    //Domain Model folder
-    │   │   └───[Entity]                    //Entity Folder
-    │   │   │   └───[Files]                 // file related to the entity
-    │   │   └───[Files]                     //Simple Entities that don't need more than a file/class
-    │   │   └───[..]
+    │   └───domainModels                    
+    │   │   └───{Entity}.scala              
+    │   │   └───{entity}s                   
+    │   │   │        └───{Entity}.scala     
+    │   │   └───[..]                     
     │   │
-    │   └───services                        //Service Model folder
-    │       └───[Aggregate]Service          // service used to manage the aggregates and the necessary ports 
+    │   └───services                        
+    │       └───{Aggregate}Service              
     │
-    └───ddMandates                           //Aggregate root
-        └───[..]                             //same structure    
+    └───[..]
 
 ```
-
+The *Scope* could assume this value:
+- Repository: this port is a repository, used to store the entity/aggregate
+- UI: this port is a controller  
+- Nothing: generic scope, it's a generic port used to connect to something
 

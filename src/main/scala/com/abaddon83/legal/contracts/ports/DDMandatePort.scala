@@ -1,7 +1,7 @@
 package com.abaddon83.legal.contracts.ports
 
 import com.abaddon83.legal.contracts.domainModels.DDMandate
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 
 import scala.concurrent.Future
 

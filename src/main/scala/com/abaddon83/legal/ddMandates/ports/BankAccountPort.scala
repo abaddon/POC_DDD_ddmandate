@@ -2,7 +2,7 @@ package com.abaddon83.legal.ddMandates.ports
 
 import com.abaddon83.legal.ddMandates.domainModels.Debtor
 import com.abaddon83.legal.ddMandates.domainModels.bankAccount.BankAccount
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
 
 import scala.concurrent.Future
 

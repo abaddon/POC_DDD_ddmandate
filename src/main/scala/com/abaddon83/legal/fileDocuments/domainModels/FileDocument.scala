@@ -1,7 +1,7 @@
 package com.abaddon83.legal.fileDocuments.domainModels
 
-import com.abaddon83.legal.sharedValueObjects.contracts.Format
-import com.abaddon83.legal.sharedValueObjects.fileDocuments.FileDocumentIdentity
+import com.abaddon83.legal.shares.contracts.Format
+import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 
 trait  FileDocument {
   val identity: FileDocumentIdentity
