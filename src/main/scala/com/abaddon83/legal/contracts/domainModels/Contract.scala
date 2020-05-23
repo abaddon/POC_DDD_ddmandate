@@ -3,7 +3,7 @@ package com.abaddon83.legal.contracts.domainModels
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, ContractType, DD_MANDATE, Format}
+import com.abaddon83.legal.shares.contracts.{ContractIdentity, ContractType, DD_MANDATE, Format}
 import com.abaddon83.libs.ddd.Entity
 
 sealed trait Contract extends Entity{

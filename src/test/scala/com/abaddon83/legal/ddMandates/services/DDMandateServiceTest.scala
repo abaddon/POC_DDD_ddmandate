@@ -3,13 +3,13 @@ package com.abaddon83.legal.ddMandates.services
 import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
-import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
+import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.domainModels._
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, ContractDDMandatePort, DDMandateRepositoryPort}
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.{DDMandateDomainElementHelper, UUIDRegistryHelper}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
@@ -20,9 +20,9 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateDomainElementHelper  {
    protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
-   protected val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
+   protected val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
    protected val creditorPort: CreditorPort = new FakeCreditorAdapter()
-   protected  val contractPort: ContractDDMandatePort = new FakeContractDDMandateAdapter()
+   protected  val contractPort: DDMandateContractPort = new DDMandateContractFakeAdapter()
    protected val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort, contractPort)
 
 
@@ -68,9 +68,9 @@ class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateD
     val ddMandateNotAccepted =ddMandateRepository.findDDMandateNotAcceptedById(ddmandateIdentity).futureValue
 
     //sign the Contract
-    contractPort.asInstanceOf[FakeContractDDMandateAdapter].setSigned(ddMandateNotAccepted.contract.identity)
+    contractPort.asInstanceOf[DDMandateContractFakeAdapter].setSigned(ddMandateNotAccepted.contract.identity)
     //validate the BankAccount
-    bankAccountPort.asInstanceOf[FakeBankAccountAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
+    bankAccountPort.asInstanceOf[BankAccountFakeAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     ddMandateService.acceptDDMandate(ddmandateIdentity).futureValue
 

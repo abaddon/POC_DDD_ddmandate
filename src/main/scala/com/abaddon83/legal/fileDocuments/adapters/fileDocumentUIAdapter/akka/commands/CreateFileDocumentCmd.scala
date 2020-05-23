@@ -1,6 +1,6 @@
 package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.commands
 
-import com.abaddon83.legal.sharedValueObjects.contracts.Format
+import com.abaddon83.legal.shares.contracts.Format
 
 
 case class CreateFileDocumentCmd(

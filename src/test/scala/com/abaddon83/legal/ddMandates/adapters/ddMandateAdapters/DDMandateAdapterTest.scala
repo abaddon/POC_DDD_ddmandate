@@ -4,11 +4,11 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters
 import java.util.UUID
 
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
-import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.FakeBankAccountAdapter
-import com.abaddon83.legal.ddMandates.adapters.contractDDMandateAdapters.fake.FakeContractDDMandateAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.DDMandateControllerAdapter
+import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
+import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.DDMandateUIAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, ContractDDMandatePort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, DDMandateContractPort, CreditorPort, DDMandateRepositoryPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
@@ -17,9 +17,9 @@ import org.scalatest.matchers.should.Matchers
 
 class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val ddMandateAdapter = new DDMandateControllerAdapter() {
-    override val bankAccountPort: BankAccountPort = new FakeBankAccountAdapter()
-    override val contractPort: ContractDDMandatePort = new FakeContractDDMandateAdapter()
+  val ddMandateAdapter = new DDMandateUIAdapter() {
+    override val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
+    override val contractPort: DDMandateContractPort = new DDMandateContractFakeAdapter()
     override val creditorPort: CreditorPort = new FakeCreditorAdapter()
     override val ddMandateRepositoryPort: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
   }

@@ -4,8 +4,8 @@ import java.util.Date
 
 import com.abaddon83.legal.ddMandates.domainModels.{Creditor, DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateContract, DDMandateNotAccepted, DDMandateType, Debtor}
 import com.abaddon83.legal.ddMandates.ports.DDMandateRepositoryPort
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future

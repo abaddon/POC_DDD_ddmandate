@@ -2,7 +2,7 @@ package com.abaddon83.legal.ddMandates.domainModels
 
 import java.util.Date
 
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, ContractType, Format}
+import com.abaddon83.legal.shares.contracts.{ContractIdentity, ContractType, Format}
 
 case class DDMandateContract(
                              identity: ContractIdentity,

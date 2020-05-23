@@ -3,13 +3,13 @@ package com.abaddon83.legal.contracts.services
 import java.util.{Date, UUID}
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
-import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FakeFileDocumentAdapter
+import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.DDMandateFakeAdapter
+import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FileDocumentFakeAdapter
 import com.abaddon83.legal.contracts.domainModels.{ContractUnSigned, DDMandate}
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
 import com.abaddon83.legal.contracts.utilities.ContractDomainElementHelper
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE}
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.contracts.{ContractIdentity, DD_MANDATE}
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
@@ -17,15 +17,15 @@ import org.scalatest.funsuite.AnyFunSuite
 class ContractServiceTest extends AnyFunSuite with ScalaFutures with ContractDomainElementHelper {
 
   val contractRepository: ContractRepositoryPort = new FakeContractRepositoryAdapter
-  val fileRepository: FileDocumentPort = new FakeFileDocumentAdapter
-  val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
+  val fileRepository: FileDocumentPort = new FileDocumentFakeAdapter
+  val ddMandatePort: DDMandatePort = new DDMandateFakeAdapter
   val contractService: ContractService = new ContractService(contractRepository,fileRepository,ddMandatePort)
 
 
   test("create a DD Mandate contract unsigned"){
 
     val ddMandate = DDMandate(DDMandateIdentity())
-    ddMandatePort.asInstanceOf[FakeDDMandateAdapter].addTestableDDMandate(ddMandate)
+    ddMandatePort.asInstanceOf[DDMandateFakeAdapter].addTestableDDMandate(ddMandate)
 
     val contract = contractService.createDDMandateContract(ddMandate.identity).futureValue
 

@@ -1,14 +1,14 @@
 package com.abaddon83.legal.fileDocuments.services
 
 import com.abaddon83.legal.fileDocuments.domainModels.{FileDocument, PDFFileDocument}
-import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, PDFBuilderPort, TemplateRepositoryPort}
-import com.abaddon83.legal.sharedValueObjects.fileDocuments.FileDocumentIdentity
+import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileBodyPort, TemplateRepositoryPort}
+import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class FileDocumentService(pdfMakerPort: PDFBuilderPort,
+class FileDocumentService(pdfMakerPort: FileBodyPort,
                           templateRepository: TemplateRepositoryPort,
                           fileDocumentRepository: FileDocumentRepositoryPort
                          ) {

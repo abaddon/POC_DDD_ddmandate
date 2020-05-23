@@ -2,7 +2,7 @@ package com.abaddon83.legal.ddMandates.domainModels
 
 import java.util.Date
 
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 import com.abaddon83.libs.ddd.Entity
 
 sealed trait DDMandate extends Entity {

@@ -6,10 +6,10 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.ContractControllerRoutes
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.akka.http.messages.{ContractJsonSupport, ContractView, CreateContractRequest, SignContractRequest}
-import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
-import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FakeFileDocumentAdapter
+import com.abaddon83.legal.contracts.adapters.contractUIAdapters.akka.akkHttp.ContractUIRoutes
+import com.abaddon83.legal.contracts.adapters.contractUIAdapters.akka.akkHttp.messages.{ContractJsonSupport, ContractView, CreateContractRequest, SignContractRequest}
+import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.DDMandateFakeAdapter
+import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FileDocumentFakeAdapter
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
@@ -19,13 +19,13 @@ import org.scalatest.matchers.should.Matchers
 
 class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTest with Eventually with ContractJsonSupport{
 
-  implicit val ddMandatePort : DDMandatePort = new FakeDDMandateAdapter
+  implicit val ddMandatePort : DDMandatePort = new DDMandateFakeAdapter
   implicit val contractRepositoryPort : ContractRepositoryPort =  new FakeContractRepositoryAdapter
-  implicit val fileRepositoryPort : FileDocumentPort = new FakeFileDocumentAdapter
+  implicit val fileRepositoryPort : FileDocumentPort = new FileDocumentFakeAdapter
 
-  val contractRoutes = new ContractControllerRoutes()
+  val contractRoutes = new ContractUIRoutes()
 
-  contractRoutes.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
+  contractRoutes.ddMandatePort.asInstanceOf[DDMandateFakeAdapter].loadTestData();
 
   test("create a new Contract"){
 

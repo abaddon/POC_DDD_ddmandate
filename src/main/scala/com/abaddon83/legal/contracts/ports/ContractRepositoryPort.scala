@@ -1,7 +1,7 @@
 package com.abaddon83.legal.contracts.ports
 
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned}
-import com.abaddon83.legal.sharedValueObjects.contracts.ContractIdentity
+import com.abaddon83.legal.shares.contracts.ContractIdentity
 
 import scala.concurrent.Future
 

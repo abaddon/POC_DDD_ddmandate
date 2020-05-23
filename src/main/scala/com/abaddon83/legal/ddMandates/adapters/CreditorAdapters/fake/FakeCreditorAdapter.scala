@@ -6,7 +6,7 @@ import com.abaddon83.legal.ddMandates.domainModels
 import com.abaddon83.legal.ddMandates.domainModels.Creditor
 import com.abaddon83.legal.ddMandates.domainModels.bankAccount.{EUBankAccount, UKBankAccount}
 import com.abaddon83.legal.ddMandates.ports.CreditorPort
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

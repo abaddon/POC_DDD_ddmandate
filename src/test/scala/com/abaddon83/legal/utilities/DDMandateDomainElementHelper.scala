@@ -5,8 +5,8 @@ import java.util.{Date, UUID}
 import com.abaddon83.legal.ddMandates.domainModels
 import com.abaddon83.legal.ddMandates.domainModels.bankAccount.{BankAccount, EUBankAccount, UKBankAccount}
 import com.abaddon83.legal.ddMandates.domainModels._
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.contracts.{ContractIdentity, DD_MANDATE, Format}
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.contracts.{ContractIdentity, DD_MANDATE, Format}
 import com.abaddon83.libs.DateUtils
 
 trait DDMandateDomainElementHelper {

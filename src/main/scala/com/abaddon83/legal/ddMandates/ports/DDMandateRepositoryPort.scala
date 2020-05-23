@@ -1,8 +1,8 @@
 package com.abaddon83.legal.ddMandates.ports
 
 import com.abaddon83.legal.ddMandates.domainModels.{DDMandate, DDMandateAccepted, DDMandateCanceled, DDMandateNotAccepted}
-import com.abaddon83.legal.sharedValueObjects.bankAccounts.BankAccountIdentity
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 
 import scala.concurrent.Future
 

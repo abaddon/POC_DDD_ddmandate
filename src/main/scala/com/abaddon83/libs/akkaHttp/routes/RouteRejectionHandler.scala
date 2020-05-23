@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.model.headers.`Content-Type`
 import akka.http.scaladsl.server.{MalformedRequestContentRejection, MethodRejection, RejectionHandler, ValidationRejection}
-import com.abaddon83.legal.ddMandates.adapters.ddMandateControllerAdapters.akka.http.messages.ErrorDDMandate
+import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.messages.ErrorDDMandate
 import com.abaddon83.libs.akkaHttp.messages.GenericJsonSupport
 
 trait RouteRejectionHandler extends GenericJsonSupport{

@@ -4,7 +4,7 @@ import java.util.Date
 
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.domainModels.{Contract, ContractSigned, ContractUnSigned, DDMandate}
-import com.abaddon83.legal.sharedValueObjects.ddMandates.DDMandateIdentity
+import com.abaddon83.legal.shares.ddMandates.DDMandateIdentity
 
 
 trait ContractDomainElementHelper {

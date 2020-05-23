@@ -3,9 +3,9 @@ package com.abaddon83.legal.contracts.adapters.contractAdapters
 import java.util.UUID
 
 import com.abaddon83.legal.contracts.adapters.ContractRepositoryAdapters.Fake.FakeContractRepositoryAdapter
-import com.abaddon83.legal.contracts.adapters.contractControllerAdapters.ContractControllerAdapter
-import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.FakeDDMandateAdapter
-import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FakeFileDocumentAdapter
+import com.abaddon83.legal.contracts.adapters.contractUIAdapters.ContractUIAdapter
+import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.fake.DDMandateFakeAdapter
+import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.fake.FileDocumentFakeAdapter
 import com.abaddon83.legal.contracts.domainModels.ContractUnSigned
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
@@ -16,14 +16,14 @@ import org.scalatest.matchers.should.Matchers
 
 class ContractAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
 
-  val contractAdapter = new ContractControllerAdapter() {
-    override implicit val ddMandatePort: DDMandatePort = new FakeDDMandateAdapter
+  val contractAdapter = new ContractUIAdapter() {
+    override implicit val ddMandatePort: DDMandatePort = new DDMandateFakeAdapter
     override implicit val contractRepositoryPort: ContractRepositoryPort = new FakeContractRepositoryAdapter
-    override implicit val fileRepositoryPort: FileDocumentPort = new FakeFileDocumentAdapter
+    override implicit val fileRepositoryPort: FileDocumentPort = new FileDocumentFakeAdapter
   }
 
   test("create contract"){
-    contractAdapter.ddMandatePort.asInstanceOf[FakeDDMandateAdapter].loadTestData();
+    contractAdapter.ddMandatePort.asInstanceOf[DDMandateFakeAdapter].loadTestData();
     val contractType = "DDMANDATE"
     val ddMandateUUIDString = "79abadf2-84db-42bc-81d5-4577778d38af"
     val ddMandateUUIDReference: UUID = UUID.fromString(ddMandateUUIDString)
