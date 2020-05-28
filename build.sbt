@@ -1,3 +1,5 @@
+import scoverage.ScoverageKeys._
+
 name := "DDMandate"
 
 version := "0.1"
@@ -5,6 +7,13 @@ version := "0.1"
 scalaVersion := "2.13.1"
 
 organization := "com.abaddon83"
+
+//coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models\\.data\\..*"
+coverageExcludedPackages := "<empty>;com.abaddon83.libs.*;(.)*[F-f]ake(.)*"
+coverageMinimum := 80
+coverageFailOnMinimum := false
+
+
 
 libraryDependencies ++= {
   val akkaVersion = "2.6.4"
