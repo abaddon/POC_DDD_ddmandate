@@ -1,5 +1,5 @@
 # POC DDD Direct Debit mandate
-![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg)
+![Test](https://github.com/abaddon/POC_DDD_ddmandate/workflows/Test/badge.svg) [![codecov](https://codecov.io/gh/abaddon/POC_DDD_ddmandate/branch/master/graph/badge.svg)](https://codecov.io/gh/abaddon/POC_DDD_ddmandate)
 ## Why this POC
 
 The scope of this POC is to implement a service based on:
