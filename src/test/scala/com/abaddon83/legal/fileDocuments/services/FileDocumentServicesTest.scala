@@ -4,15 +4,14 @@ package com.abaddon83.legal.fileDocuments.services
 import com.abaddon83.legal.fileDocuments.adapters.fileBodyAdapters.pdfBox.FileBodyPdfBoxAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.localFS.FileDocumentRepositoryLocalFSAdapter
 import com.abaddon83.legal.fileDocuments.adapters.templateRepositoryAdapters.fake.TemplateRepositoryFakeAdapter
-import com.abaddon83.legal.fileDocuments.domainModels.{DocumentTemplate, PDFFileDocument}
 import com.abaddon83.legal.fileDocuments.ports.{FileBodyPort, FileDocumentRepositoryPort, TemplateRepositoryPort}
 import com.abaddon83.legal.shares.contracts.Format
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.immutable.HashMap
-import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 class FileDocumentServicesTest extends AnyFunSuite with ScalaFutures  {
 
@@ -58,7 +57,7 @@ class FileDocumentServicesTest extends AnyFunSuite with ScalaFutures  {
     //val fileBody =
 */
 
-    fileDocumentService.createNewPDFFileDocument("name",documentData) onComplete {
+    fileDocumentService.createNewPDFFileDocument("FakeTemplate.pdf",documentData) onComplete {
       case Success(value) => {
         assert(value.format == Format.PDF)
       }

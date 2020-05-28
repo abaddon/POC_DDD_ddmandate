@@ -37,32 +37,27 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   //Implicit X DDMANDATE
-  implicit val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
-  implicit val contractPort :DDMandateContractPort = new DDMandateContractAkkaAdapter()
-  implicit val creditorPort : CreditorPort = new FakeCreditorAdapter()
-  implicit val ddMandateRepositoryPort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapterSingleton
+  implicit lazy val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
+  implicit lazy val contractPort :DDMandateContractPort = new DDMandateContractAkkaAdapter()
+  implicit lazy val creditorPort : CreditorPort = new FakeCreditorAdapter()
+  implicit lazy val ddMandateRepositoryPort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapterSingleton
 
   //Implicit X Contract
-  implicit val ddMandatePort : DDMandatePort = new DDMandateAkkaAdapter()
-  implicit val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapterSingleton
-  implicit val fileRepositoryPort : FileDocumentPort = new FileDocumentAkkaAdapter
+  implicit lazy val ddMandatePort : DDMandatePort = new DDMandateAkkaAdapter()
+  implicit lazy val contractRepositoryPort : ContractRepositoryPort =  FakeContractRepositoryAdapterSingleton
+  implicit lazy val fileRepositoryPort : FileDocumentPort = new FileDocumentAkkaAdapter
 
   //Implicit X FileDocument
-  implicit val pdfMakerPort: FileBodyPort = new FileBodyPdfBoxAdapter()
-  implicit val templateRepository: TemplateRepositoryPort = new TemplateRepositoryFakeAdapter()
-  implicit val fileDocumentRepository: FileDocumentRepositoryPort = new FileDocumentRepositoryLocalFSAdapter()
+  implicit lazy val pdfMakerPort: FileBodyPort = new FileBodyPdfBoxAdapter()
+  implicit lazy val templateRepository: TemplateRepositoryPort = new TemplateRepositoryFakeAdapter()
+  implicit lazy val fileDocumentRepository: FileDocumentRepositoryPort = new FileDocumentRepositoryLocalFSAdapter()
 
   lazy val logger = Logging(actorSystem, classOf[App])
 
 //val ref = context.actorOf(SomeActor.props(someLong)), "actor")
-  val contractActor = actorSystem.actorOf(ContractUIActor.props(),name = "contractActor")
-  val ddMandateActor = actorSystem.actorOf(DDMandateUIActor.props(),name = "ddMandateActor")
-  val fileDocumentActor = actorSystem.actorOf(FileDocumentUIActorAdapter.props(),name = "fileDocumentActor")
-
-
-
-  logger.info(s"contractActor.path.toString: ${contractActor.path.toString}")
-  logger.info(s"ddMandateActor.path.toString: ${ddMandateActor.path.toString}")
+  actorSystem.actorOf(ContractUIActor.props(),name = "contractActor")
+  actorSystem.actorOf(DDMandateUIActor.props(),name = "ddMandateActor")
+  actorSystem.actorOf(FileDocumentUIActorAdapter.props(),name = "fileDocumentActor")
 
 
   val host: String = "127.0.0.1"

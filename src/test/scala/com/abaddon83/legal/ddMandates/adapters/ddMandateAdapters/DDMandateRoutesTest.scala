@@ -9,7 +9,6 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
-import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akka.akkaHttp.messages.CreateDDMandateRequest
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.DDMandateUIRoutes
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.messages.{CreateDDMandateRequest, DDMandateJsonSupport, DDMandateView}
