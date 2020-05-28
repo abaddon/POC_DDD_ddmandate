@@ -1,4 +1,6 @@
 /testing.sc
 /.idea/
-/project/
+/project/target/
+/project/project/
 /target/
+fileRepository
