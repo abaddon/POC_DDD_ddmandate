@@ -52,7 +52,7 @@ class ContractRouterTest extends AnyFunSuite with Matchers with ScalatestRouteTe
 
     val contractUUID = UUIDRegistryHelper.search("contract","unsigned").get
     val ddMandateUUIDString = "79abadf2-84db-42bc-81d5-4577778d38af"
-    println(s"GET /contracts/${contractUUID}")
+
     Get(s"/contracts/${contractUUID}") ~> Route.seal(contractRoutes.routes) ~> check{
 
       status shouldBe OK

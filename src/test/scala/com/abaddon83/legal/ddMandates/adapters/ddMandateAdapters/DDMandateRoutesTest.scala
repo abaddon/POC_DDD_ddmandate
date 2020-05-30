@@ -141,9 +141,8 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
     ddMandateRoutes.bankAccountPort.asInstanceOf[BankAccountFakeAdapter].acceptBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
-      //println(response)
+
       val message = responseAs[ErrorMessage]
-      //println(message)
       //debug(message)
       status shouldBe BadRequest
       assert(message.errorCode == 0)
@@ -162,9 +161,8 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
     ddMandateRoutes.bankAccountPort.asInstanceOf[BankAccountFakeAdapter].rejectBankAccount(ddMandateNotAccepted.debtor.bankAccount.identity)
 
     Put(s"/ddmandates/${ddMandateUUIDString}/activate") ~> Route.seal(ddMandateRoutes.route) ~> check {
-      //println(response)
+
       val message = responseAs[ErrorMessage]
-      //println(message)
       //debug(message)
       status shouldBe BadRequest
       assert(message.errorCode == 0)

@@ -26,8 +26,6 @@ class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateD
    protected val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort, contractPort)
 
 
-
-
   test("Create DD Mandate with a contract not signed") {
 
     val bankAccountId = BankAccountIdentity(UUID.fromString("146a525d-402b-4bce-a317-3f00d05aede0"))

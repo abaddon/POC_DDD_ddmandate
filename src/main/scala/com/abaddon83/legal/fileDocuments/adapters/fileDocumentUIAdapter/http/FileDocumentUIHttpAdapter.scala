@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Route
 import akka.util.ByteString
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.messages.ErrorFileDocument
 import com.abaddon83.legal.fileDocuments.domainModels.FileDocument
-import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileDocumentUIPort, FileBodyPort, TemplateRepositoryPort}
+import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileDocumentUIPort, FileBodyPort, FileDocumentTemplateRepositoryPort}
 import com.abaddon83.legal.fileDocuments.services.FileDocumentService
 import com.abaddon83.legal.shares.contracts.Format
 import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
@@ -16,7 +16,7 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 class FileDocumentUIHttpAdapter(implicit pdfMakerPort: FileBodyPort,
-                                templateRepository: TemplateRepositoryPort,
+                                templateRepository: FileDocumentTemplateRepositoryPort,
                                 fileDocumentRepository: FileDocumentRepositoryPort
                                 ) extends FileDocumentUIPort with RouteRejectionHandler{
 

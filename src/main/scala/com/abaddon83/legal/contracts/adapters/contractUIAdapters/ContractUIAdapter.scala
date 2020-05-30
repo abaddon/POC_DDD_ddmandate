@@ -23,7 +23,6 @@ trait ContractUIAdapter extends ContractUIPort{
   override def createContract(contractType: String, reference: UUID): Future[ContractUnSigned] = {
       contractType match {
         case "DDMANDATE" => {
-          println("ContractAdapter.createContract START")
           contractService.createDDMandateContract(DDMandateIdentity(reference))
         }
         case "T&C" => contractService.createTCContract()

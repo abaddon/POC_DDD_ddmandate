@@ -11,15 +11,10 @@ case class PDFFileDocument( identity: FileDocumentIdentity,
                             format: Format
                           ) extends FileDocument{
 
-  val path: String = "."
-
-  def getLocalPath(): String = {
-    s"${path}/${identity.convertTo()}"
-  }
 }
 
 object PDFFileDocument {
-  def apply(file : Array[Byte]): PDFFileDocument = {
-    new PDFFileDocument(FileDocumentIdentity(UUID.randomUUID(),Format.PDF),file,Format.PDF)
+  def apply(fileBody : FileBody): PDFFileDocument = {
+    new PDFFileDocument(FileDocumentIdentity(UUID.randomUUID(),Format.PDF),fileBody.body,Format.PDF)
   }
 }

@@ -1,18 +1,19 @@
-package com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.localFS
+package com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local
 
 import java.io.{File, FileInputStream, FileOutputStream}
 
 import com.abaddon83.legal.fileDocuments.domainModels.{FileDocument, PDFFileDocument}
 import com.abaddon83.legal.fileDocuments.ports.FileDocumentRepositoryPort
+import com.abaddon83.legal.fileDocuments.services.FileDocumentConfigService
 import com.abaddon83.legal.shares.contracts.Format
 import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class FileDocumentRepositoryLocalFSAdapter extends FileDocumentRepositoryPort{
+class FileDocumentRepositoryLocalAdapter extends FileDocumentRepositoryPort{
 
-  var path: String = "./fileRepository"
+  var path: String = FileDocumentConfigService.getFileRepositoryPath()
 
   override def save(fileDocument: FileDocument): FileDocument = {
     persist(fileDocument)
@@ -25,7 +26,6 @@ class FileDocumentRepositoryLocalFSAdapter extends FileDocumentRepositoryPort{
   }
 
   private def persist(fileDocument: FileDocument) : FileDocument={
-    println(s"->>>> getFullPath(fileDocument.identity): ${getFullPath(fileDocument.identity)}")
     val file: File = new File(getFullPath(fileDocument.identity))
     var out = new FileOutputStream(file)
     out.write(fileDocument.fileBinaries)

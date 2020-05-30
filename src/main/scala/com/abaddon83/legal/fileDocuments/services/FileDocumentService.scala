@@ -1,22 +1,23 @@
 package com.abaddon83.legal.fileDocuments.services
 
 import com.abaddon83.legal.fileDocuments.domainModels.{FileDocument, PDFFileDocument}
-import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileBodyPort, TemplateRepositoryPort}
+import com.abaddon83.legal.fileDocuments.ports.{FileBodyPort, FileDocumentRepositoryPort, FileDocumentTemplateRepositoryPort}
 import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class FileDocumentService(pdfMakerPort: FileBodyPort,
-                          templateRepository: TemplateRepositoryPort,
+class FileDocumentService(fileBodyPort: FileBodyPort,
+                          documentTemplateRepository: FileDocumentTemplateRepositoryPort,
                           fileDocumentRepository: FileDocumentRepositoryPort
                          ) {
 
   def createNewPDFFileDocument(templateName: String, templateData:Map[String, String]): Future[FileDocument] = {
+    val templateConfig = FileDocumentConfigService.getTemplateConfig(templateName)
     for{
-      documentTemplate <- templateRepository.findTemplateByName(templateName)
-      fileBinaries <- pdfMakerPort.createFile(documentTemplate,templateData)
+      documentTemplate <- documentTemplateRepository.loadTemplate(templateConfig,templateData)
+      fileBinaries <- fileBodyPort.createFile(documentTemplate)
     } yield fileDocumentRepository.save(PDFFileDocument(fileBinaries))
   }
 

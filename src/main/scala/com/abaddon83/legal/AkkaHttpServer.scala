@@ -18,12 +18,12 @@ import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akka.DDMandateUIActor
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akkaHttp.DDMandateUIRoutes
 import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.fileDocuments.adapters.documentTemplateRepositoryAdapters.local.FileDocumentTemplateRepositoryLocalAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileBodyAdapters.pdfBox.FileBodyPdfBoxAdapter
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.localFS.FileDocumentRepositoryLocalFSAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local.FileDocumentRepositoryLocalAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.FileDocumentUIActorAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.FileDocumentUIHttpAdapter
-import com.abaddon83.legal.fileDocuments.adapters.templateRepositoryAdapters.fake.TemplateRepositoryFakeAdapter
-import com.abaddon83.legal.fileDocuments.ports.{FileBodyPort, FileDocumentRepositoryPort, TemplateRepositoryPort}
+import com.abaddon83.legal.fileDocuments.ports.{FileDocumentTemplateRepositoryPort, FileBodyPort, FileDocumentRepositoryPort}
 import com.abaddon83.libs.akkaHttp.routes.RouteExceptionHandling
 
 import scala.concurrent.Await
@@ -49,8 +49,8 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
 
   //Implicit X FileDocument
   implicit lazy val pdfMakerPort: FileBodyPort = new FileBodyPdfBoxAdapter()
-  implicit lazy val templateRepository: TemplateRepositoryPort = new TemplateRepositoryFakeAdapter()
-  implicit lazy val fileDocumentRepository: FileDocumentRepositoryPort = new FileDocumentRepositoryLocalFSAdapter()
+  implicit lazy val templateRepository: FileDocumentTemplateRepositoryPort = new FileDocumentTemplateRepositoryLocalAdapter()
+  implicit lazy val fileDocumentRepository: FileDocumentRepositoryPort = new FileDocumentRepositoryLocalAdapter()
 
   lazy val logger = Logging(actorSystem, classOf[App])
 

@@ -2,7 +2,7 @@ package com.abaddon83.legal.fileDocuments.adapters.fileBodyAdapters.pdfBox
 
 import java.io.ByteArrayOutputStream
 
-import com.abaddon83.legal.fileDocuments.domainModels.DocumentTemplate
+import com.abaddon83.legal.fileDocuments.domainModels.{FileBody, FileDocumentTemplate}
 import com.abaddon83.legal.fileDocuments.ports.FileBodyPort
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.interactive.form.PDField
@@ -15,25 +15,27 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class FileBodyPdfBoxAdapter extends FileBodyPort{
 
-  override def createFile(template: DocumentTemplate, templateData: Map[String, String]): Future[Array[Byte]] = {
+  override def createFile(fileDocumentTemplate: FileDocumentTemplate): Future[FileBody] = {
     Future{
 
-      val pdfDocument = PDDocument.load(template.body)
-      val pdfDocumentFilled = fillPdf(pdfDocument,templateData)
+      val pdfDocument = PDDocument.load(fileDocumentTemplate.body)
+
+      val pdfDocumentFilled = fillPdf(pdfDocument,fileDocumentTemplate.filledData)
 
       val buffer = new ByteArrayOutputStream()
       pdfDocumentFilled.save(buffer)
       pdfDocumentFilled.close()
-      buffer.toByteArray
+
+      FileBody(buffer.toByteArray)
     }
   }
+
 
   private def fillPdf(pdfDocument: PDDocument, templateData: Map[String, String]): PDDocument  = {
     val pdfForms = pdfDocument.getDocumentCatalog.getAcroForm
 
     pdfForms.getFields.asScala.toList.map { pdfField: PDField =>
       val pdfFieldName = pdfField.getFullyQualifiedName
-      //println(s"pdfFieldName: ${pdfFieldName}")
       templateData.get(pdfFieldName).map { value =>
         pdfField.setValue(value)
         pdfField.setReadOnly(true)
