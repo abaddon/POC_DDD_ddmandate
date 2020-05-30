@@ -1,5 +1,6 @@
 package com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters
 
+import java.io.FileNotFoundException
 import java.util.UUID
 
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local.FileDocumentRepositoryLocalAdapter
@@ -7,8 +8,11 @@ import com.abaddon83.legal.fileDocuments.domainModels.PDFFileDocument
 import com.abaddon83.legal.shares.contracts.Format.PDF
 import com.abaddon83.legal.shares.fileDocuments.FileDocumentIdentity
 import com.abaddon83.legal.utilities.UUIDRegistryHelper
+import org.scalatest.RecoverMethods.recoverToSucceededIf
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class FileDocumentRepositoryLocalAdapterTest extends AnyFunSuite with ScalaFutures{
 
@@ -35,6 +39,16 @@ class FileDocumentRepositoryLocalAdapterTest extends AnyFunSuite with ScalaFutur
     val fileDocumentIdentity = FileDocumentIdentity(uuid, PDF)
     val fileDocumentLoaded = fileDocumentRepositoryLocalAdapter.findByFileId(fileDocumentIdentity).futureValue
     assert(fileDocumentLoaded.identity == fileDocumentIdentity)
+  }
+
+  test("load a wrong file"){
+    val uuid = UUID.randomUUID()
+    val fileDocumentIdentity = FileDocumentIdentity(uuid, PDF)
+    recoverToSucceededIf[FileNotFoundException] {
+      fileDocumentRepositoryLocalAdapter.findByFileId(fileDocumentIdentity)
+    }
+
+
   }
 
 }
