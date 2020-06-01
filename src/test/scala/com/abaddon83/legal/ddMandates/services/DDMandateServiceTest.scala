@@ -2,7 +2,7 @@ package com.abaddon83.legal.ddMandates.services
 
 import java.util.UUID
 
-import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
+import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.CreditorFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
@@ -21,7 +21,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class DDMandateServiceTest extends AnyFunSuite with ScalaFutures with DDMandateDomainElementHelper  {
    protected val ddMandateRepository: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
    protected val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
-   protected val creditorPort: CreditorPort = new FakeCreditorAdapter()
+   protected val creditorPort: CreditorPort = new CreditorFakeAdapter()
    protected  val contractPort: DDMandateContractPort = new DDMandateContractFakeAdapter()
    protected val ddMandateService: DDMandateService =   new DDMandateService(ddMandateRepository,bankAccountPort,creditorPort, contractPort)
 

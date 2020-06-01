@@ -1,4 +1,4 @@
-package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.messages
+package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.akka.messages
 
 import com.abaddon83.legal.fileDocuments.domainModels.{FileDocument, PDFFileDocument}
 import sun.reflect.generics.reflectiveObjects.NotImplementedException

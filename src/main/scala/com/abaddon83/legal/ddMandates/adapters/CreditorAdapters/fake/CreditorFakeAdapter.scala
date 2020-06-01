@@ -11,7 +11,7 @@ import com.abaddon83.legal.shares.bankAccounts.BankAccountIdentity
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class FakeCreditorAdapter extends CreditorPort{
+class CreditorFakeAdapter extends CreditorPort{
   override def findByLegalEntity(legalEntityCode: String): Future[Creditor] = {
     Future{
       creditorList.find(creditor => creditor.legalEntityCode == legalEntityCode).getOrElse(throw new NoSuchElementException(s"Creditor with legalEntity: ${legalEntityCode} not found"))

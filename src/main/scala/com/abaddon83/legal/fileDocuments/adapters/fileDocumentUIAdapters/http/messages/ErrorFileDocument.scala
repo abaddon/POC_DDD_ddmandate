@@ -1,4 +1,4 @@
-package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.messages
+package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.http.messages
 
 import com.abaddon83.libs.akkaHttp.messages.ErrorMessage
 

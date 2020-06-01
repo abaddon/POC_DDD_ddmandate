@@ -6,7 +6,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
+import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.CreditorFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapter
@@ -25,7 +25,7 @@ class DDMandateRoutesTest extends AnyFunSuite with ScalaFutures with Matchers wi
 
   implicit val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
   implicit val contractPort :DDMandateContractPort = new DDMandateContractFakeAdapter()
-  implicit val creditorPort : CreditorPort = new FakeCreditorAdapter()
+  implicit val creditorPort : CreditorPort = new CreditorFakeAdapter()
   implicit val ddMandateRepositoryPort : DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
 
   val ddMandateRoutes = new DDMandateUIRoutes()

@@ -1,6 +1,5 @@
 package com.abaddon83.legal.fileDocuments.services
 
-import com.typesafe.config.ConfigException
 import org.scalatest.funsuite.AnyFunSuite
 
 class FileDocumentConfigServiceTest extends AnyFunSuite{
@@ -21,7 +20,7 @@ class FileDocumentConfigServiceTest extends AnyFunSuite{
 
   test(" load missing template configuration") {
     val templateName = "missing"
-    assertThrows[ConfigException] {
+    assertThrows[NoSuchElementException] {
       FileDocumentConfigService.getTemplateConfig(templateName)
     }
   }

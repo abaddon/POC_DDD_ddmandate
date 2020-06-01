@@ -6,8 +6,8 @@ import akka.util.Timeout
 import com.abaddon83.legal.contracts.domainModels.DDMandate
 import com.abaddon83.legal.contracts.domainModels.FileRepositories.FileRepository
 import com.abaddon83.legal.contracts.ports.FileDocumentPort
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.commands.CreateFileDocumentCmd
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.messages.FileDocumentMsg
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.akka.commands.CreateFileDocumentCmd
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.akka.messages.FileDocumentMsg
 import com.abaddon83.legal.shares.contracts.Format
 
 import scala.collection.immutable.HashMap

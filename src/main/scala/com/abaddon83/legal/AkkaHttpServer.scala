@@ -11,7 +11,7 @@ import com.abaddon83.legal.contracts.adapters.contractUIAdapters.akka.akkHttp.Co
 import com.abaddon83.legal.contracts.adapters.ddMandateAdapters.akka.DDMandateAkkaAdapter
 import com.abaddon83.legal.contracts.adapters.fileDocumentAdapters.akka.FileDocumentAkkaAdapter
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
-import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
+import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.CreditorFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.akka.DDMandateContractAkkaAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateRepositoryAdapters.fake.FakeDDMandateRepositoryAdapterSingleton
@@ -21,8 +21,8 @@ import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMa
 import com.abaddon83.legal.fileDocuments.adapters.documentTemplateRepositoryAdapters.local.FileDocumentTemplateRepositoryLocalAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileBodyAdapters.pdfBox.FileBodyPdfBoxAdapter
 import com.abaddon83.legal.fileDocuments.adapters.fileDocumentRepositoryAdapters.local.FileDocumentRepositoryLocalAdapter
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.akka.FileDocumentUIActorAdapter
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.FileDocumentUIHttpAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.akka.FileDocumentUIActorAdapter
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.http.FileDocumentUIHttpAdapter
 import com.abaddon83.legal.fileDocuments.ports.{FileDocumentTemplateRepositoryPort, FileBodyPort, FileDocumentRepositoryPort}
 import com.abaddon83.libs.akkaHttp.routes.RouteExceptionHandling
 
@@ -39,7 +39,7 @@ trait AkkaHttpServer extends  RouteExceptionHandling{
   //Implicit X DDMANDATE
   implicit lazy val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
   implicit lazy val contractPort :DDMandateContractPort = new DDMandateContractAkkaAdapter()
-  implicit lazy val creditorPort : CreditorPort = new FakeCreditorAdapter()
+  implicit lazy val creditorPort : CreditorPort = new CreditorFakeAdapter()
   implicit lazy val ddMandateRepositoryPort : DDMandateRepositoryPort = FakeDDMandateRepositoryAdapterSingleton
 
   //Implicit X Contract

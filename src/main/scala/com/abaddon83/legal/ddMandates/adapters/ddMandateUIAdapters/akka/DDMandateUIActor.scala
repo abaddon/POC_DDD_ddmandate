@@ -5,7 +5,8 @@ import akka.pattern.pipe
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.DDMandateUIAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akka.commands.GiveMeDDMandateCmd
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.akka.responses.DDMandateMsg
-import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, DDMandateContractPort, CreditorPort, DDMandateRepositoryPort}
+import com.abaddon83.legal.ddMandates.ports.{BankAccountPort, CreditorPort, DDMandateContractPort, DDMandateRepositoryPort}
+import com.abaddon83.libs.akkaActors.FailurePropatingActor
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -15,7 +16,7 @@ class DDMandateUIActor(implicit
                        contractAdapter :DDMandateContractPort,
                        creditorAdapter : CreditorPort,
                        ddMandateRepositoryAdapter : DDMandateRepositoryPort
-                    ) extends DDMandateUIAdapter with Actor with ActorLogging{
+                    ) extends DDMandateUIAdapter with Actor with ActorLogging with FailurePropatingActor{
 
   override val bankAccountPort: BankAccountPort = bankAccountAdapter
   override val contractPort :DDMandateContractPort = contractAdapter

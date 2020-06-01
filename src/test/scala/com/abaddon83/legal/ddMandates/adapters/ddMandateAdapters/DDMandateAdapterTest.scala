@@ -3,7 +3,7 @@ package com.abaddon83.legal.ddMandates.adapters.ddMandateAdapters
 
 import java.util.UUID
 
-import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.FakeCreditorAdapter
+import com.abaddon83.legal.ddMandates.adapters.CreditorAdapters.fake.CreditorFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.bankAccountAdapters.fake.BankAccountFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateContractAdapters.fake.DDMandateContractFakeAdapter
 import com.abaddon83.legal.ddMandates.adapters.ddMandateUIAdapters.DDMandateUIAdapter
@@ -20,7 +20,7 @@ class DDMandateAdapterTest extends AnyFunSuite with Matchers with ScalaFutures {
   val ddMandateAdapter = new DDMandateUIAdapter() {
     override val bankAccountPort: BankAccountPort = new BankAccountFakeAdapter()
     override val contractPort: DDMandateContractPort = new DDMandateContractFakeAdapter()
-    override val creditorPort: CreditorPort = new FakeCreditorAdapter()
+    override val creditorPort: CreditorPort = new CreditorFakeAdapter()
     override val ddMandateRepositoryPort: DDMandateRepositoryPort = new FakeDDMandateRepositoryAdapter
   }
 

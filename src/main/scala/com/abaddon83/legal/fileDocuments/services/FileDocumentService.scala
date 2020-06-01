@@ -14,11 +14,16 @@ class FileDocumentService(fileBodyPort: FileBodyPort,
                          ) {
 
   def createNewPDFFileDocument(templateName: String, templateData:Map[String, String]): Future[FileDocument] = {
-    val templateConfig = FileDocumentConfigService.getTemplateConfig(templateName)
-    for{
-      documentTemplate <- documentTemplateRepository.loadTemplate(templateConfig,templateData)
-      fileBinaries <- fileBodyPort.createFile(documentTemplate)
-    } yield fileDocumentRepository.save(PDFFileDocument(fileBinaries))
+    //try{
+      val templateConfig = FileDocumentConfigService.getTemplateConfig(templateName)
+      for{
+        documentTemplate <- documentTemplateRepository.loadTemplate(templateConfig,templateData)
+        fileBinaries <- fileBodyPort.createFile(documentTemplate)
+      } yield fileDocumentRepository.save(PDFFileDocument(fileBinaries))
+    //} catch {
+    //  case e: NoSuchElementException => throw e
+    //  case e: Exception => throw e
+    //}
   }
 
   def giveMeFileDocument(fileDocumentId: FileDocumentIdentity): Future[FileDocument] = {

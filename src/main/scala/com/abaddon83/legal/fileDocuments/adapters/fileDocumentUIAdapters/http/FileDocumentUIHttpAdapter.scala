@@ -1,10 +1,10 @@
-package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http
+package com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.http
 
 
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, MediaTypes, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.util.ByteString
-import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapter.http.messages.ErrorFileDocument
+import com.abaddon83.legal.fileDocuments.adapters.fileDocumentUIAdapters.http.messages.ErrorFileDocument
 import com.abaddon83.legal.fileDocuments.domainModels.FileDocument
 import com.abaddon83.legal.fileDocuments.ports.{FileDocumentRepositoryPort, FileDocumentUIPort, FileBodyPort, FileDocumentTemplateRepositoryPort}
 import com.abaddon83.legal.fileDocuments.services.FileDocumentService

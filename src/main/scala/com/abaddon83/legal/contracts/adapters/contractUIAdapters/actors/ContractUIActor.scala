@@ -6,6 +6,7 @@ import com.abaddon83.legal.contracts.adapters.contractUIAdapters.ContractUIAdapt
 import com.abaddon83.legal.contracts.adapters.contractUIAdapters.actors.commands.{CreateDDMandateContractCmd, GiveMeSignedContractCmd}
 import com.abaddon83.legal.contracts.adapters.contractUIAdapters.actors.responses.ContractMsg
 import com.abaddon83.legal.contracts.ports.{ContractRepositoryPort, DDMandatePort, FileDocumentPort}
+import com.abaddon83.libs.akkaActors.FailurePropatingActor
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
@@ -15,7 +16,7 @@ class ContractUIActor()(implicit
                         ddMandateAdapter : DDMandatePort,
                         contractRepositoryAdapter : ContractRepositoryPort,
                         fileRepositoryAdapter : FileDocumentPort
-) extends ContractUIAdapter with Actor with ActorLogging{
+) extends ContractUIAdapter with Actor with ActorLogging with FailurePropatingActor{
 
   override val ddMandatePort : DDMandatePort = ddMandateAdapter
   override val contractRepositoryPort : ContractRepositoryPort =  contractRepositoryAdapter
